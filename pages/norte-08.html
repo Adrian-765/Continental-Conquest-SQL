@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>El Corredor Escandinavo — SQL: La Gran Guerra</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .nivel-layout{display:grid;grid-template-columns:1.15fr 0.85fr;gap:2rem;margin:1.5rem 0;}
+    @media(max-width:880px){.nivel-layout{grid-template-columns:1fr;}}
+    .header-nivel{background:linear-gradient(135deg,rgba(10,14,6,.98),rgba(26,34,16,.95));border-bottom:3px solid var(--khaki-light);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;}
+    .nivel-num{font-family:var(--font-display);font-size:3.5rem;font-weight:900;color:rgba(90,110,66,.2);line-height:1;}
+    .col-p{display:flex;flex-direction:column;gap:1.5rem;}
+    .col-l{display:flex;flex-direction:column;gap:1.4rem;}
+    .sql-panel{background:#060a04;border:1px solid rgba(90,110,66,.3);border-top:3px solid var(--khaki-light);overflow:hidden;}
+    .sql-header{background:rgba(90,110,66,.1);border-bottom:1px solid rgba(90,110,66,.2);padding:.6rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:#c8e0a0;}
+    .sql-dots{display:flex;gap:4px;}
+    .sql-dot{width:8px;height:8px;border-radius:50%;}
+    .sql-block{border-bottom:1px solid rgba(90,110,66,.12);padding:0;}
+    .sql-block:last-child{border-bottom:none;}
+    .sql-lbl{font-family:var(--font-typewriter);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(90,110,66,.7);padding:.5rem 1rem .2rem;border-left:2px solid var(--khaki-mid);}
+    .sql-pre{font-family:'Special Elite','Courier New',monospace;font-size:.73rem;line-height:1.65;color:#a8d4a0;padding:.3rem 1rem .7rem;overflow-x:auto;background:transparent;white-space:pre;margin:0;}
+    .schema-box{background:rgba(0,0,0,.3);border:1px dashed rgba(90,110,66,.25);margin:.5rem 1rem 1rem;}
+    .schema-lbl{font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(90,110,66,.5);padding:.4rem .8rem .2rem;}
+    .mapa-mini{background:linear-gradient(135deg,#b8c4a0,#8a9e72);border:2px solid #6a7e52;padding:1rem;min-height:120px;position:relative;overflow:hidden;box-shadow:3px 3px 0 rgba(0,0,0,.25);}
+    .mapa-mini::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(60,80,40,.06) 10px,rgba(60,80,40,.06) 11px);}
+    .mapa-ruta{font-family:var(--font-handwritten);font-size:1rem;color:#1a2510;font-weight:700;position:relative;line-height:1.6;}
+    .progreso-bar{background:rgba(0,0,0,.3);padding:.5rem 2rem;border-bottom:1px solid rgba(90,110,66,.15);display:flex;align-items:center;gap:1rem;}
+    .section-label{font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:#c8e0a0;margin-bottom:.6rem;}
+    .exigencia-item{display:flex;gap:.8rem;padding:.7rem 0;border-bottom:1px solid rgba(90,110,66,.15);}
+    .exigencia-item:last-child{border-bottom:none;}
+    .exigencia-letra{flex-shrink:0;width:24px;height:24px;background:var(--khaki-dark);color:#c8e0a0;font-family:var(--font-display);font-weight:900;font-size:.85rem;display:flex;align-items:center;justify-content:center;}
+    .exigencia-txt{font-family:var(--font-body);font-size:.82rem;color:var(--paper-aged);line-height:1.5;}
+    .tabla-datos{width:100%;border-collapse:collapse;font-family:var(--font-typewriter);font-size:.72rem;}
+    .tabla-datos th{background:var(--khaki-dark);color:#c8e0a0;padding:.35rem .6rem;text-align:left;letter-spacing:.08em;font-weight:normal;}
+    .tabla-datos td{padding:.3rem .6rem;border-bottom:1px solid rgba(90,110,66,.15);color:var(--paper-aged);}
+    .tabla-datos tr:last-child td{border-bottom:none;}
+    .tabla-datos tr:hover td{background:rgba(90,110,66,.07);}
+    .rn-badge{display:inline-block;background:var(--khaki-dark);color:#c8e0a0;border:1px solid var(--khaki-light);font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.15em;padding:.2rem .7rem;text-transform:uppercase;margin-bottom:.3rem;}
+</style>
+</head>
+<body class="page-bg">
+
+<nav class="nav-principal">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo-area">
+      <div class="nav-logo-text">SQL: La Gran Guerra</div>
+      <div class="nav-logo-sub">Conquista y Diplomacia · Ruta Norte</div>
+    </a>
+    <div class="nav-center">Ruta Norte — Misión 4 de 6 · <span class='nombre-comandante'>Comandante</span> · Bergen</div>
+    <div class="nav-actions">
+      <button id="btn-guardar" class="btn btn-primary" style="font-size:.72rem;padding:.5rem 1.2rem;">💾 Guardar</button>
+    </div>
+  </div>
+</nav>
+
+<div class="ticker-wrap" style="background:var(--khaki-dark);">
+  <span class="ticker-content">
+    <span class="ticker-sep">⬥</span> RUTA NORTE — SQL: CONQUISTA Y DIPLOMACIA
+    <span class="ticker-sep">⬥</span> NIVEL 8 — EL CORREDOR ESCANDINAVO · BERGEN · TRÁNSITO ESCANDINAVO · COHERENCIA O BLOQUEO
+    <span class="ticker-sep">⬥</span> MISIÓN: INFILTRARSE EN RUSIA POR EL BÁLTICO · DETENER AL TZAR
+    <span class="ticker-sep">⬥</span>
+  </span>
+</div>
+
+<div class="header-nivel">
+  <div>
+    <div class="rn-badge">Nivel 8 · Ruta Norte · Bergen, Noruega · 1915</div>
+    <div style="font-family:var(--font-typewriter);font-size:.78rem;letter-spacing:.1em;color:#c8e0a0;font-weight:bold;">El Corredor Escandinavo</div>
+    <div style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.08em;color:var(--paper-dark);">Bergen, Noruega · 1915</div>
+  </div>
+  <div class="nivel-num">N·8</div>
+</div>
+
+<div class="progreso-bar">
+  <div class="rn-badge">🔴 Ruta Norte</div>
+  <span style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.1em;color:var(--paper-dark);text-transform:uppercase;margin-left:.4rem;">Misión 4 de 6:</span>
+  <div class="barra-nivel"><div class="punto-nivel hecho"></div><div class="punto-nivel hecho"></div><div class="punto-nivel hecho"></div><div class="punto-nivel actual"></div><div class="punto-nivel"></div><div class="punto-nivel"></div></div>
+</div>
+
+<div id="libreta-flotante">
+  <button id="libreta-toggle">📓 Notas <span class="libreta-arrow">▼</span></button>
+  <div id="libreta-body">
+    <textarea id="libreta-notas" placeholder="Anote sus observaciones..."></textarea>
+    <div id="libreta-footer">
+      <span>Ruta Norte — Libreta</span>
+      <span id="libreta-guardado" style="color:var(--khaki-faded);"></span>
+    </div>
+  </div>
+</div>
+
+<main class="container">
+  <div class="nivel-layout">
+
+    <div class="col-p">
+
+      <div class="fade-in-1">
+        <div class="section-label">📔 Diario del Comandante — Coherencia o bloqueo</div>
+        <div class="diario-entrada">
+          <div class="diario-fecha">Bergen, Noruega · 1915</div>
+          <p>Noruega no grita. Revisa.</p>
+<p>Cada documento debe sostener al siguiente. Si una cifra cae, toda la historia cae con ella.</p>
+<p>No buscan traición. Buscan inconsistencias.</p>
+        </div>
+      </div>
+
+      <div class="fade-in-2">
+        <div class="section-label">📨 Control de Tránsito — Bergen, Noruega</div>
+        <div class="telegrama" style="transform:rotate(-.4deg);border-top-color:var(--khaki-dark);">
+          <div class="telegrama-sello" style="border-color:var(--khaki-light);color:var(--khaki-light);">NORUEGA<br>TRÁNSITO<br>1915</div>
+          <div class="telegrama-header" style="border-color:var(--khaki-mid);">CONTROL DE TRÁNSITO ESCANDINAVO — BERGEN, NORUEGA</div>
+          <div class="telegrama-body">FECHA: 1915 · TRÁNSITO ESCANDINAVO<br>
+DE: AUTORIDADES PORTUARIAS — BERGEN<br>
+PARA: CONVOY EN TRÁNSITO<br><br>
+Noruega no grita. Revisa.<br><br>
+Cada documento debe sostener al siguiente.<br>
+Si una cifra cae, toda la historia cae con ella.<br>
+No buscan traición. Buscan inconsistencias.<br><br>
+VERIFICACIONES REQUERIDAS:<br>
+1 — Coincidencia peso declarado vs real (JOIN + WHERE &lt;&gt;)<br>
+2 — Secuencia correcta de tránsito (ORDER BY)<br>
+3 — Detectar salto incoherente en la ruta (WHERE origen/destino)<br>
+4 — Calcular total transportado (SUM)<br>
+— CONTROL DE TRÁNSITO</div>
+        </div>
+      </div>
+
+      <div class="fade-in-2">
+  <div class="section-label">📋 Documentos de tránsito — Control noruego</div>
+  <div style="margin-bottom:.6rem;">
+    <div class="section-label" style="font-size:.58rem;margin-bottom:.3rem;">📄 documentos_transito</div>
+    <table class="tabla-datos"><thead><tr><th>id_doc</th><th>origen</th><th>destino</th><th>tipo_carga</th><th>peso</th></tr></thead><tbody><tr><td>1</td><td>Dinamarca</td><td>Noruega</td><td>Comercial</td><td>125</td></tr><tr><td>2</td><td>Noruega</td><td>Suecia</td><td>Comercial</td><td>125</td></tr></tbody></table>
+  </div>
+  <div style="margin-bottom:.8rem;">
+    <div class="section-label" style="font-size:.58rem;margin-bottom:.3rem;">⚖ carga_real</div>
+    <table class="tabla-datos"><thead><tr><th>tipo_carga</th><th>peso_total</th></tr></thead><tbody><tr><td>Comercial</td><td>125</td></tr></tbody></table>
+  </div>
+  <div style="padding:.6rem 1rem;background:rgba(90,110,66,.1);border-left:3px solid var(--khaki-mid);font-family:var(--font-typewriter);font-size:.7rem;color:var(--paper-aged);line-height:1.8;margin-bottom:.8rem;">
+    ✓ Secuencia lógica: Dinamarca→Noruega (id=1) luego Noruega→Suecia (id=2)<br>
+    ✓ Pesos declarados: ambos dicen 125 · Peso real: 125 → coinciden<br>
+    ✓ No hay salto incoherente Dinamarca→Suecia
+  </div>
+  <div class="section-label">🔎 Las 4 Verificaciones Noruegas</div>
+  <div style="background:rgba(0,0,0,.2);border:1px solid rgba(90,110,66,.25);padding:.8rem 1rem;"><div class="exigencia-item"><div class="exigencia-letra">1</div><div class="exigencia-txt">Comparar el peso declarado en cada documento con el peso real registrado — detectar fraude documental.</div></div><div class="exigencia-item"><div class="exigencia-letra">2</div><div class="exigencia-txt">Verificar que la secuencia de tránsito es lógica y continua, sin saltos ni retrocesos en la ruta.</div></div><div class="exigencia-item"><div class="exigencia-letra">3</div><div class="exigencia-txt">Detectar saltos incoherentes: un documento que va de Dinamarca directamente a Suecia saltándose Noruega.</div></div><div class="exigencia-item"><div class="exigencia-letra">4</div><div class="exigencia-txt">Calcular el peso total transportado en todos los documentos para cuadrarlo con la carga real.</div></div></div>
+</div>
+
+      <div style="text-align:center;" class="fade-in-3">
+        <button class="btn" onclick="abrirEscenario('https://deck.toys')" style="background:var(--khaki-mid);border:1px solid var(--khaki-light);color:#c8e0a0;font-family:var(--font-typewriter);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;padding:.7rem 1.8rem;cursor:pointer;">
+          🗺 Abrir escenario en deck.toys
+        </button>
+        <div style="font-family:var(--font-typewriter);font-size:.62rem;letter-spacing:.1em;color:var(--paper-dark);margin-top:.4rem;text-transform:uppercase;">Se abrirá en nueva pestaña</div>
+      </div>
+
+    </div>
+
+    <div class="col-l">
+
+      <div class="fade-in-1">
+        <div class="section-label">🗺 Ruta Norte — Avance</div>
+        <div class="mapa-mini">
+          <div style="font-family:var(--font-typewriter);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:#3a4f2a;margin-bottom:.4rem;position:relative;">Posición actual</div>
+          <div class="mapa-ruta">Newcastle → Mar del Norte → Bergen → Frontera Sueca</div>
+          <div style="margin-top:.8rem;position:relative;">
+            <div style="font-family:var(--font-typewriter);font-size:.58rem;text-transform:uppercase;letter-spacing:.1em;color:#3a4f2a;margin-bottom:.3rem;">Progreso ruta norte:</div>
+            <div class="marcador-progreso"><div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa activo"></div><div class="paso-mapa"></div><div class="paso-mapa"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fade-in-2">
+        <div class="section-label">💾 Consultas SQL</div>
+        <div class="sql-panel">
+          <div class="sql-header">
+            <div class="sql-dots">
+              <div class="sql-dot" style="background:#c0392b;"></div>
+              <div class="sql-dot" style="background:#f39c12;"></div>
+              <div class="sql-dot" style="background:#27ae60;"></div>
+            </div>
+            norte_n8.sql
+          </div>
+          <div class="sql-block"><div class="sql-lbl">1 · Peso declarado vs real — JOIN</div><pre class="sql-pre">SELECT d.id_doc
+FROM documentos_transito d
+JOIN carga_real c USING(tipo_carga)
+WHERE d.peso <> c.peso_total;</pre></div><div class="sql-block"><div class="sql-lbl">2 · Secuencia de tránsito — ORDER BY</div><pre class="sql-pre">SELECT *
+FROM documentos_transito
+ORDER BY id_doc;</pre></div><div class="sql-block"><div class="sql-lbl">3 · Detectar salto incoherente</div><pre class="sql-pre">SELECT *
+FROM documentos_transito
+WHERE origen = 'Dinamarca'
+  AND destino = 'Suecia';</pre></div><div class="sql-block"><div class="sql-lbl">4 · Total transportado — SUM</div><pre class="sql-pre">SELECT SUM(peso) AS total_transito
+FROM documentos_transito;</pre></div>
+          <div class="schema-box"><div class="schema-lbl">📋 Estructura de tablas</div><pre class="sql-pre">CREATE TABLE documentos_transito (
+    id_doc     INT PRIMARY KEY,
+    origen     VARCHAR(50),
+    destino    VARCHAR(50),
+    tipo_carga VARCHAR(30),
+    peso       INT
+);
+CREATE TABLE carga_real (
+    tipo_carga VARCHAR(30),
+    peso_total INT
+);</pre></div>
+        </div>
+      </div>
+
+      <div class="fade-in-3">
+        <div class="section-label">🔍 Análisis Táctico</div>
+        <div class="pista-container">
+  <button class="pista-toggle">🔒 Verificación 1 — Resultado esperado<span class="pista-icono">▼</span></button>
+  <div class="pista-contenido">JOIN une documentos_transito con carga_real por tipo_carga. WHERE d.peso &lt;&gt; c.peso_total busca discrepancias. En este caso ambos documentos declaran 125 y la carga real es 125, así que el resultado está <em>vacío</em> — no hay fraude documental.</div>
+</div><div class="pista-container">
+  <button class="pista-toggle">🔒 Verificación 2 — Secuencia lógica<span class="pista-icono">▼</span></button>
+  <div class="pista-contenido">ORDER BY id_doc muestra los documentos en orden: Dinamarca→Noruega (id=1) y luego Noruega→Suecia (id=2). La secuencia es coherente: el destino de cada documento es el origen del siguiente.</div>
+</div><div class="pista-container">
+  <button class="pista-toggle">🔒 Verificación 3 — Resultado esperado<span class="pista-icono">▼</span></button>
+  <div class="pista-contenido">WHERE origen='Dinamarca' AND destino='Suecia' busca un salto que omitiera Noruega. En los datos actuales no existe ese documento, así que el resultado está <em>vacío</em> — no hay salto incoherente. Si existiera, las autoridades detectarían el fraude.</div>
+</div><div class="pista-container">
+  <button class="pista-toggle">🔒 Verificación 4 — Total transportado<span class="pista-icono">▼</span></button>
+  <div class="pista-contenido">SUM(peso) suma 125+125=250 unidades totales. Este número representa el tránsito acumulado a lo largo de toda la ruta escandinava desde Dinamarca hasta Suecia.</div>
+</div>
+      </div>
+
+      <div class="fade-in-4" style="display:flex;flex-direction:column;gap:.7rem;">
+        <a href="norte-09.html" class="btn" style="text-align:center;justify-content:center;background:var(--khaki-mid);border:1px solid var(--khaki-light);color:#c8e0a0;font-family:var(--font-typewriter);font-size:.72rem;letter-spacing:.1em;padding:.7rem;display:block;text-decoration:none;text-transform:uppercase;">
+          Siguiente misión →
+        </a>
+        <a href="norte-07.html" class="btn btn-secondary" style="text-align:center;font-size:.68rem;">← Misión anterior</a>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script src="../js/main.js"></script>
+<script>initPuntosNivel(6, 4);</script>
+</body>
+</html>

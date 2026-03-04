@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Travesía Final Hacia el Norte — SQL: La Gran Guerra</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .nivel-layout{display:grid;grid-template-columns:1.15fr 0.85fr;gap:2rem;margin:1.5rem 0;}
+    @media(max-width:880px){.nivel-layout{grid-template-columns:1fr;}}
+    .header-nivel{background:linear-gradient(135deg,rgba(10,14,6,.98),rgba(26,34,16,.95));border-bottom:3px solid var(--khaki-light);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;}
+    .nivel-num{font-family:var(--font-display);font-size:3.5rem;font-weight:900;color:rgba(90,110,66,.2);line-height:1;}
+    .col-p{display:flex;flex-direction:column;gap:1.5rem;}
+    .col-l{display:flex;flex-direction:column;gap:1.4rem;}
+    .sql-panel{background:#060a04;border:1px solid rgba(90,110,66,.3);border-top:3px solid var(--khaki-light);overflow:hidden;}
+    .sql-header{background:rgba(90,110,66,.1);border-bottom:1px solid rgba(90,110,66,.2);padding:.6rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:#c8e0a0;}
+    .sql-dots{display:flex;gap:4px;}
+    .sql-dot{width:8px;height:8px;border-radius:50%;}
+    .sql-block{border-bottom:1px solid rgba(90,110,66,.12);padding:0;}
+    .sql-block:last-child{border-bottom:none;}
+    .sql-lbl{font-family:var(--font-typewriter);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(90,110,66,.7);padding:.5rem 1rem .2rem;border-left:2px solid var(--khaki-mid);}
+    .sql-pre{font-family:'Special Elite','Courier New',monospace;font-size:.73rem;line-height:1.65;color:#a8d4a0;padding:.3rem 1rem .7rem;overflow-x:auto;background:transparent;white-space:pre;margin:0;}
+    .schema-box{background:rgba(0,0,0,.3);border:1px dashed rgba(90,110,66,.25);margin:.5rem 1rem 1rem;}
+    .schema-lbl{font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(90,110,66,.5);padding:.4rem .8rem .2rem;}
+    .mapa-mini{background:linear-gradient(135deg,#b8c4a0,#8a9e72);border:2px solid #6a7e52;padding:1rem;min-height:120px;position:relative;overflow:hidden;box-shadow:3px 3px 0 rgba(0,0,0,.25);}
+    .mapa-mini::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(60,80,40,.06) 10px,rgba(60,80,40,.06) 11px);}
+    .mapa-ruta{font-family:var(--font-handwritten);font-size:1rem;color:#1a2510;font-weight:700;position:relative;line-height:1.6;}
+    .progreso-bar{background:rgba(0,0,0,.3);padding:.5rem 2rem;border-bottom:1px solid rgba(90,110,66,.15);display:flex;align-items:center;gap:1rem;}
+    .section-label{font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:#c8e0a0;margin-bottom:.6rem;}
+    .exigencia-item{display:flex;gap:.8rem;padding:.7rem 0;border-bottom:1px solid rgba(90,110,66,.15);}
+    .exigencia-item:last-child{border-bottom:none;}
+    .exigencia-letra{flex-shrink:0;width:24px;height:24px;background:var(--khaki-dark);color:#c8e0a0;font-family:var(--font-display);font-weight:900;font-size:.85rem;display:flex;align-items:center;justify-content:center;}
+    .exigencia-txt{font-family:var(--font-body);font-size:.82rem;color:var(--paper-aged);line-height:1.5;}
+    .tabla-datos{width:100%;border-collapse:collapse;font-family:var(--font-typewriter);font-size:.72rem;}
+    .tabla-datos th{background:var(--khaki-dark);color:#c8e0a0;padding:.35rem .6rem;text-align:left;letter-spacing:.08em;font-weight:normal;}
+    .tabla-datos td{padding:.3rem .6rem;border-bottom:1px solid rgba(90,110,66,.15);color:var(--paper-aged);}
+    .tabla-datos tr:last-child td{border-bottom:none;}
+    .tabla-datos tr:hover td{background:rgba(90,110,66,.07);}
+    .rn-badge{display:inline-block;background:var(--khaki-dark);color:#c8e0a0;border:1px solid var(--khaki-light);font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.15em;padding:.2rem .7rem;text-transform:uppercase;margin-bottom:.3rem;}
+</style>
+</head>
+<body class="page-bg">
+
+<nav class="nav-principal">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo-area">
+      <div class="nav-logo-text">SQL: La Gran Guerra</div>
+      <div class="nav-logo-sub">Conquista y Diplomacia · Ruta Norte</div>
+    </a>
+    <div class="nav-center">Ruta Norte — Misión 5 de 6 · <span class='nombre-comandante'>Comandante</span> · Suecia</div>
+    <div class="nav-actions">
+      <button id="btn-guardar" class="btn btn-primary" style="font-size:.72rem;padding:.5rem 1.2rem;">💾 Guardar</button>
+    </div>
+  </div>
+</nav>
+
+<div class="ticker-wrap" style="background:var(--khaki-dark);">
+  <span class="ticker-content">
+    <span class="ticker-sep">⬥</span> RUTA NORTE — SQL: CONQUISTA Y DIPLOMACIA
+    <span class="ticker-sep">⬥</span> NIVEL 9 — TRAVESÍA FINAL · FRONTERA SUECA · ASIGNACIÓN DE CONVOYES · OPTIMIZACIÓN
+    <span class="ticker-sep">⬥</span> MISIÓN: INFILTRARSE EN RUSIA POR EL BÁLTICO · DETENER AL TZAR
+    <span class="ticker-sep">⬥</span>
+  </span>
+</div>
+
+<div class="header-nivel">
+  <div>
+    <div class="rn-badge">Nivel 9 · Ruta Norte · Frontera Sueca · 1916</div>
+    <div style="font-family:var(--font-typewriter);font-size:.78rem;letter-spacing:.1em;color:#c8e0a0;font-weight:bold;">Travesía Final Hacia el Norte</div>
+    <div style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.08em;color:var(--paper-dark);">Frontera Sueca · 1916</div>
+  </div>
+  <div class="nivel-num">N·9</div>
+</div>
+
+<div class="progreso-bar">
+  <div class="rn-badge">🔴 Ruta Norte</div>
+  <span style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.1em;color:var(--paper-dark);text-transform:uppercase;margin-left:.4rem;">Misión 5 de 6:</span>
+  <div class="barra-nivel"><div class="punto-nivel hecho"></div><div class="punto-nivel hecho"></div><div class="punto-nivel hecho"></div><div class="punto-nivel hecho"></div><div class="punto-nivel actual"></div><div class="punto-nivel"></div></div>
+</div>
+
+<div id="libreta-flotante">
+  <button id="libreta-toggle">📓 Notas <span class="libreta-arrow">▼</span></button>
+  <div id="libreta-body">
+    <textarea id="libreta-notas" placeholder="Anote sus observaciones..."></textarea>
+    <div id="libreta-footer">
+      <span>Ruta Norte — Libreta</span>
+      <span id="libreta-guardado" style="color:var(--khaki-faded);"></span>
+    </div>
+  </div>
+</div>
+
+<main class="container">
+  <div class="nivel-layout">
+
+    <div class="col-p">
+
+      <div class="fade-in-1">
+        <div class="section-label">📔 Diario del Comandante — Optimización ferroviaria</div>
+        <div class="diario-entrada">
+          <div class="diario-fecha">Frontera Sueca · 1916</div>
+          <p>Aquí no preguntan por ideología.</p>
+<p>Preguntan por capacidad.</p>
+<p>No podemos mover toda la carga junta. Debemos dividir sin exceder los límites ferroviarios de cada convoy. El error no será político.</p>
+<p>Será matemático.</p>
+        </div>
+      </div>
+
+      <div class="fade-in-2">
+        <div class="section-label">📨 Plan de Asignación — Coordinación Ferroviaria</div>
+        <div class="telegrama" style="transform:rotate(-.4deg);border-top-color:var(--khaki-dark);">
+          <div class="telegrama-sello" style="border-color:var(--khaki-light);color:var(--khaki-light);">FRONTERA<br>SUECIA<br>1916</div>
+          <div class="telegrama-header" style="border-color:var(--khaki-mid);">COORDINACIÓN FERROVIARIA — FRONTERA SUECO-RUSA</div>
+          <div class="telegrama-body">FECHA: 1916 · FRONTERA SUECA<br>
+DE: OFICIAL DE LOGÍSTICA FERROVIARIA<br>
+PARA: COMANDANTE EN TRÁNSITO<br><br>
+Aquí no preguntan por ideología. Preguntan por capacidad.<br><br>
+TRES CONVOYES DISPONIBLES:<br>
+Convoy 1: capacidad 70t<br>
+Convoy 2: capacidad 60t<br>
+Convoy 3: capacidad 50t<br><br>
+CUATRO TIPOS DE CARGA:<br>
+Munición (40t) · Alimentos (30t)<br>
+Equipamiento (35t) · Medicinas (20t)<br><br>
+VERIFICACIONES REQUERIDAS:<br>
+1 — Total de carga a mover (SUM cargas)<br>
+2 — Capacidad total disponible (SUM convoyes)<br>
+3 — Detectar convoy sobrecargado (WHERE capacidad &lt; 40)<br>
+4 — Calcular margen capacidad-carga (subconsultas)<br>
+— LOGÍSTICA FERROVIARIA</div>
+        </div>
+      </div>
+
+      <div class="fade-in-2">
+  <div class="section-label">📋 Logística ferroviaria — Frontera sueca</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.8rem;">
+    <div>
+      <div class="section-label" style="font-size:.58rem;margin-bottom:.3rem;">🚂 convoyes</div>
+      <table class="tabla-datos"><thead><tr><th>id_convoy</th><th>capacidad (t)</th></tr></thead><tbody><tr><td>1</td><td>70</td></tr><tr><td>2</td><td>60</td></tr><tr><td>3</td><td>50</td></tr></tbody></table>
+    </div>
+    <div>
+      <div class="section-label" style="font-size:.58rem;margin-bottom:.3rem;">📦 cargas</div>
+      <table class="tabla-datos"><thead><tr><th>recurso</th><th>peso (t)</th></tr></thead><tbody><tr><td>Munición</td><td>40</td></tr><tr><td>Alimentos</td><td>30</td></tr><tr><td>Equipamiento</td><td>35</td></tr><tr><td>Medicinas</td><td>20</td></tr></tbody></table>
+    </div>
+  </div>
+  <div style="padding:.6rem 1rem;background:rgba(90,110,66,.12);border-left:3px solid var(--khaki-light);font-family:var(--font-typewriter);font-size:.72rem;color:var(--paper-aged);line-height:1.9;margin-bottom:.8rem;">
+    Total carga: 40+30+35+20 = <strong>125t</strong><br>
+    Total capacidad: 70+60+50 = <strong>180t</strong><br>
+    Margen: 180-125 = <strong style="color:#c8e0a0;">55t</strong> — la operación es viable
+  </div>
+  <div class="section-label">🔎 Las 4 Verificaciones Ferroviarias</div>
+  <div style="background:rgba(0,0,0,.2);border:1px solid rgba(90,110,66,.25);padding:.8rem 1rem;"><div class="exigencia-item"><div class="exigencia-letra">1</div><div class="exigencia-txt">Calcular el total de carga que debe moverse para saber si cabe en los convoyes disponibles.</div></div><div class="exigencia-item"><div class="exigencia-letra">2</div><div class="exigencia-txt">Calcular la capacidad total disponible en todos los convoyes para confirmar que la operación es viable.</div></div><div class="exigencia-item"><div class="exigencia-letra">3</div><div class="exigencia-txt">Detectar qué convoy no podría transportar la carga más pesada (munición: 40t). Buscar capacidad &lt; 40.</div></div><div class="exigencia-item"><div class="exigencia-letra">4</div><div class="exigencia-txt">Calcular el margen total entre capacidad disponible y carga a mover — el colchón de seguridad logístico.</div></div></div>
+</div>
+
+      <div style="text-align:center;" class="fade-in-3">
+        <button class="btn" onclick="abrirEscenario('https://deck.toys')" style="background:var(--khaki-mid);border:1px solid var(--khaki-light);color:#c8e0a0;font-family:var(--font-typewriter);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;padding:.7rem 1.8rem;cursor:pointer;">
+          🗺 Abrir escenario en deck.toys
+        </button>
+        <div style="font-family:var(--font-typewriter);font-size:.62rem;letter-spacing:.1em;color:var(--paper-dark);margin-top:.4rem;text-transform:uppercase;">Se abrirá en nueva pestaña</div>
+      </div>
+
+    </div>
+
+    <div class="col-l">
+
+      <div class="fade-in-1">
+        <div class="section-label">🗺 Ruta Norte — Avance</div>
+        <div class="mapa-mini">
+          <div style="font-family:var(--font-typewriter);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:#3a4f2a;margin-bottom:.4rem;position:relative;">Posición actual</div>
+          <div class="mapa-ruta">Bergen → Suecia → Frontera Rusa → Arkhangelsk</div>
+          <div style="margin-top:.8rem;position:relative;">
+            <div style="font-family:var(--font-typewriter);font-size:.58rem;text-transform:uppercase;letter-spacing:.1em;color:#3a4f2a;margin-bottom:.3rem;">Progreso ruta norte:</div>
+            <div class="marcador-progreso"><div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa activo"></div><div class="paso-mapa"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fade-in-2">
+        <div class="section-label">💾 Consultas SQL</div>
+        <div class="sql-panel">
+          <div class="sql-header">
+            <div class="sql-dots">
+              <div class="sql-dot" style="background:#c0392b;"></div>
+              <div class="sql-dot" style="background:#f39c12;"></div>
+              <div class="sql-dot" style="background:#27ae60;"></div>
+            </div>
+            norte_n9.sql
+          </div>
+          <div class="sql-block"><div class="sql-lbl">1 · Total de carga — SUM</div><pre class="sql-pre">SELECT SUM(peso) AS total
+FROM cargas;</pre></div><div class="sql-block"><div class="sql-lbl">2 · Capacidad total — SUM</div><pre class="sql-pre">SELECT SUM(capacidad) AS total
+FROM convoyes;</pre></div><div class="sql-block"><div class="sql-lbl">3 · Convoy sobrecargado — WHERE</div><pre class="sql-pre">SELECT *
+FROM convoyes
+WHERE capacidad < 40;</pre></div><div class="sql-block"><div class="sql-lbl">4 · Margen capacidad-carga</div><pre class="sql-pre">SELECT
+  (SELECT SUM(capacidad) FROM convoyes)
+  -
+  (SELECT SUM(peso) FROM cargas)
+  AS margen;</pre></div>
+          <div class="schema-box"><div class="schema-lbl">📋 Estructura de tablas</div><pre class="sql-pre">CREATE TABLE convoyes (
+    id_convoy INT PRIMARY KEY,
+    capacidad INT
+);
+CREATE TABLE cargas (
+    recurso VARCHAR(30),
+    peso    INT
+);</pre></div>
+        </div>
+      </div>
+
+      <div class="fade-in-3">
+        <div class="section-label">🔍 Análisis Táctico</div>
+        <div class="pista-container">
+  <button class="pista-toggle">🔒 Verificación 1 — Total de carga<span class="pista-icono">▼</span></button>
+  <div class="pista-contenido">SUM(peso) suma 40+30+35+20 = 125 toneladas. Si este número supera la capacidad total disponible, la operación es imposible. Como 125 &lt; 180, la distribución es viable.</div>
+</div><div class="pista-container">
+  <button class="pista-toggle">🔒 Verificación 2 — Capacidad total<span class="pista-icono">▼</span></button>
+  <div class="pista-contenido">SUM(capacidad) suma 70+60+50 = 180 toneladas. Como 180 > 125, la operación es matemáticamente viable. Los tres convoyes juntos pueden transportar toda la carga con 55t de margen.</div>
+</div><div class="pista-container">
+  <button class="pista-toggle">🔒 Verificación 3 — Resultado esperado<span class="pista-icono">▼</span></button>
+  <div class="pista-contenido">WHERE capacidad &lt; 40 busca convoyes que no podrían transportar la carga más pesada (munición: 40t). Convoy 1 (70), Convoy 2 (60), Convoy 3 (50): ninguno tiene capacidad menor a 40. El resultado está <em>vacío</em>.</div>
+</div><div class="pista-container">
+  <button class="pista-toggle">🔒 Verificación 4 — Margen de seguridad<span class="pista-icono">▼</span></button>
+  <div class="pista-contenido">La subconsulta calcula (180 - 125) = 55 toneladas de margen. Esto significa que podemos redistribuir hasta 55t adicionales si surgiera carga extra de última hora antes de cruzar la frontera rusa.</div>
+</div>
+      </div>
+
+      <div class="fade-in-4" style="display:flex;flex-direction:column;gap:.7rem;">
+        <a href="norte-10.html" class="btn" style="text-align:center;justify-content:center;background:var(--khaki-mid);border:1px solid var(--khaki-light);color:#c8e0a0;font-family:var(--font-typewriter);font-size:.72rem;letter-spacing:.1em;padding:.7rem;display:block;text-decoration:none;text-transform:uppercase;">
+          Siguiente misión →
+        </a>
+        <a href="norte-08.html" class="btn btn-secondary" style="text-align:center;font-size:.68rem;">← Misión anterior</a>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script src="../js/main.js"></script>
+<script>initPuntosNivel(6, 5);</script>
+</body>
+</html>

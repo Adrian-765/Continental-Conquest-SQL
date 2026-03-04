@@ -21,27 +21,100 @@
     .sql-block:last-child{border-bottom:none;}
     .sql-lbl{font-family:var(--font-typewriter);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(184,146,42,.6);padding:.5rem 1rem .2rem;border-left:2px solid var(--gold);}
     .sql-pre{font-family:'Special Elite','Courier New',monospace;font-size:.75rem;line-height:1.7;color:#a8d4a0;padding:.3rem 1rem .7rem;overflow-x:auto;background:transparent;white-space:pre;margin:0;}
-    .schema-box{background:rgba(0,0,0,.3);border:1px dashed rgba(184,146,42,.2);margin:.5rem 1rem 1rem;}
-    .schema-lbl{font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(184,146,42,.5);padding:.4rem .8rem .2rem;}
     .mapa-mini{background:linear-gradient(135deg,#c4b07a,#a8905a);border:2px solid var(--paper-stain);padding:1rem;min-height:120px;position:relative;overflow:hidden;box-shadow:3px 3px 0 rgba(0,0,0,.25);}
     .mapa-mini::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(100,75,30,.05) 10px,rgba(100,75,30,.05) 11px);}
     .mapa-ruta{font-family:var(--font-handwritten);font-size:1rem;color:var(--ink);font-weight:700;position:relative;line-height:1.6;}
     .progreso-bar{background:rgba(0,0,0,.3);padding:.5rem 2rem;border-bottom:1px solid rgba(184,146,42,.1);display:flex;align-items:center;gap:1rem;}
     .section-label{font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem;}
-    .exigencia-item{display:flex;gap:.8rem;padding:.7rem 0;border-bottom:1px solid rgba(184,146,42,.1);}
-    .exigencia-item:last-child{border-bottom:none;}
-    .exigencia-letra{flex-shrink:0;width:24px;height:24px;background:var(--red-ink);color:var(--paper-warm);font-family:var(--font-display);font-weight:900;font-size:.85rem;display:flex;align-items:center;justify-content:center;}
-    .exigencia-txt{font-family:var(--font-body);font-size:.82rem;color:var(--paper-aged);line-height:1.5;}
-    .tabla-datos{width:100%;border-collapse:collapse;font-family:var(--font-typewriter);font-size:.72rem;}
-    .tabla-datos th{background:var(--ink);color:var(--gold);padding:.35rem .6rem;text-align:left;letter-spacing:.08em;font-weight:normal;}
-    .tabla-datos td{padding:.3rem .6rem;border-bottom:1px solid rgba(184,146,42,.1);color:var(--paper-aged);}
-    .tabla-datos tr:last-child td{border-bottom:none;}
-    .tabla-datos tr:hover td{background:rgba(184,146,42,.05);}
-    .badge-ruta{display:inline-block;padding:.15rem .5rem;font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;}
-    .badge-alta{background:rgba(139,26,26,.3);color:#e88;border:1px solid rgba(139,26,26,.4);}
-    .badge-media{background:rgba(139,100,42,.3);color:#e8c8a0;border:1px solid rgba(139,100,42,.4);}
-    .badge-baja{background:rgba(42,48,32,.5);color:var(--khaki-faded);border:1px solid var(--khaki-mid);}
-    .badge-critica{background:rgba(192,57,43,.5);color:#ffc;border:1px solid var(--red-stamp);animation:pulseGold 1.5s infinite;}
+
+    /* ── TARJETAS DE RUTA ── */
+    .ruta-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:.5rem;}
+    @media(max-width:600px){.ruta-grid{grid-template-columns:1fr;}}
+
+    .ruta-card{
+      border:2px solid;
+      padding:1.4rem 1.2rem 1.2rem;
+      position:relative;
+      cursor:pointer;
+      transition:transform .15s, box-shadow .15s;
+      text-decoration:none;
+      display:block;
+    }
+    .ruta-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.5);}
+
+    .ruta-card-norte{
+      border-color:var(--red-ink);
+      background:linear-gradient(135deg,rgba(139,26,26,.12),rgba(26,20,9,.95));
+    }
+    .ruta-card-sur{
+      border-color:var(--gold);
+      background:linear-gradient(135deg,rgba(184,146,42,.12),rgba(26,20,9,.95));
+    }
+
+    .ruta-card-badge{
+      display:inline-block;
+      font-family:var(--font-typewriter);
+      font-size:.58rem;
+      letter-spacing:.2em;
+      text-transform:uppercase;
+      padding:.2rem .7rem;
+      margin-bottom:.7rem;
+    }
+    .ruta-card-norte .ruta-card-badge{background:var(--red-ink);color:var(--paper-warm);}
+    .ruta-card-sur  .ruta-card-badge{background:rgba(184,146,42,.8);color:var(--ink);}
+
+    .ruta-card-titulo{
+      font-family:var(--font-display);
+      font-size:1.1rem;
+      font-weight:900;
+      line-height:1.2;
+      margin-bottom:.5rem;
+    }
+    .ruta-card-norte .ruta-card-titulo{color:#e8a0a0;}
+    .ruta-card-sur  .ruta-card-titulo{color:var(--gold-bright);}
+
+    .ruta-card-trayecto{
+      font-family:var(--font-handwritten);
+      font-size:.85rem;
+      line-height:1.7;
+      margin-bottom:.8rem;
+    }
+    .ruta-card-norte .ruta-card-trayecto{color:var(--paper-dark);}
+    .ruta-card-sur  .ruta-card-trayecto{color:var(--paper-dark);}
+
+    .ruta-card-meta{
+      font-family:var(--font-typewriter);
+      font-size:.62rem;
+      letter-spacing:.08em;
+      line-height:1.8;
+      color:var(--paper-dark);
+      border-top:1px solid;
+      padding-top:.6rem;
+      margin-top:.4rem;
+    }
+    .ruta-card-norte .ruta-card-meta{border-color:rgba(139,26,26,.3);}
+    .ruta-card-sur  .ruta-card-meta{border-color:rgba(184,146,42,.25);}
+
+    .ruta-card-cta{
+      display:block;
+      text-align:center;
+      font-family:var(--font-typewriter);
+      font-size:.68rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      padding:.55rem 1rem;
+      margin-top:.9rem;
+      transition:opacity .15s;
+    }
+    .ruta-card-norte .ruta-card-cta{background:var(--red-ink);color:var(--paper-warm);}
+    .ruta-card-sur  .ruta-card-cta{background:rgba(184,146,42,.85);color:var(--ink);}
+    .ruta-card:hover .ruta-card-cta{opacity:.9;}
+
+    /* decoración de esquina */
+    .ruta-corner{
+      position:absolute;top:.6rem;right:.7rem;
+      font-size:1.4rem;opacity:.3;
+    }
   </style>
 </head>
 <body class="page-bg">
@@ -52,9 +125,9 @@
       <div class="nav-logo-text">SQL: La Gran Guerra</div>
       <div class="nav-logo-sub">Conquista y Diplomacia · 1914–1918</div>
     </a>
-    <div class="nav-center">Misión 3 de 7 · <span class='nombre-comandante'>Comandante</span> · Francia → Encrucijada</div>
+    <div class="nav-center">Misión 3 de 4 · <span class="nombre-comandante">Comandante</span> · La Encrucijada</div>
     <div class="nav-actions">
-      <button id="btn-guardar" class="btn btn-primary" style="font-size:.72rem;padding:.5rem 1.2rem;">💾 Guardar partida</button>
+      <button id="btn-guardar" class="btn btn-primary" style="font-size:.72rem;padding:.5rem 1.2rem;">💾 Guardar</button>
     </div>
   </div>
 </nav>
@@ -62,8 +135,8 @@
 <div class="ticker-wrap">
   <span class="ticker-content">
     <span class="ticker-sep">⬥</span> SQL: CONQUISTA Y DIPLOMACIA EN LA GRAN GUERRA
-    <span class="ticker-sep">⬥</span> NIVEL 4 — LA ENCRUCIJADA DE EUROPA · BREISACH AM RHEIN · DECISIÓN: RUTA NORTE O RUTA SUR
-    <span class="ticker-sep">⬥</span> OBJETIVO FINAL: DETENER AL TZAR RUSO — PROTEGER EL EQUILIBRIO DE EUROPA
+    <span class="ticker-sep">⬥</span> NIVEL 4 — LA ENCRUCIJADA DE EUROPA · BREISACH AM RHEIN · 1915
+    <span class="ticker-sep">⬥</span> DOS RUTAS · DOS DESTINOS · UNA SOLA MISIÓN: DETENER AL TZAR
     <span class="ticker-sep">⬥</span>
   </span>
 </div>
@@ -72,20 +145,25 @@
   <div>
     <div class="nivel-badge">Nivel 4 · Frontera Franco-Alemana</div>
     <div style="font-family:var(--font-typewriter);font-size:.78rem;letter-spacing:.1em;color:var(--gold-bright);font-weight:bold;">La Encrucijada de Europa</div>
-    <div style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.08em;color:var(--paper-dark);">Primavera 1915 — Breisach am Rhein, Frontera Franco-Alemana</div>
+    <div style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.08em;color:var(--paper-dark);">Breisach am Rhein · Frontera Franco-Alemana · Primavera 1915</div>
   </div>
   <div class="nivel-num">N·4</div>
 </div>
 
 <div class="progreso-bar">
-  <span style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.12em;color:var(--paper-dark);text-transform:uppercase;white-space:nowrap;">Progreso de la misión:</span>
-  <div class="barra-nivel"><div class="punto-nivel hecho"></div><div class="punto-nivel hecho"></div><div class="punto-nivel actual"></div><div class="punto-nivel"></div><div class="punto-nivel"></div><div class="punto-nivel"></div><div class="punto-nivel"></div></div>
+  <span style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.12em;color:var(--paper-dark);text-transform:uppercase;white-space:nowrap;">Progreso:</span>
+  <div class="barra-nivel">
+    <div class="punto-nivel hecho"></div>
+    <div class="punto-nivel hecho"></div>
+    <div class="punto-nivel hecho"></div>
+    <div class="punto-nivel actual"></div>
+  </div>
 </div>
 
 <div id="libreta-flotante">
-  <button id="libreta-toggle">📓 Notas de Campaña <span class="libreta-arrow">▼</span></button>
+  <button id="libreta-toggle">📓 Notas <span class="libreta-arrow">▼</span></button>
   <div id="libreta-body">
-    <textarea id="libreta-notas" placeholder="Anote sus observaciones..."></textarea>
+    <textarea id="libreta-notas" placeholder="Anote su decisión..."></textarea>
     <div id="libreta-footer">
       <span>Libreta del Comandante</span>
       <span id="libreta-guardado" style="color:var(--khaki-faded);"></span>
@@ -103,57 +181,85 @@
       <div class="fade-in-1">
         <div class="section-label">📔 Diario del Comandante — Entrada 15</div>
         <div class="diario-entrada">
-          <div class="diario-fecha">Primavera 1915 — Breisach am Rhein, Frontera Franco-Alemana</div>
-          <p>La niebla envolvía la frontera alemana como un manto húmedo y opresivo. Allí nos esperaba Generaloberst Friedrich von Adlerheim, un hombre cuya experiencia en el frente occidental había marcado cada línea de su rostro.</p>
-<p>El plan original era audaz: cruzar los Alpes por el paso de Mont Virel, alcanzar Venecia y zarpar hacia Atenas. El objetivo final: atravesar el estrecho del Bósforo e infiltrarnos en Rusia para contactar con los bolcheviques.</p>
-<p>Pero los combates en torno al Paso de Valdieri Alto lo cambiaron todo. Von Adlerheim, en un español torpe y forzado, propuso: <em>"No… cruzar Alpes. Muy peligroso. Barco… amigo mío… costa sur Francia. Ir Barcelona. Luego Argel. Después Nápoles. Y finalmente Venecia."</em></p>
-<p>Entonces Seamus O'Callaghan habló: <em>"We could take the northern route. Denmark. I have contacts there. From Copenhagen we could access the Baltic. It's riskier… but faster."</em></p>
-<p>Después de un largo silencio, tomé la decisión: <strong>ruta amarilla, sur</strong>. La prudencia y la seguridad de los hombres fueron mi guía.</p>
+          <div class="diario-fecha">Breisach am Rhein · Frontera Franco-Alemana · Primavera 1915</div>
+          <p>La niebla envolvía la frontera alemana como un manto húmedo y opresivo. Apenas podía distinguir los contornos de los árboles. Allí nos esperaba Generaloberst Friedrich von Adlerheim, cuya experiencia en el frente occidental había marcado cada línea de su rostro. Sus ojos, profundos y fatigados, no mostraban emoción alguna.</p>
+          <p>El plan original era audaz: cruzar los Alpes por el paso de Mont Virel, alcanzar Venecia y zarpar hacia Atenas. El objetivo final: atravesar el estrecho del Bósforo e infiltrarnos en Rusia. Pero los combates en torno al Paso de Valdieri Alto lo cambiaron todo.</p>
+          <p>Von Adlerheim, en un español torpe y forzado, propuso la alternativa sur: <em>"No… cruzar Alpes. Muy peligroso. Barco… amigo mío… costa sur Francia. Ir Barcelona. Luego Argel. Después Nápoles. Y finalmente Venecia."</em></p>
+          <p>Entonces Seamus O'Callaghan habló con calma: <em>"We could take the northern route. Denmark. I have contacts there. From Copenhagen we could access the Baltic and reach Russia through the north. It's riskier… but faster."</em></p>
+          <p>Me detuve. Contemplé a los hombres. Cada ruta determinaría no solo nuestra seguridad, sino el delicado equilibrio de poder en Europa.</p>
+          <p><strong>La decisión es tuya, comandante.</strong></p>
         </div>
       </div>
 
-      <!-- TELEGRAMA / DOCUMENTO -->
+      <!-- TELEGRAMA -->
       <div class="fade-in-2">
-        <div class="section-label">📨 Propuesta de Von Adlerheim — Mapa Táctico</div>
+        <div class="section-label">📨 Evaluación Estratégica — Von Adlerheim</div>
         <div class="telegrama" style="transform:rotate(-.5deg);">
-          <div class="telegrama-sello">VON<br>ADLERHEIM<br>1915</div>
+          <div class="telegrama-sello">VON<br>ADLER<br>HEIM</div>
           <div class="telegrama-header">GENERALOBERST FRIEDRICH VON ADLERHEIM — BREISACH AM RHEIN</div>
-          <div class="telegrama-body">FECHA: PRIMAVERA 1915 · DECISIÓN ESTRATÉGICA URGENTE<br>
-DE: GENERALOBERST FRIEDRICH VON ADLERHEIM<br>
-PARA: COMANDANTE ESPAÑOL<br><br>
-Los combates en el Paso de Valdieri Alto hacen imposible cruzar los Alpes.<br>
-He evaluado dos alternativas viables:<br><br>
-🔴 RUTA NORTE — Mayor dificultad:<br>
-Francia → Alemania → Dinamarca → Mar Báltico → Rusia<br>
-Más rápida. Riesgo: vigilancia naval británica, climas adversos.<br>
-SQL: JOINs múltiples, validaciones estrictas.<br><br>
-🟡 RUTA SUR — Menor dificultad:<br>
-Francia → Barcelona → Argelia Francesa → Nápoles → Venecia → Atenas<br>
-Más larga. Logística compleja pero controlable.<br>
-SQL: cálculos con descuentos, agregaciones, planificación marítima.<br><br>
-— VON ADLERHEIM<br>
-<em>(Seamus O'Callaghan propone ruta norte. La decisión es suya.)</em></div>
+          <div class="telegrama-body">
+            FECHA: PRIMAVERA 1915 · EVALUACIÓN DE RUTAS<br><br>
+            Alpes: IMPOSIBLE. Combates en Valdieri Alto.<br><br>
+            🔴 RUTA NORTE — Mayor dificultad:<br>
+            Francia → Alemania → Dinamarca → Mar Báltico → Rusia<br>
+            SQL: HAVING, CREATE VIEW, CASE WHEN, CREATE PROCEDURE<br><br>
+            🟡 RUTA SUR — Menor dificultad:<br>
+            Francia → Barcelona → Argelia → Nápoles → Venecia → Atenas<br>
+            SQL: JOIN, GROUP BY, SUM, COUNT, LEFT JOIN<br><br>
+            Ambas rutas llevan al mismo objetivo.<br>
+            El camino determina la prueba.<br>
+            — VON ADLERHEIM
+          </div>
         </div>
       </div>
 
-      <div class="fade-in-2">
-  <div class="section-label">🗺 Las Dos Rutas — Decisión del Comandante</div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-    <div style="border:2px solid var(--red-ink);padding:1rem;background:rgba(139,26,26,.08);">
-      <div style="font-family:var(--font-typewriter);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--red-ink);margin-bottom:.5rem;">🔴 Ruta Norte — NO elegida</div>
-      <div style="font-family:var(--font-body);font-size:.8rem;color:var(--paper-dark);line-height:1.6;">Francia → Alemania → Dinamarca → Mar Báltico → Rusia<br><em>Más rápida, más peligrosa.</em></div>
-    </div>
-    <div style="border:2px solid var(--gold);padding:1rem;background:rgba(184,146,42,.08);">
-      <div style="font-family:var(--font-typewriter);font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-bright);margin-bottom:.5rem;">🟡 Ruta Sur — ELEGIDA ✓</div>
-      <div style="font-family:var(--font-body);font-size:.8rem;color:var(--paper-warm);line-height:1.6;">Francia → Barcelona → Argelia → Nápoles → Venecia → Atenas<br><em>Más larga, mayor seguridad.</em></div>
-    </div>
-  </div>
-</div>
+      <!-- ELECCIÓN DE RUTA -->
+      <div class="fade-in-3">
+        <div class="section-label">⚔ Elige tu ruta — La decisión es irreversible</div>
 
-      <!-- CTA DECK.TOYS -->
-      <div style="text-align:center;" class="fade-in-3">
+        <div class="ruta-grid">
+
+          <!-- RUTA NORTE -->
+          <a href="nivel-alemania.html" class="ruta-card ruta-card-norte">
+            <span class="ruta-corner">🔴</span>
+            <div class="ruta-card-badge">Ruta Norte · Mayor dificultad</div>
+            <div class="ruta-card-titulo">El camino del norte</div>
+            <div class="ruta-card-trayecto">
+              Francia<br>→ Alemania<br>→ Dinamarca<br>→ Mar del Norte<br>→ Mar Báltico<br>→ Arkhangelsk<br>→ Imperio Ruso
+            </div>
+            <div class="ruta-card-meta">
+              ⚡ Más rápida · Mayor riesgo<br>
+              🧠 SQL avanzado: HAVING, VIEW,<br>
+              &nbsp;&nbsp;&nbsp;CASE WHEN, PROCEDURE<br>
+              🎯 6 niveles · Vigilancia británica
+            </div>
+            <div class="ruta-card-cta">Elegir ruta norte →</div>
+          </a>
+
+          <!-- RUTA SUR -->
+          <a href="nivel-04.html" class="ruta-card ruta-card-sur">
+            <span class="ruta-corner">🟡</span>
+            <div class="ruta-card-badge">Ruta Sur · Menor dificultad</div>
+            <div class="ruta-card-titulo">El camino del sur</div>
+            <div class="ruta-card-trayecto">
+              Francia<br>→ Barcelona<br>→ Argelia Francesa<br>→ Nápoles · Venecia<br>→ Atenas<br>→ Mar Negro<br>→ Imperio Ruso
+            </div>
+            <div class="ruta-card-meta">
+              🛡 Más larga · Menor riesgo inmediato<br>
+              🧠 SQL esencial: JOIN, GROUP BY,<br>
+              &nbsp;&nbsp;&nbsp;SUM, COUNT, LEFT JOIN<br>
+              🎯 4 niveles · Logística marítima
+            </div>
+            <div class="ruta-card-cta">Elegir ruta sur →</div>
+          </a>
+
+        </div>
+      </div>
+
+      <!-- DECK.TOYS -->
+      <div style="text-align:center;" class="fade-in-4">
         <button class="btn btn-gold" onclick="abrirEscenario('https://deck.toys')">
-          🗺 Abrir escenario interactivo en deck.toys
+          🗺 Abrir escenario en deck.toys
         </button>
         <div style="font-family:var(--font-typewriter);font-size:.62rem;letter-spacing:.1em;color:var(--paper-dark);margin-top:.4rem;text-transform:uppercase;">Se abrirá en nueva pestaña</div>
       </div>
@@ -163,22 +269,31 @@ SQL: cálculos con descuentos, agregaciones, planificación marítima.<br><br>
     <!-- ══ COLUMNA LATERAL ════════════════════════════ -->
     <div class="col-l">
 
-      <!-- MAPA MINI -->
+      <!-- MAPA -->
       <div class="fade-in-1">
-        <div class="section-label">🗺 Ruta de la Misión</div>
+        <div class="section-label">🗺 La Encrucijada</div>
         <div class="mapa-mini">
-          <div style="font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faded);margin-bottom:.4rem;position:relative;">Trayecto actual</div>
-          <div class="mapa-ruta">Versalles → Breisach am Rhein → ¿Norte o Sur?</div>
+          <div style="font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faded);margin-bottom:.4rem;position:relative;">Punto de decisión</div>
+          <div class="mapa-ruta">
+            Versalles → Breisach<br>
+            <span style="color:#8b1a1a;">↑ Norte: Dinamarca → Báltico</span><br>
+            <span style="color:#8a6a1a;">↓ Sur: Argelia → Venecia</span>
+          </div>
           <div style="margin-top:.8rem;position:relative;">
-            <div style="font-family:var(--font-typewriter);font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-faded);margin-bottom:.3rem;">Progreso total:</div>
-            <div class="marcador-progreso"><div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa activo"></div><div class="paso-mapa"></div><div class="paso-mapa"></div><div class="paso-mapa"></div><div class="paso-mapa"></div></div>
+            <div style="font-family:var(--font-typewriter);font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-faded);margin-bottom:.3rem;">Progreso compartido:</div>
+            <div class="marcador-progreso">
+              <div class="paso-mapa completado"></div>
+              <div class="paso-mapa completado"></div>
+              <div class="paso-mapa completado"></div>
+              <div class="paso-mapa activo"></div>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- PANEL SQL -->
+      <!-- COMPARATIVA SQL -->
       <div class="fade-in-2">
-        <div class="section-label">💾 Consultas SQL de este Nivel</div>
+        <div class="section-label">💾 SQL por Ruta</div>
         <div class="sql-panel">
           <div class="sql-header">
             <div class="sql-dots">
@@ -186,51 +301,59 @@ SQL: cálculos con descuentos, agregaciones, planificación marítima.<br><br>
               <div class="sql-dot" style="background:#f39c12;"></div>
               <div class="sql-dot" style="background:#27ae60;"></div>
             </div>
-            mysql — gran_guerra.sql
+            comparativa_rutas.sql
           </div>
-          <div class="sql-block"><div class="sql-lbl">Ruta Sur — Cálculo con descuentos</div><pre class="sql-pre">SELECT unidad,
-  coste * (1 - descuento_logistico)
-  AS coste_real
-FROM operacion_mediterraneo;</pre></div><div class="sql-block"><div class="sql-lbl">Ruta Sur — Agregaciones</div><pre class="sql-pre">SELECT SUM(soldados) AS total_hombres,
-       SUM(municion)  AS total_municion
-FROM operacion_mediterraneo;</pre></div><div class="sql-block"><div class="sql-lbl">Ruta Sur — Por puerto de salida</div><pre class="sql-pre">SELECT puerto_salida, COUNT(*) AS grupos
-FROM operacion_mediterraneo
-GROUP BY puerto_salida;</pre></div><div class="sql-block"><div class="sql-lbl">Ruta Norte (ref.) — JOINs múltiples</div><pre class="sql-pre">-- Solo si se hubiera elegido ruta norte:
-SELECT u.nombre, s.municion, r.destino
+          <div class="sql-block">
+            <div class="sql-lbl" style="border-color:var(--red-ink);color:rgba(200,80,80,.7);">🔴 Ruta Norte — SQL avanzado</div>
+            <pre class="sql-pre">-- HAVING (filtro post-agrupación)
+HAVING SUM(peso) > capacidad_maxima;
+
+-- CREATE VIEW
+CREATE VIEW control_britanico AS ...
+
+-- CASE WHEN dentro de SUM
+SUM(CASE WHEN posicion='Babor'
+     THEN peso ELSE 0 END)
+
+-- CREATE PROCEDURE con SIGNAL
+SIGNAL SQLSTATE '45000';</pre>
+          </div>
+          <div class="sql-block">
+            <div class="sql-lbl" style="border-color:var(--gold);color:rgba(184,146,42,.7);">🟡 Ruta Sur — SQL esencial</div>
+            <pre class="sql-pre">-- JOIN básico
 FROM unidades u
-JOIN suministros s USING(id_unidad)
-JOIN rutas r      ON r.id_ruta = u.id_ruta
-WHERE r.nivel_riesgo < 3;</pre></div>
-          
+JOIN suministros s USING(id_unidad);
+
+-- LEFT JOIN para ausencias
+LEFT JOIN suministros s USING(id_unidad)
+WHERE s.id_unidad IS NULL;
+
+-- GROUP BY + SUM
+SELECT region, SUM(efectivos)
+FROM voluntarios GROUP BY region;</pre>
+          </div>
         </div>
       </div>
 
       <!-- PISTAS -->
       <div class="fade-in-3">
-        <div class="section-label">🔍 Análisis Clasificado</div>
+        <div class="section-label">🔍 Pistas para la Decisión</div>
         <div class="pista-container">
-  <button class="pista-toggle">🔒 ¿Por qué la ruta sur?<span class="pista-icono">▼</span></button>
-  <div class="pista-contenido">La ruta sur evita los pasos alpinos peligrosos, la vigilancia naval británica del norte y los climas adversos del Báltico. Permite coordinar con el Kapitän Otto Weissmann en Port-Saint-Aubin-sur-Mer.</div>
-</div><div class="pista-container">
-  <button class="pista-toggle">🔒 La contraseña clave<span class="pista-icono">▼</span></button>
-  <div class="pista-contenido">Para embarcar en el Die Morgenstern con Weissmann deberá pronunciar la contraseña acordada: <strong>'Rhein und Schatten'</strong>. Sin ella, el capitán no aceptará el embarque.</div>
-</div><div class="pista-container">
-  <button class="pista-toggle">🔒 Próximo destino<span class="pista-icono">▼</span></button>
-  <div class="pista-contenido">Desde Port-Saint-Aubin-sur-Mer navegará hacia Port-Henri d'Oran (Argelia Francesa). Allí el pescador Youssef Ben Amar le trasladará clandestinamente hacia la península itálica.</div>
-</div><div class="pista-container">
-  <button class="pista-toggle">🔒 SQL de la ruta sur<span class="pista-icono">▼</span></button>
-  <div class="pista-contenido">La ruta sur requiere cálculos de suministros con descuentos logísticos (multiplicación), SUM para totales y GROUP BY para organizar por puerto de salida.</div>
-</div>
-      </div>
-
-      <!-- NAVEGACIÓN -->
-      <div class="fade-in-4" style="display:flex;flex-direction:column;gap:.7rem;">
-        <a href="nivel-04.html" class="btn btn-gold" style="text-align:center;justify-content:center;">
-          Siguiente misión →
-        </a>
-        <button id="btn-guardar2" class="btn btn-primary" style="text-align:center;justify-content:center;" onclick="document.getElementById('btn-guardar').click()">
-          💾 Guardar progreso
-        </button>
+          <button class="pista-toggle">🔒 ¿Qué implica la ruta norte?<span class="pista-icono">▼</span></button>
+          <div class="pista-contenido">La ruta norte pasa por Dinamarca (país neutral), cruza el Mar del Norte bajo vigilancia británica, navega el Báltico y entra al Imperio Ruso por Arkhangelsk. 6 niveles con SQL avanzado: HAVING, CREATE VIEW, CASE WHEN, CREATE PROCEDURE.</div>
+        </div>
+        <div class="pista-container">
+          <button class="pista-toggle">🔒 ¿Qué implica la ruta sur?<span class="pista-icono">▼</span></button>
+          <div class="pista-contenido">La ruta sur navega el Mediterráneo con identidades comerciales, pasa por Argelia Francesa y Venecia, cruza el Bósforo a bordo del SS Eleftheria y desembarca en Novorossiysk. 4 niveles con SQL esencial: JOIN, LEFT JOIN, GROUP BY, SUM, COUNT.</div>
+        </div>
+        <div class="pista-container">
+          <button class="pista-toggle">🔒 La propuesta de Seamus<span class="pista-icono">▼</span></button>
+          <div class="pista-contenido">Seamus O'Callaghan conoce Dinamarca y tiene contactos en Copenhague. Si eliges la ruta norte, él será guía en los primeros pasos. Su presencia, sin embargo, es un riesgo: su nacionalidad irlandesa levanta sospechas en los controles británicos del Mar del Norte.</div>
+        </div>
+        <div class="pista-container">
+          <button class="pista-toggle">🔒 Von Adlerheim y la contraseña sur<span class="pista-icono">▼</span></button>
+          <div class="pista-contenido">Si eliges el sur, Von Adlerheim te conecta con el Kapitän Otto Weissmann en Port-Saint-Aubin-sur-Mer. La contraseña es <strong>"Rhein und Schatten"</strong>. Sin ella, el embarque en el Die Morgenstern no será posible.</div>
+        </div>
       </div>
 
     </div>
@@ -238,6 +361,6 @@ WHERE r.nivel_riesgo < 3;</pre></div>
 </main>
 
 <script src="../js/main.js"></script>
-<script>initPuntosNivel(7, 3);</script>
+<script>initPuntosNivel(4, 4);</script>
 </body>
 </html>

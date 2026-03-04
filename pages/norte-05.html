@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Neutralidad No Es Inocencia — SQL: La Gran Guerra</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .nivel-layout{display:grid;grid-template-columns:1.15fr 0.85fr;gap:2rem;margin:1.5rem 0;}
+    @media(max-width:880px){.nivel-layout{grid-template-columns:1fr;}}
+    .header-nivel{background:linear-gradient(135deg,rgba(10,14,6,.98),rgba(26,34,16,.95));border-bottom:3px solid var(--khaki-light);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;}
+    .nivel-num{font-family:var(--font-display);font-size:3.5rem;font-weight:900;color:rgba(90,110,66,.2);line-height:1;}
+    .col-p{display:flex;flex-direction:column;gap:1.5rem;}
+    .col-l{display:flex;flex-direction:column;gap:1.4rem;}
+    .sql-panel{background:#060a04;border:1px solid rgba(90,110,66,.3);border-top:3px solid var(--khaki-light);overflow:hidden;}
+    .sql-header{background:rgba(90,110,66,.1);border-bottom:1px solid rgba(90,110,66,.2);padding:.6rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:#c8e0a0;}
+    .sql-dots{display:flex;gap:4px;}
+    .sql-dot{width:8px;height:8px;border-radius:50%;}
+    .sql-block{border-bottom:1px solid rgba(90,110,66,.12);padding:0;}
+    .sql-block:last-child{border-bottom:none;}
+    .sql-lbl{font-family:var(--font-typewriter);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(90,110,66,.7);padding:.5rem 1rem .2rem;border-left:2px solid var(--khaki-mid);}
+    .sql-pre{font-family:'Special Elite','Courier New',monospace;font-size:.73rem;line-height:1.65;color:#a8d4a0;padding:.3rem 1rem .7rem;overflow-x:auto;background:transparent;white-space:pre;margin:0;}
+    .schema-box{background:rgba(0,0,0,.3);border:1px dashed rgba(90,110,66,.25);margin:.5rem 1rem 1rem;}
+    .schema-lbl{font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(90,110,66,.5);padding:.4rem .8rem .2rem;}
+    .mapa-mini{background:linear-gradient(135deg,#b8c4a0,#8a9e72);border:2px solid #6a7e52;padding:1rem;min-height:120px;position:relative;overflow:hidden;box-shadow:3px 3px 0 rgba(0,0,0,.25);}
+    .mapa-mini::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(60,80,40,.06) 10px,rgba(60,80,40,.06) 11px);}
+    .mapa-ruta{font-family:var(--font-handwritten);font-size:1rem;color:#1a2510;font-weight:700;position:relative;line-height:1.6;}
+    .progreso-bar{background:rgba(0,0,0,.3);padding:.5rem 2rem;border-bottom:1px solid rgba(90,110,66,.15);display:flex;align-items:center;gap:1rem;}
+    .section-label{font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:#c8e0a0;margin-bottom:.6rem;}
+    .exigencia-item{display:flex;gap:.8rem;padding:.7rem 0;border-bottom:1px solid rgba(90,110,66,.15);}
+    .exigencia-item:last-child{border-bottom:none;}
+    .exigencia-letra{flex-shrink:0;width:24px;height:24px;background:var(--khaki-dark);color:#c8e0a0;font-family:var(--font-display);font-weight:900;font-size:.85rem;display:flex;align-items:center;justify-content:center;}
+    .exigencia-txt{font-family:var(--font-body);font-size:.82rem;color:var(--paper-aged);line-height:1.5;}
+    .tabla-datos{width:100%;border-collapse:collapse;font-family:var(--font-typewriter);font-size:.72rem;}
+    .tabla-datos th{background:var(--khaki-dark);color:#c8e0a0;padding:.35rem .6rem;text-align:left;letter-spacing:.08em;font-weight:normal;}
+    .tabla-datos td{padding:.3rem .6rem;border-bottom:1px solid rgba(90,110,66,.15);color:var(--paper-aged);}
+    .tabla-datos tr:last-child td{border-bottom:none;}
+    .tabla-datos tr:hover td{background:rgba(90,110,66,.07);}
+    .rn-badge{display:inline-block;background:var(--khaki-dark);color:#c8e0a0;border:1px solid var(--khaki-light);font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.15em;padding:.2rem .7rem;text-transform:uppercase;margin-bottom:.3rem;}
+</style>
+</head>
+<body class="page-bg">
+
+<nav class="nav-principal">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo-area">
+      <div class="nav-logo-text">SQL: La Gran Guerra</div>
+      <div class="nav-logo-sub">Conquista y Diplomacia · Ruta Norte</div>
+    </a>
+    <div class="nav-center">Ruta Norte — Misión 1 de 6 · <span class='nombre-comandante'>Comandante</span> · Copenhague</div>
+    <div class="nav-actions">
+      <button id="btn-guardar" class="btn btn-primary" style="font-size:.72rem;padding:.5rem 1.2rem;">💾 Guardar</button>
+    </div>
+  </div>
+</nav>
+
+<div class="ticker-wrap" style="background:var(--khaki-dark);">
+  <span class="ticker-content">
+    <span class="ticker-sep">⬥</span> RUTA NORTE — SQL: CONQUISTA Y DIPLOMACIA
+    <span class="ticker-sep">⬥</span> NIVEL 5 — DINAMARCA · LA PRUEBA DEL COMERCIANTE DANÉS · COPENHAGUE 1915
+    <span class="ticker-sep">⬥</span> MISIÓN: INFILTRARSE EN RUSIA POR EL BÁLTICO · DETENER AL TZAR
+    <span class="ticker-sep">⬥</span>
+  </span>
+</div>
+
+<div class="header-nivel">
+  <div>
+    <div class="rn-badge">Nivel 5 · Ruta Norte · Copenhague, Dinamarca · 1915</div>
+    <div style="font-family:var(--font-typewriter);font-size:.78rem;letter-spacing:.1em;color:#c8e0a0;font-weight:bold;">La Neutralidad No Es Inocencia</div>
+    <div style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.08em;color:var(--paper-dark);">Copenhague, Dinamarca · 1915</div>
+  </div>
+  <div class="nivel-num">N·5</div>
+</div>
+
+<div class="progreso-bar">
+  <div class="rn-badge">🔴 Ruta Norte</div>
+  <span style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.1em;color:var(--paper-dark);text-transform:uppercase;margin-left:.4rem;">Misión 1 de 6:</span>
+  <div class="barra-nivel"><div class="punto-nivel actual"></div><div class="punto-nivel"></div><div class="punto-nivel"></div><div class="punto-nivel"></div><div class="punto-nivel"></div><div class="punto-nivel"></div></div>
+</div>
+
+<div id="libreta-flotante">
+  <button id="libreta-toggle">📓 Notas <span class="libreta-arrow">▼</span></button>
+  <div id="libreta-body">
+    <textarea id="libreta-notas" placeholder="Anote sus observaciones..."></textarea>
+    <div id="libreta-footer">
+      <span>Ruta Norte — Libreta</span>
+      <span id="libreta-guardado" style="color:var(--khaki-faded);"></span>
+    </div>
+  </div>
+</div>
+
+<main class="container">
+  <div class="nivel-layout">
+
+    <div class="col-p">
+
+      <div class="fade-in-1">
+        <div class="section-label">📔 Diario del Comandante — He elegido el norte</div>
+        <div class="diario-entrada">
+          <div class="diario-fecha">Copenhague, Dinamarca · 1915</div>
+          <p>He elegido el norte.</p>
+<p>El Mediterráneo ofrecía una ruta más cómoda, pero la comodidad en guerra es una trampa. Aquí, en Dinamarca, todo parece en calma. Las calles están iluminadas. Los puertos funcionan. Nadie dispara.</p>
+<p>Y, sin embargo, todo está vigilado.</p>
+<p>La neutralidad danesa no es una protección; es un equilibrio frágil entre potencias que observan cada movimiento. Los estrechos hacia el Báltico son arterias estratégicas. Quien entra o sale hacia Rusia deja rastro.</p>
+<p>Llegamos a Copenhague bajo identidades prestadas. Sellos alemanes. Documentación precisa. Nada puede parecer improvisado.</p>
+<p>Seamus organizó la reunión con un comerciante naval. No comparte nuestra causa. Comparte nuestro interés. Rusia debe debilitarse. Ese es el único punto en común.</p>
+<p>Extendió sobre la mesa registros de rutas, barcos, permisos y cargas. No quería discursos. Quería coherencia.</p>
+<p><em>—"Si vuestros documentos no se sostienen entre sí, no cruzaréis el Báltico."</em></p>
+<p>Comprendí entonces que la verdadera prueba no era política. Era logística. Cada barco debía justificar su peso. Cada carga debía coincidir con su permiso. Cada autorización debía resistir una inspección británica.</p>
+<p>Mañana demostraré que entiendo esa red invisible. Si fallo, no habrá segunda oportunidad.</p>
+        </div>
+      </div>
+
+      <div class="fade-in-2">
+        <div class="section-label">📨 Registro Naval — Comerciante de Copenhague</div>
+        <div class="telegrama" style="transform:rotate(-.4deg);border-top-color:var(--khaki-dark);">
+          <div class="telegrama-sello" style="border-color:var(--khaki-light);color:var(--khaki-light);">COPEN<br>HAGUE<br>1915</div>
+          <div class="telegrama-header" style="border-color:var(--khaki-mid);">COMERCIANTE NAVAL — COPENHAGUE · REUNIÓN DISCRETA</div>
+          <div class="telegrama-body">FECHA: 1915 · IDENTIDADES PRESTADAS<br>
+DE: COMERCIANTE (IDENTIDAD RESERVADA)<br>
+PARA: COMANDANTE EN TRÁNSITO<br><br>
+"Si vuestros documentos no se sostienen entre sí,<br>
+no cruzaréis el Báltico."<br><br>
+TABLAS BAJO REVISIÓN:<br>
+barcos (id, nombre, bandera, capacidad_maxima)<br>
+cargas (id_carga, id_barco, peso)<br>
+permisos (id_permiso, id_barco, estado_permiso)<br><br>
+CUATRO VERIFICACIONES REQUERIDAS:<br>
+1 — Ocupación real por barco (JOIN + GROUP BY + ROUND)<br>
+2 — Detectar barcos con sobrepeso (HAVING)<br>
+3 — Detectar barcos sin carga declarada (LEFT JOIN + HAVING COUNT=0)<br>
+4 — Barco que puede zarpar legalmente (permiso + peso)<br>
+— COMERCIANTE</div>
+        </div>
+      </div>
+
+      <div class="fade-in-2">
+  <div class="section-label">📋 Tablas del sistema naval</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:.8rem;">
+    <div>
+      <div class="section-label" style="font-size:.58rem;margin-bottom:.3rem;">🛳 barcos</div>
+      <table class="tabla-datos"><thead><tr><th>id_barco</th><th>nombre_barco</th><th>bandera</th><th>cap_max</th></tr></thead><tbody><tr><td>1</td><td>Aurora Borealis</td><td>Neutral</td><td>300</td></tr><tr><td>2</td><td>Skagen Star</td><td>Alemana</td><td>200</td></tr><tr><td>3</td><td>Baltic Wind</td><td>Neutral</td><td>150</td></tr></tbody></table>
+    </div>
+    <div>
+      <div class="section-label" style="font-size:.58rem;margin-bottom:.3rem;">📦 cargas</div>
+      <table class="tabla-datos"><thead><tr><th>id_carga</th><th>id_barco</th><th>peso</th></tr></thead><tbody><tr><td>1</td><td>1</td><td>120</td></tr><tr><td>2</td><td>1</td><td>80</td></tr><tr><td>3</td><td>2</td><td>210</td></tr><tr><td>4</td><td>3</td><td>50</td></tr></tbody></table>
+    </div>
+  </div>
+  <div class="section-label" style="font-size:.58rem;margin-bottom:.3rem;">📑 permisos</div>
+  <table class="tabla-datos"><thead><tr><th>id_permiso</th><th>id_barco</th><th>estado_permiso</th></tr></thead><tbody><tr><td>1</td><td>1</td><td>✅ Aprobado</td></tr><tr><td>2</td><td>2</td><td>✅ Aprobado</td></tr><tr><td>3</td><td>3</td><td>⏳ Pendiente</td></tr></tbody></table>
+  <div style="margin-top:1rem;" class="section-label">🔎 Las 4 Verificaciones del Comerciante</div>
+  <div style="background:rgba(0,0,0,.2);border:1px solid rgba(90,110,66,.25);padding:.8rem 1rem;"><div class="exigencia-item"><div class="exigencia-letra">1</div><div class="exigencia-txt">Calcular la ocupación real de cada barco: peso total cargado y porcentaje de capacidad usada.</div></div><div class="exigencia-item"><div class="exigencia-letra">2</div><div class="exigencia-txt">Detectar barcos con sobrepeso — un barco que supera su capacidad máxima será detenido.</div></div><div class="exigencia-item"><div class="exigencia-letra">3</div><div class="exigencia-txt">Detectar barcos sin carga declarada — un barco vacío genera sospecha inmediata en tiempos de guerra.</div></div><div class="exigencia-item"><div class="exigencia-letra">4</div><div class="exigencia-txt">Determinar qué barco puede zarpar legalmente: permiso aprobado y sin superar capacidad.</div></div></div>
+</div>
+
+      <div style="text-align:center;" class="fade-in-3">
+        <button class="btn" onclick="abrirEscenario('https://deck.toys')" style="background:var(--khaki-mid);border:1px solid var(--khaki-light);color:#c8e0a0;font-family:var(--font-typewriter);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;padding:.7rem 1.8rem;cursor:pointer;">
+          🗺 Abrir escenario en deck.toys
+        </button>
+        <div style="font-family:var(--font-typewriter);font-size:.62rem;letter-spacing:.1em;color:var(--paper-dark);margin-top:.4rem;text-transform:uppercase;">Se abrirá en nueva pestaña</div>
+      </div>
+
+    </div>
+
+    <div class="col-l">
+
+      <div class="fade-in-1">
+        <div class="section-label">🗺 Ruta Norte — Avance</div>
+        <div class="mapa-mini">
+          <div style="font-family:var(--font-typewriter);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:#3a4f2a;margin-bottom:.4rem;position:relative;">Posición actual</div>
+          <div class="mapa-ruta">Alemania → Mar del Norte → Copenhague</div>
+          <div style="margin-top:.8rem;position:relative;">
+            <div style="font-family:var(--font-typewriter);font-size:.58rem;text-transform:uppercase;letter-spacing:.1em;color:#3a4f2a;margin-bottom:.3rem;">Progreso ruta norte:</div>
+            <div class="marcador-progreso"><div class="paso-mapa activo"></div><div class="paso-mapa"></div><div class="paso-mapa"></div><div class="paso-mapa"></div><div class="paso-mapa"></div><div class="paso-mapa"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fade-in-2">
+        <div class="section-label">💾 Consultas SQL</div>
+        <div class="sql-panel">
+          <div class="sql-header">
+            <div class="sql-dots">
+              <div class="sql-dot" style="background:#c0392b;"></div>
+              <div class="sql-dot" style="background:#f39c12;"></div>
+              <div class="sql-dot" style="background:#27ae60;"></div>
+            </div>
+            norte_n5.sql
+          </div>
+          <div class="sql-block"><div class="sql-lbl">1 · Ocupación real por barco</div><pre class="sql-pre">SELECT nombre_barco,
+       SUM(peso) total,
+       ROUND(SUM(peso)/capacidad_maxima*100,2)
+         AS ocupacion
+FROM barcos
+JOIN cargas USING(id_barco)
+GROUP BY id_barco;</pre></div><div class="sql-block"><div class="sql-lbl">2 · Detectar sobrepeso — HAVING</div><pre class="sql-pre">SELECT nombre_barco
+FROM barcos
+JOIN cargas USING(id_barco)
+GROUP BY id_barco
+HAVING SUM(peso) > capacidad_maxima;</pre></div><div class="sql-block"><div class="sql-lbl">3 · Sin carga — LEFT JOIN + HAVING</div><pre class="sql-pre">SELECT nombre_barco
+FROM barcos
+LEFT JOIN cargas USING(id_barco)
+GROUP BY id_barco
+HAVING COUNT(id_carga) = 0;</pre></div><div class="sql-block"><div class="sql-lbl">4 · Puede zarpar legalmente</div><pre class="sql-pre">SELECT nombre_barco
+FROM barcos
+JOIN permisos USING(id_barco)
+JOIN cargas   USING(id_barco)
+WHERE estado_permiso = 'Aprobado'
+GROUP BY id_barco
+HAVING SUM(peso) <= capacidad_maxima;</pre></div>
+          <div class="schema-box"><div class="schema-lbl">📋 Estructura de tablas</div><pre class="sql-pre">CREATE TABLE barcos (
+    id_barco         INT PRIMARY KEY,
+    nombre_barco     VARCHAR(50),
+    bandera          VARCHAR(30),
+    capacidad_maxima INT
+);
+CREATE TABLE cargas (
+    id_carga  INT PRIMARY KEY,
+    id_barco  INT,
+    peso      INT
+);
+CREATE TABLE permisos (
+    id_permiso    INT PRIMARY KEY,
+    id_barco      INT,
+    estado_permiso VARCHAR(20)
+);</pre></div>
+        </div>
+      </div>
+
+      <div class="fade-in-3">
+        <div class="section-label">🔍 Análisis Táctico</div>
+        <div class="pista-container">
+  <button class="pista-toggle">🔒 HAVING vs WHERE — la diferencia clave<span class="pista-icono">▼</span></button>
+  <div class="pista-contenido">WHERE filtra filas <em>antes</em> de agrupar y no puede usar SUM(). HAVING filtra <em>después</em> de GROUP BY y sí puede comparar agregaciones como SUM(peso) con capacidad_maxima. Es el concepto central de este nivel.</div>
+</div><div class="pista-container">
+  <button class="pista-toggle">🔒 Verificación 2 — Resultado esperado<span class="pista-icono">▼</span></button>
+  <div class="pista-contenido">Skagen Star tiene SUM(peso)=120+90=210 pero capacidad_maxima=200. La consulta HAVING SUM(peso) > capacidad_maxima devuelve solo el Skagen Star como barco sobrecargado.</div>
+</div><div class="pista-container">
+  <button class="pista-toggle">🔒 Verificación 3 — LEFT JOIN para ausencias<span class="pista-icono">▼</span></button>
+  <div class="pista-contenido">LEFT JOIN incluye todos los barcos aunque no tengan cargas. COUNT(id_carga) = 0 en HAVING detecta los que no tienen ninguna carga asignada. Si todos tienen carga, el resultado estará vacío.</div>
+</div><div class="pista-container">
+  <button class="pista-toggle">🔒 Verificación 4 — Resultado esperado<span class="pista-icono">▼</span></button>
+  <div class="pista-contenido">Aurora Borealis: permiso aprobado + SUM(peso)=200 ≤ 300. Es el único que cumple ambas condiciones. Skagen Star tiene permiso pero sobrepeso. Baltic Wind tiene permiso pendiente.</div>
+</div>
+      </div>
+
+      <div class="fade-in-4" style="display:flex;flex-direction:column;gap:.7rem;">
+        <a href="norte-06.html" class="btn" style="text-align:center;justify-content:center;background:var(--khaki-mid);border:1px solid var(--khaki-light);color:#c8e0a0;font-family:var(--font-typewriter);font-size:.72rem;letter-spacing:.1em;padding:.7rem;display:block;text-decoration:none;text-transform:uppercase;">
+          Siguiente misión →
+        </a>
+        <a href="nivel-alemania.html" class="btn btn-secondary" style="text-align:center;font-size:.68rem;">← Misión anterior</a>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script src="../js/main.js"></script>
+<script>initPuntosNivel(6, 1);</script>
+</body>
+</html>
