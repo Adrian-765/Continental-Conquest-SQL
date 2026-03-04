@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ruta Sur 07 — El Armisticio — Mudros, 1918 — La Gran Guerra</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .nivel-layout {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 2rem;
+      margin: 1.5rem 0;
+    }
+    @media (max-width:768px) {
+      .nivel-layout { grid-template-columns: 1fr; }
+    }
+    .header-nivel {
+      background: linear-gradient(135deg, rgba(90,58,26,0.6), rgba(139,94,42,0.3));
+      border-bottom: 1px solid rgba(200,165,58,0.3);
+      padding: 1rem 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .ruta-badge {
+      background: linear-gradient(135deg, #8b5e2a, #5a3a1a);
+      color: var(--gold-medal);
+      font-family: var(--font-typewriter);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.8rem;
+      border: 1px solid var(--gold-medal);
+      border-radius: 3px;
+      margin-bottom: 0.3rem;
+      display: inline-block;
+    }
+    .mapa-mini {
+      background: linear-gradient(135deg, #d4a060, #b8803a);
+      border: 2px solid var(--sepia-mid);
+      border-radius: 8px;
+      padding: 1rem;
+      min-height: 140px;
+    }
+    .col-principal { display: flex; flex-direction: column; gap: 1.5rem; }
+    .col-lateral { display: flex; flex-direction: column; gap: 1.5rem; }
+    .acciones-nivel { display: flex; flex-direction: column; gap: 0.8rem; }
+    .telegrama-wrapper { animation: paperSlide 0.7s 0.5s ease both; }
+  </style>
+</head>
+<body class="page-bg">
+
+  <nav class="nav-principal">
+    <a href="../index.html" class="nav-logo">⚔ La Gran Guerra</a>
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <span class="text-typewriter" style="font-size:0.75rem;color:var(--sepia-light);">
+        Ruta Sur · Misión 07/07 · Cdte: <span class="nombre-comandante">—</span>
+      </span>
+    </div>
+  </nav>
+
+  <div class="header-nivel">
+    <div>
+      <div class="ruta-badge">🏜️ Ruta Sur</div>
+      <div style="font-family:var(--font-typewriter);font-size:0.78rem;letter-spacing:0.1em;color:var(--sepia-light);">Isla de Mudros, 30 de octubre de 1918</div>
+    </div>
+    <div style="font-family:var(--font-display);font-size:2.5rem;color:rgba(200,165,58,0.2);">S·07</div>
+  </div>
+
+  <div style="background:rgba(0,0,0,0.3);padding:0.6rem 2rem;border-bottom:1px solid rgba(139,109,56,0.2);">
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <span class="text-typewriter" style="font-size:0.7rem;color:var(--sepia-light);">PROGRESO RUTA SUR:</span>
+      <div class="barra-nivel"></div>
+    </div>
+  </div>
+
+  <div id="libreta-flotante">
+    <button id="libreta-toggle">📓 Notas <span class="libreta-arrow">▼</span></button>
+    <div id="libreta-body">
+      <textarea id="libreta-notas" placeholder="Escriba sus notas..."></textarea>
+      <div id="libreta-footer">
+        <span>Libreta de Campaña</span>
+        <span id="libreta-guardado" style="color:var(--green-faded)"></span>
+      </div>
+    </div>
+  </div>
+
+  <main class="container">
+    <h1 class="fade-in" style="color:var(--gold-medal);margin:1.5rem 0 0.3rem;font-size:1.8rem;">El Armisticio — Mudros, 1918</h1>
+    <div class="ornamento" style="margin:0.5rem 0 1.5rem;">✦ ✦ ✦</div>
+
+    <div class="nivel-layout">
+      <div class="col-principal">
+
+        <div>
+          <h3 style="font-family:var(--font-typewriter);font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--sepia-light);margin-bottom:0.8rem;">
+            📔 Diario del Comandante
+          </h3>
+          <div class="diario-entrada fade-in-delay-1">
+            <div class="diario-fecha">Entrada de campaña — Isla de Mudros, 30 de octubre de 1918</div>
+            <p>Ha llegado el día. A bordo del HMS Agamemnon, fondeado en el puerto de Mudros, se firma el armisticio con el Imperio Otomano. El Imperio que durante siglos dominó tres continentes firma su rendición. Mehmed Talat, uno de los responsables del genocidio armenio, ya ha huido a Alemania. El Imperio Otomano ha colapsado. Quedan sus pueblos, sus territorios prometidos a distintas potencias, y las semillas de un siglo de conflictos. La guerra termina aquí, en el sur. Pero las consecuencias durarán generaciones.</p>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-family:var(--font-typewriter);font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--sepia-light);margin-bottom:0.8rem;">
+            📨 Documento Oficial Recibido
+          </h3>
+          <div class="telegrama telegrama-wrapper fade-in-delay-2" style="transform:rotate(-0.5deg);">
+            <div class="telegrama-sello">RUTA<br>SUR<br>1915</div>
+            <div class="telegrama-header">HMS AGAMEMNON — PUERTO DE MUDROS</div>
+            <div style="white-space:pre-line;font-size:0.82rem;line-height:1.7;">FECHA: 30.X.1918 // HISTÓRICO
+DE: ALMIRANTE CALTHORPE — COMANDANTE MEDITERRÁNEO
+PARA: ALMIRANTAZGO — URGENTE — DIFUSIÓN AMPLIA
+
+ARMISTICIO OTTOMANO FIRMADO
+
+A las 12:00 horas de hoy, representantes del Imperio Otomano han firmado el Armisticio de Mudros.
+
+TÉRMINOS PRINCIPALES:
+- Desmobilización ejército otomano
+- Apertura del Bósforo y Dardanelos
+- Ocupación aliada de puntos estratégicos
+- Rendición de todas las guarniciones otomanas
+
+FIN DE LAS HOSTILIDADES EN EL TEATRO SUR.
+
+El Imperio Otomano, que perduró durante 600 años, ha llegado a su fin.
+
+— CALTHORPE</div>
+          </div>
+        </div>
+
+        <div style="text-align:center;">
+          <button class="btn btn-gold" onclick="abrirEscenario('https://deck.toys')">
+            🗺 Abrir Escenario Interactivo
+          </button>
+          <p class="text-typewriter" style="color:var(--sepia-mid);font-size:0.7rem;margin-top:0.5rem;letter-spacing:0.08em;">Se abrirá en nueva pestaña</p>
+        </div>
+
+      </div>
+
+      <div class="col-lateral">
+
+        <div>
+          <h3 style="font-family:var(--font-typewriter);font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--sepia-light);margin-bottom:0.8rem;">
+            🗺 Mapa de Avance
+          </h3>
+          <div class="mapa-mini fade-in-delay-2">
+            <div style="font-family:var(--font-typewriter);font-size:0.68rem;letter-spacing:0.1em;color:var(--ink-dark);margin-bottom:0.5rem;">RUTA SUR — PROGRESO:</div>
+            <div style="font-family:var(--font-manuscript);font-size:0.95rem;color:var(--ink-dark);font-weight:bold;margin-bottom:0.8rem;">Jerusalén → Damasco → Mudros</div>
+            <div class="marcador-progreso">
+              <div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa activo"></div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-family:var(--font-typewriter);font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--sepia-light);margin-bottom:0.8rem;">
+            🔍 Pistas Clasificadas
+          </h3>
+          <div class="fade-in-delay-3">
+            
+            <div class="pista-container">
+              <button class="pista-toggle">🔒 Pista 1 — El colapso otomano <span class="icono">▼</span></button>
+              <div class="pista-contenido">El Imperio Otomano firmó el armisticio el 30 de octubre de 1918, dos semanas antes que Alemania. Las campañas en Arabia, Mesopotamia y Palestina habían destruido su capacidad militar.</div>
+            </div>
+            <div class="pista-container">
+              <button class="pista-toggle">🔒 Pista 2 — El nacimiento de nuevas naciones <span class="icono">▼</span></button>
+              <div class="pista-contenido">Del colapso otomano surgirán: Irak, Siria, Líbano, Palestina y la futura Turquía. Las fronteras trazadas por Gran Bretaña y Francia definirán el Oriente Medio del siglo XX.</div>
+            </div>
+            <div class="pista-container">
+              <button class="pista-toggle">🔒 Pista 3 — Mustafá Kemal y Turquía <span class="icono">▼</span></button>
+              <div class="pista-contenido">El héroe de Gallipoli liderará la guerra de independencia turca (1919-1923) y fundará la República de Turquía moderna, transformando radicalmente el país bajo el nombre de Atatürk.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="acciones-nivel fade-in-delay-4">
+          <button id="btn-guardar" class="btn btn-primary">💾 Guardar Progreso</button>
+          <a href="final.html" class="btn btn-gold" style="text-align:center;justify-content:center;">
+            Siguiente Misión →
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <script src="../js/main.js"></script>
+  <script>
+    initPuntosNivel(7, 7);
+  </script>
+</body>
+</html>

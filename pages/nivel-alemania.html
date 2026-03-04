@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sombras sobre el Egeo — SQL: La Gran Guerra</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .nivel-layout{display:grid;grid-template-columns:1.15fr 0.85fr;gap:2rem;margin:1.5rem 0;}
+    @media(max-width:880px){.nivel-layout{grid-template-columns:1fr;}}
+    .header-nivel{background:linear-gradient(135deg,rgba(26,20,9,.98),rgba(42,48,32,.95));border-bottom:3px solid var(--gold);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;}
+    .nivel-badge{display:inline-block;background:var(--khaki-dark);color:var(--paper-warm);font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.2em;padding:.2rem .7rem;text-transform:uppercase;margin-bottom:.3rem;}
+    .nivel-num{font-family:var(--font-display);font-size:3.5rem;font-weight:900;color:rgba(184,146,42,.15);line-height:1;}
+    .col-p{display:flex;flex-direction:column;gap:1.5rem;}
+    .col-l{display:flex;flex-direction:column;gap:1.4rem;}
+    .sql-panel{background:#0a0d06;border:1px solid rgba(184,146,42,.2);border-top:3px solid var(--gold);overflow:hidden;}
+    .sql-header{background:rgba(184,146,42,.08);border-bottom:1px solid rgba(184,146,42,.15);padding:.6rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);}
+    .sql-dots{display:flex;gap:4px;}
+    .sql-dot{width:8px;height:8px;border-radius:50%;}
+    .sql-block{border-bottom:1px solid rgba(184,146,42,.08);padding:0;}
+    .sql-block:last-child{border-bottom:none;}
+    .sql-lbl{font-family:var(--font-typewriter);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(184,146,42,.6);padding:.5rem 1rem .2rem;border-left:2px solid var(--gold);}
+    .sql-pre{font-family:'Special Elite','Courier New',monospace;font-size:.75rem;line-height:1.7;color:#a8d4a0;padding:.3rem 1rem .7rem;overflow-x:auto;background:transparent;white-space:pre;margin:0;}
+    .schema-box{background:rgba(0,0,0,.3);border:1px dashed rgba(184,146,42,.2);margin:.5rem 1rem 1rem;}
+    .schema-lbl{font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(184,146,42,.5);padding:.4rem .8rem .2rem;}
+    .mapa-mini{background:linear-gradient(135deg,#c4b07a,#a8905a);border:2px solid var(--paper-stain);padding:1rem;min-height:120px;position:relative;overflow:hidden;box-shadow:3px 3px 0 rgba(0,0,0,.25);}
+    .mapa-mini::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(100,75,30,.05) 10px,rgba(100,75,30,.05) 11px);}
+    .mapa-ruta{font-family:var(--font-handwritten);font-size:1rem;color:var(--ink);font-weight:700;position:relative;line-height:1.6;}
+    .progreso-bar{background:rgba(0,0,0,.3);padding:.5rem 2rem;border-bottom:1px solid rgba(184,146,42,.1);display:flex;align-items:center;gap:1rem;}
+    .section-label{font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem;}
+    .exigencia-item{display:flex;gap:.8rem;padding:.7rem 0;border-bottom:1px solid rgba(184,146,42,.1);}
+    .exigencia-item:last-child{border-bottom:none;}
+    .exigencia-letra{flex-shrink:0;width:24px;height:24px;background:var(--red-ink);color:var(--paper-warm);font-family:var(--font-display);font-weight:900;font-size:.85rem;display:flex;align-items:center;justify-content:center;}
+    .exigencia-txt{font-family:var(--font-body);font-size:.82rem;color:var(--paper-aged);line-height:1.5;}
+    .tabla-datos{width:100%;border-collapse:collapse;font-family:var(--font-typewriter);font-size:.72rem;}
+    .tabla-datos th{background:var(--ink);color:var(--gold);padding:.35rem .6rem;text-align:left;letter-spacing:.08em;font-weight:normal;}
+    .tabla-datos td{padding:.3rem .6rem;border-bottom:1px solid rgba(184,146,42,.1);color:var(--paper-aged);}
+    .tabla-datos tr:last-child td{border-bottom:none;}
+    .tabla-datos tr:hover td{background:rgba(184,146,42,.05);}
+    .badge-ruta{display:inline-block;padding:.15rem .5rem;font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;}
+    .badge-alta{background:rgba(139,26,26,.3);color:#e88;border:1px solid rgba(139,26,26,.4);}
+    .badge-media{background:rgba(139,100,42,.3);color:#e8c8a0;border:1px solid rgba(139,100,42,.4);}
+    .badge-baja{background:rgba(42,48,32,.5);color:var(--khaki-faded);border:1px solid var(--khaki-mid);}
+    .badge-critica{background:rgba(192,57,43,.5);color:#ffc;border:1px solid var(--red-stamp);animation:pulseGold 1.5s infinite;}
+  </style>
+</head>
+<body class="page-bg">
+
+<nav class="nav-principal">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo-area">
+      <div class="nav-logo-text">SQL: La Gran Guerra</div>
+      <div class="nav-logo-sub">Conquista y Diplomacia · 1914–1918</div>
+    </a>
+    <div class="nav-center">Misión 5 de 7 · <span class='nombre-comandante'>Comandante</span> · Venecia — SS Eleftheria</div>
+    <div class="nav-actions">
+      <button id="btn-guardar" class="btn btn-primary" style="font-size:.72rem;padding:.5rem 1.2rem;">💾 Guardar partida</button>
+    </div>
+  </div>
+</nav>
+
+<div class="ticker-wrap">
+  <span class="ticker-content">
+    <span class="ticker-sep">⬥</span> SQL: CONQUISTA Y DIPLOMACIA EN LA GRAN GUERRA
+    <span class="ticker-sep">⬥</span> NIVEL 6 — SOMBRAS SOBRE EL EGEO · VENECIA · SS ELEFTHERIA · EMBARQUE HACIA ATENAS
+    <span class="ticker-sep">⬥</span> OBJETIVO FINAL: DETENER AL TZAR RUSO — PROTEGER EL EQUILIBRIO DE EUROPA
+    <span class="ticker-sep">⬥</span>
+  </span>
+</div>
+
+<div class="header-nivel">
+  <div>
+    <div class="nivel-badge">Nivel 6 · Venecia → Atenas</div>
+    <div style="font-family:var(--font-typewriter);font-size:.78rem;letter-spacing:.1em;color:var(--gold-bright);font-weight:bold;">Sombras sobre el Egeo</div>
+    <div style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.08em;color:var(--paper-dark);">Otoño 1915 — Puerto de Venecia, Italia</div>
+  </div>
+  <div class="nivel-num">N·6</div>
+</div>
+
+<div class="progreso-bar">
+  <span style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.12em;color:var(--paper-dark);text-transform:uppercase;white-space:nowrap;">Progreso de la misión:</span>
+  <div class="barra-nivel"><div class="punto-nivel hecho"></div><div class="punto-nivel hecho"></div><div class="punto-nivel hecho"></div><div class="punto-nivel hecho"></div><div class="punto-nivel actual"></div><div class="punto-nivel"></div><div class="punto-nivel"></div></div>
+</div>
+
+<div id="libreta-flotante">
+  <button id="libreta-toggle">📓 Notas de Campaña <span class="libreta-arrow">▼</span></button>
+  <div id="libreta-body">
+    <textarea id="libreta-notas" placeholder="Anote sus observaciones..."></textarea>
+    <div id="libreta-footer">
+      <span>Libreta del Comandante</span>
+      <span id="libreta-guardado" style="color:var(--khaki-faded);"></span>
+    </div>
+  </div>
+</div>
+
+<main class="container">
+  <div class="nivel-layout">
+
+    <!-- ══ COLUMNA PRINCIPAL ══════════════════════════ -->
+    <div class="col-p">
+
+      <!-- DIARIO -->
+      <div class="fade-in-1">
+        <div class="section-label">📔 Diario del Comandante — Entrada 18</div>
+        <div class="diario-entrada">
+          <div class="diario-fecha">Otoño 1915 — Puerto de Venecia, Italia</div>
+          <p>Tras semanas de navegación por el Mediterráneo, atravesando puertos y costas hostiles, finalmente ponemos pie en Venecia. La ciudad se presenta envuelta en niebla, con el bullicio portuario amortiguado por el silencio de la guerra.</p>
+<p>Nuestro próximo objetivo es claro: cruzar hacia Atenas a bordo del <em>SS Eleftheria</em>, un barco de bandera neutral que oficialmente transporta recursos hacia Rumanía. Nadie debe sospechar la verdadera intención.</p>
+<p>Pero Nikolas Theron, el capitán del puerto, nos detiene con mirada firme: la logística debe verificarse. Cada contacto en Atenas tiene una capacidad limitada, y cualquier error podría retrasar la operación o comprometer la neutralidad del barco.</p>
+<p>Mientras contemplo la bruma que cubre los canales, pienso en los próximos pasos: Atenas, el Bósforo, y luego el corazón del Imperio Ruso.</p>
+        </div>
+      </div>
+
+      <!-- TELEGRAMA / DOCUMENTO -->
+      <div class="fade-in-2">
+        <div class="section-label">📨 Autorización de Embarque — Capitán del Puerto</div>
+        <div class="telegrama" style="transform:rotate(-.5deg);">
+          <div class="telegrama-sello">SS<br>ELEFTHERIA<br>NEUTRAL</div>
+          <div class="telegrama-header">NIKOLAS THERON — CAPITÁN DEL PUERTO · VENECIA</div>
+          <div class="telegrama-body">FECHA: OTOÑO 1915 · SS ELEFTHERIA — AUTORIZACIÓN PENDIENTE<br>
+DE: NIKOLAS THERON — CAPITÁN DEL PUERTO<br>
+PARA: COMANDANTE EN TRÁNSITO<br><br>
+Antes de autorizar el embarque en el SS Eleftheria,<br>
+debo verificar la logística con los contactos en Atenas.<br><br>
+Cada contacto tiene capacidad limitada para recibir<br>
+tropas y suministros. Un error puede comprometer<br>
+la neutralidad del barco y retrasar toda la operación.<br><br>
+CONTACTOS EN ATENAS (tabla: puertos_atenas):<br>
+Theo Marinakis · Eleni Kostas · Dimitrios Pappas · Andreas Laskaris<br><br>
+Relacione cada consulta SQL con su función estratégica.<br>
+Solo entonces el barco zarpará.<br>
+— THERON</div>
+        </div>
+      </div>
+
+      <div class="fade-in-2">
+  <div class="section-label">📋 Contactos en Atenas — tabla: puertos_atenas</div>
+  <table class="tabla-datos"><thead><tr><th>id</th><th>Nombre contacto</th><th>Cap. soldados</th><th>Cap. suministros</th><th>Barcos</th></tr></thead><tbody><tr><td>1</td><td>Theo Marinakis</td><td>150</td><td>200</td><td>2</td></tr><tr><td>2</td><td>Eleni Kostas</td><td>100</td><td>120</td><td>1</td></tr><tr><td>3</td><td>Dimitrios Pappas</td><td>200</td><td>150</td><td>3</td></tr><tr><td>4</td><td>Andreas Laskaris</td><td>80</td><td>100</td><td>1</td></tr></tbody></table>
+  <div style="margin-top:1rem;" class="section-label">🔴 Relacione cada consulta con su función estratégica</div>
+  <div style="background:rgba(0,0,0,.25);border:1px solid rgba(184,146,42,.15);padding:.8rem 1rem;"><div class="exigencia-item"><div class="exigencia-letra">1</div><div class="exigencia-txt">Identificar el contacto con mayor capacidad de soldados, para que las tropas puedan embarcar sin exceder límites.</div></div><div class="exigencia-item"><div class="exigencia-letra">2</div><div class="exigencia-txt">Mostrar todos los contactos con sus capacidades completas, útil para planificación general de recursos.</div></div><div class="exigencia-item"><div class="exigencia-letra">3</div><div class="exigencia-txt">Filtrar los contactos con más de un barco disponible, importante para asignaciones de embarque múltiples.</div></div><div class="exigencia-item"><div class="exigencia-letra">4</div><div class="exigencia-txt">Filtrar los contactos capaces de recibir suministros grandes, asegurando que la carga pesada tenga destino seguro.</div></div></div>
+  <div style="margin-top:.6rem;padding:.5rem 1rem;background:rgba(184,146,42,.08);border-left:3px solid var(--gold);font-family:var(--font-typewriter);font-size:.7rem;letter-spacing:.06em;color:var(--gold);">
+    ✅ Parejas correctas: 1→A · 2→B · 3→C · 4→D
+  </div>
+</div>
+
+      <!-- CTA DECK.TOYS -->
+      <div style="text-align:center;" class="fade-in-3">
+        <button class="btn btn-gold" onclick="abrirEscenario('https://deck.toys')">
+          🗺 Abrir escenario interactivo en deck.toys
+        </button>
+        <div style="font-family:var(--font-typewriter);font-size:.62rem;letter-spacing:.1em;color:var(--paper-dark);margin-top:.4rem;text-transform:uppercase;">Se abrirá en nueva pestaña</div>
+      </div>
+
+    </div>
+
+    <!-- ══ COLUMNA LATERAL ════════════════════════════ -->
+    <div class="col-l">
+
+      <!-- MAPA MINI -->
+      <div class="fade-in-1">
+        <div class="section-label">🗺 Ruta de la Misión</div>
+        <div class="mapa-mini">
+          <div style="font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faded);margin-bottom:.4rem;position:relative;">Trayecto actual</div>
+          <div class="mapa-ruta">Chioggia → Venecia → Mar Adriático → Atenas</div>
+          <div style="margin-top:.8rem;position:relative;">
+            <div style="font-family:var(--font-typewriter);font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-faded);margin-bottom:.3rem;">Progreso total:</div>
+            <div class="marcador-progreso"><div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa activo"></div><div class="paso-mapa"></div><div class="paso-mapa"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL SQL -->
+      <div class="fade-in-2">
+        <div class="section-label">💾 Consultas SQL de este Nivel</div>
+        <div class="sql-panel">
+          <div class="sql-header">
+            <div class="sql-dots">
+              <div class="sql-dot" style="background:#c0392b;"></div>
+              <div class="sql-dot" style="background:#f39c12;"></div>
+              <div class="sql-dot" style="background:#27ae60;"></div>
+            </div>
+            mysql — gran_guerra.sql
+          </div>
+          <div class="sql-block"><div class="sql-lbl">1→A · Mayor cap. soldados</div><pre class="sql-pre">SELECT nombre_contacto
+FROM puertos_atenas
+ORDER BY capacidad_soldados DESC
+LIMIT 1;</pre></div><div class="sql-block"><div class="sql-lbl">2→B · Todos los contactos</div><pre class="sql-pre">SELECT nombre_contacto,
+       capacidad_soldados,
+       capacidad_suministros
+FROM puertos_atenas;</pre></div><div class="sql-block"><div class="sql-lbl">3→C · Más de un barco</div><pre class="sql-pre">SELECT nombre_contacto
+FROM puertos_atenas
+WHERE barcos_disponibles > 1;</pre></div><div class="sql-block"><div class="sql-lbl">4→D · Suministros ≥ 150</div><pre class="sql-pre">SELECT nombre_contacto
+FROM puertos_atenas
+WHERE capacidad_suministros >= 150;</pre></div>
+          <div class="schema-box"><div class="schema-lbl">📋 Estructura de tablas</div><pre class="sql-pre">CREATE TABLE puertos_atenas (
+    id_contacto          INT PRIMARY KEY,
+    nombre_contacto      VARCHAR(50),
+    capacidad_soldados   INT,
+    capacidad_suministros INT,
+    barcos_disponibles   INT
+);</pre></div>
+        </div>
+      </div>
+
+      <!-- PISTAS -->
+      <div class="fade-in-3">
+        <div class="section-label">🔍 Análisis Clasificado</div>
+        <div class="pista-container">
+  <button class="pista-toggle">🔒 Consulta 1 — ORDER BY + LIMIT<span class="pista-icono">▼</span></button>
+  <div class="pista-contenido">ORDER BY capacidad_soldados DESC ordena de mayor a menor. LIMIT 1 devuelve solo el primero. Resultado: Dimitrios Pappas (200 soldados).</div>
+</div><div class="pista-container">
+  <button class="pista-toggle">🔒 Consulta 2 — SELECT sin filtro<span class="pista-icono">▼</span></button>
+  <div class="pista-contenido">Un SELECT sin WHERE ni LIMIT devuelve todos los registros. Útil para ver el panorama completo de los 4 contactos disponibles en Atenas.</div>
+</div><div class="pista-container">
+  <button class="pista-toggle">🔒 Consulta 3 — WHERE barcos > 1<span class="pista-icono">▼</span></button>
+  <div class="pista-contenido">Filtra los contactos con más de un barco disponible. Resultado: Theo Marinakis (2 barcos) y Dimitrios Pappas (3 barcos). Importante para asignaciones múltiples.</div>
+</div><div class="pista-container">
+  <button class="pista-toggle">🔒 Consulta 4 — WHERE suministros ≥ 150<span class="pista-icono">▼</span></button>
+  <div class="pista-contenido">El operador >= incluye el valor 150 (mayor o igual). Resultado: Theo Marinakis (200) y Dimitrios Pappas (150). Son los que pueden recibir la carga pesada.</div>
+</div>
+      </div>
+
+      <!-- NAVEGACIÓN -->
+      <div class="fade-in-4" style="display:flex;flex-direction:column;gap:.7rem;">
+        <a href="ruta-sur-01.html" class="btn btn-gold" style="text-align:center;justify-content:center;">
+          Siguiente misión →
+        </a>
+        <button id="btn-guardar2" class="btn btn-primary" style="text-align:center;justify-content:center;" onclick="document.getElementById('btn-guardar').click()">
+          💾 Guardar progreso
+        </button>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script src="../js/main.js"></script>
+<script>initPuntosNivel(7, 5);</script>
+</body>
+</html>

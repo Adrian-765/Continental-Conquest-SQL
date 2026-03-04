@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contexto Histórico — La Gran Guerra</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    /* ═══ ESTILOS ESPECÍFICOS DE CONTEXTO HISTÓRICO ════════ */
+
+    /* — HERO PORTADA DE PERIÓDICO — */
+    .hero-newspaper {
+      position: relative;
+      min-height: 100vh;
+      background: var(--paper-warm);
+      background-image: var(--grain-overlay);
+      overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+
+    /* Imagen héroe de fondo */
+    .hero-bg-photo {
+      position: absolute; inset: 0;
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Zossen-Bundesarchiv_Bild_183-R05148%2C_Erster_Weltkrieg%2C_Westfront.jpg/1280px-Zossen-Bundesarchiv_Bild_183-R05148%2C_Erster_Weltkrieg%2C_Westfront.jpg');
+      background-size: cover;
+      background-position: center 40%;
+      filter: grayscale(1) sepia(0.4) brightness(0.35) contrast(1.3);
+      transform: scale(1.04);
+      animation: slowZoom 20s ease-in-out infinite alternate;
+    }
+    @keyframes slowZoom {
+      from { transform: scale(1.04) translateX(0); }
+      to   { transform: scale(1.1) translateX(-1%); }
+    }
+
+    /* Degradado papel sobre foto */
+    .hero-bg-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(242,228,196,0.97) 0%,
+        rgba(242,228,196,0.85) 30%,
+        rgba(8,6,4,0.65) 70%,
+        rgba(8,6,4,0.95) 100%
+      );
+    }
+
+    /* Contenido periódico encima */
+    .hero-content {
+      position: relative; z-index: 2;
+      flex: 1; display: flex; flex-direction: column;
+    }
+
+    /* ÁREA INFERIOR SOBRE LA FOTO OSCURA */
+    .hero-story {
+      margin-top: auto;
+      padding: 2rem 2.5rem 2.5rem;
+      color: var(--paper-warm);
+    }
+    .hero-story .article-kicker { border-bottom-color: #d4a83a; color: #d4a83a; }
+    .hero-story .article-headline { color: var(--paper-warm); font-size: clamp(2.2rem, 5vw, 4rem); }
+    .hero-story .article-byline { color: rgba(200,176,122,0.7); border-color: rgba(200,176,122,0.4); }
+    .hero-story .article-body { color: rgba(230,210,172,0.88); }
+    .hero-story .article-body p:first-child::first-letter { color: var(--gold-bright); }
+
+    /* — SECCIÓN PRINCIPAL: PAPEL — */
+    .main-newspaper { background: var(--paper-warm); background-image: var(--grain-overlay); }
+
+    /* — SEPARADOR NEGRO — */
+    .black-bar {
+      background: var(--ink);
+      color: var(--paper-warm);
+      padding: 0.5rem 1.5rem;
+      display: flex; align-items: center; gap: 1.5rem;
+    }
+    .black-bar-label {
+      font-family: var(--font-typewriter);
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .black-bar-line {
+      flex: 1; height: 1px;
+      background: rgba(184,146,42,0.4);
+    }
+    .black-bar-num {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: var(--gold);
+    }
+
+    /* — GRID PRINCIPAL — */
+    .contenido-wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* — CRONOLOGÍA VISUAL — */
+    .timeline {
+      position: relative;
+      padding: 1rem 0;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute; left: 50%; top: 0; bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--gold), var(--ink));
+      transform: translateX(-50%);
+    }
+    .tl-item {
+      display: grid;
+      grid-template-columns: 1fr 60px 1fr;
+      gap: 0;
+      margin-bottom: 0;
+      align-items: center;
+    }
+    .tl-content-left  { text-align: right; padding: 1.2rem 1.5rem 1.2rem 0; }
+    .tl-content-right { text-align: left;  padding: 1.2rem 0 1.2rem 1.5rem; }
+    .tl-center {
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .tl-dot {
+      width: 14px; height: 14px;
+      background: var(--ink);
+      border: 3px solid var(--gold);
+      border-radius: 50%;
+      flex-shrink: 0;
+      z-index: 1;
+      transition: all 0.3s;
+    }
+    .tl-item:hover .tl-dot {
+      background: var(--gold);
+      box-shadow: 0 0 12px rgba(184,146,42,0.6);
+      transform: scale(1.3);
+    }
+    .tl-year {
+      font-family: var(--font-typewriter);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      color: var(--red-ink);
+      text-transform: uppercase;
+      font-weight: bold;
+      margin-bottom: 0.2rem;
+    }
+    .tl-headline {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.2;
+      margin-bottom: 0.3rem;
+    }
+    .tl-text {
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      color: var(--ink-faded);
+      line-height: 1.6;
+    }
+    .tl-empty { padding: 1.2rem 0; }
+
+    /* — BLOQUE ALIANZAS — */
+    .alianza-card {
+      border-top: 6px solid;
+      padding: 1.5rem;
+      background: var(--paper-warm);
+      background-image: var(--grain-overlay);
+      position: relative;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .alianza-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+    }
+    .alianza-card.entente { border-color: var(--khaki-mid); }
+    .alianza-card.centrales { border-color: var(--red-ink); }
+    .alianza-card.neutral { border-color: var(--gold); }
+    .alianza-card-title {
+      font-family: var(--font-display);
+      font-size: 1.1rem; font-weight: 900;
+      margin-bottom: 0.5rem;
+    }
+    .alianza-card.entente  .alianza-card-title { color: var(--khaki-mid); }
+    .alianza-card.centrales .alianza-card-title { color: var(--red-ink); }
+    .alianza-card.neutral   .alianza-card-title { color: var(--gold); }
+    .alianza-pais {
+      font-family: var(--font-typewriter);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      color: var(--ink-faded);
+      line-height: 2;
+      display: flex; flex-direction: column; gap: 0;
+    }
+    .alianza-pais span {
+      padding: 0.1rem 0;
+      border-bottom: 1px dotted rgba(26,20,9,0.1);
+    }
+
+    /* — CIFRAS ESTADÍSTICAS — */
+    .stat-block {
+      border: 2px solid var(--ink);
+      padding: 1.5rem;
+      text-align: center;
+      position: relative;
+      background: var(--paper-warm);
+      background-image: var(--grain-overlay);
+    }
+    .stat-block::before {
+      content: attr(data-label);
+      position: absolute; top: -0.6rem; left: 50%;
+      transform: translateX(-50%);
+      background: var(--ink);
+      color: var(--paper-warm);
+      font-family: var(--font-typewriter);
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 0.1rem 0.6rem;
+      white-space: nowrap;
+    }
+    .stat-number {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      color: var(--ink);
+      line-height: 1;
+      animation: countUp 2s ease both;
+    }
+    @keyframes countUp {
+      from { opacity: 0; transform: translateY(15px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .stat-label {
+      font-family: var(--font-typewriter);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--ink-faded);
+      margin-top: 0.3rem;
+    }
+    .stat-accent { color: var(--red-ink); }
+
+    /* — CUADROS FOTO-TESTIMONIO — */
+    .foto-testimonio {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border: 1px solid rgba(26,20,9,0.2);
+    }
+    .foto-testimonio-img {
+      position: relative; overflow: hidden;
+    }
+    .foto-testimonio-img img {
+      width: 100%; height: 100%; object-fit: cover;
+      display: block;
+      filter: grayscale(1) contrast(1.15) brightness(0.85) sepia(0.15);
+      transition: filter 0.5s, transform 0.8s;
+    }
+    .foto-testimonio-img:hover img {
+      filter: grayscale(1) contrast(1.1) brightness(0.95) sepia(0.08);
+      transform: scale(1.03);
+    }
+    .foto-testimonio-text {
+      padding: 1.5rem;
+      background: var(--ink);
+      color: var(--paper-warm);
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .foto-testimonio-text .article-kicker { color: var(--gold-bright); border-color: var(--gold-bright); }
+    .foto-testimonio-text .article-headline { color: var(--paper-warm); font-size: 1.1rem; margin-bottom: 0.8rem; }
+    .foto-testimonio-text .article-body { color: rgba(230,210,172,0.85); font-size: 0.82rem; }
+    .foto-testimonio-text .article-body p:first-child::first-letter { color: var(--gold-bright); }
+
+    /* — MAPA SECCIÓN — */
+    .mapa-section {
+      background: var(--press-dark);
+      padding: 3rem 0;
+    }
+    .mapa-wrapper {
+      max-width: 1200px; margin: 0 auto; padding: 0 1.5rem;
+    }
+    .mapa-section-title {
+      font-family: var(--font-typewriter);
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+    .mapa-section h2 {
+      color: var(--paper-warm);
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    /* — INFORME MILITAR SECCIÓN — */
+    .informe-section {
+      background: var(--paper-aged);
+      background-image: var(--grain-overlay), var(--lines-paper);
+    }
+
+    /* — FRENTE ORIENTAL — */
+    .oriental-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border: 1px solid rgba(26,20,9,0.2);
+      margin: 1.5rem 0;
+    }
+    .oriental-foto {
+      position: relative; overflow: hidden;
+      min-height: 280px;
+    }
+    .oriental-foto img {
+      width: 100%; height: 100%; object-fit: cover;
+      display: block;
+      filter: grayscale(1) sepia(0.2) contrast(1.2) brightness(0.8);
+    }
+    .oriental-texto {
+      padding: 2rem;
+      background: var(--ink);
+      color: var(--paper-warm);
+    }
+
+    /* — BARRA LATERAL DE DATOS — */
+    .sidebar-facts {
+      background: var(--ink);
+      color: var(--paper-warm);
+      padding: 1.5rem;
+      border-left: 4px solid var(--gold);
+    }
+    .sidebar-facts-title {
+      font-family: var(--font-typewriter);
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border-bottom: 1px solid rgba(184,146,42,0.3);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .fact-item {
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0.7rem 0;
+    }
+    .fact-item:last-child { border-bottom: none; }
+    .fact-label {
+      font-family: var(--font-typewriter);
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.15rem;
+    }
+    .fact-value {
+      font-family: var(--font-display);
+      font-size: 0.88rem;
+      color: var(--paper-warm);
+      line-height: 1.3;
+    }
+
+    /* — BOTÓN SIGUIENTE ESPECIAL — */
+    .cta-section {
+      background: var(--ink);
+      padding: 4rem 2rem;
+      text-align: center;
+      border-top: 4px solid var(--gold);
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Zossen-Bundesarchiv_Bild_183-R05148%2C_Erster_Weltkrieg%2C_Westfront.jpg/1280px-Zossen-Bundesarchiv_Bild_183-R05148%2C_Erster_Weltkrieg%2C_Westfront.jpg');
+      background-size: cover;
+      background-position: center;
+      filter: grayscale(1) brightness(0.12) sepia(0.3);
+      opacity: 0.4;
+    }
+    .cta-inner { position: relative; z-index: 1; }
+    .cta-section .article-kicker { color: var(--gold); border-color: var(--gold); }
+    .cta-section h2 { color: var(--paper-warm); font-size: clamp(1.8rem, 4vw, 3rem); margin: 0.5rem 0 1.5rem; }
+    .cta-section p {
+      font-family: var(--font-typewriter);
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      color: var(--paper-dark);
+      margin-bottom: 2rem;
+    }
+
+    /* — DECORACIONES TIPOGRÁFICAS — */
+    .cap-ornament {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: 900;
+      float: left;
+      line-height: 0.85;
+      margin: 0.05em 0.07em 0 0;
+      color: var(--ink);
+    }
+    .cap-ornament-inverse { color: var(--gold-bright); }
+
+    /* — SEPARADORES EDITORIALES — */
+    .press-divider {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 1rem;
+      margin: 2rem 0;
+      color: var(--ink-faded);
+    }
+    .press-divider::before, .press-divider::after {
+      content: ''; height: 1px;
+      background: linear-gradient(to right, transparent, currentColor, transparent);
+    }
+    .press-divider-text {
+      font-family: var(--font-typewriter);
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* Animación scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(25px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal-left.visible { opacity: 1; transform: translateX(0); }
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+    @media (max-width: 768px) {
+      .timeline::before { left: 20px; }
+      .tl-item { grid-template-columns: 40px 1fr; }
+      .tl-content-left { display: none; }
+      .tl-content-right { padding-left: 1rem; grid-column: 2; }
+      .tl-center { justify-content: flex-start; }
+      .foto-testimonio, .oriental-grid { grid-template-columns: 1fr; }
+      .hero-story { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ NAV ESTILO PERIÓDICO ═════════════════════════════ -->
+  <nav class="nav-principal">
+    <div class="nav-inner">
+      <a href="../index.html" class="nav-logo-area">
+        <div class="nav-logo-text">La Gran Guerra</div>
+        <div class="nav-logo-sub">1914 — 1918</div>
+      </a>
+      <div class="nav-center">
+        Estado Mayor Español · Misión de Observación · Agosto 1914
+      </div>
+      <div class="nav-actions">
+        <a href="seleccion-personaje.html" class="btn btn-gold" style="font-size:0.72rem;padding:0.5rem 1.2rem;">
+          Seleccionar Comandante →
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- TICKER DE NOTICIAS -->
+  <div class="ticker-wrap">
+    <span class="ticker-content">
+      <span class="ticker-sep">⬥</span>
+      AUSTRIA-HUNGRÍA DECLARA LA GUERRA A SERBIA — 28 DE JULIO DE 1914
+      <span class="ticker-sep">⬥</span>
+      ALEMANIA INVADE BÉLGICA NEUTRAL — 4 DE AGOSTO 1914
+      <span class="ticker-sep">⬥</span>
+      GRAN BRETAÑA DECLARA LA GUERRA AL KAISER — "UN PAPEL MOJADO" RESPONDIÓ BERLÍN
+      <span class="ticker-sep">⬥</span>
+      LOS EJÉRCITOS EUROPEOS SE MOVILIZAN: MÁS DE 15 MILLONES DE HOMBRES EN ARMAS
+      <span class="ticker-sep">⬥</span>
+      PRIMERA BATALLA DEL MARNE: PARIS SE SALVA — SEPTIEMBRE 1914
+      <span class="ticker-sep">⬥</span>
+      ESPAÑA DECLARA SU NEUTRALIDAD — ESPAÑA OBSERVA — ESPAÑA ESPERA
+      <span class="ticker-sep">⬥</span>
+    </span>
+  </div>
+
+  <!-- ═══ PORTADA — HERO PERIÓDICO ═════════════════════════ -->
+  <section class="hero-newspaper">
+    <div class="hero-bg-photo"></div>
+    <div class="hero-bg-overlay"></div>
+
+    <div class="hero-content">
+      <!-- CABECERA DEL PERIÓDICO -->
+      <div class="newspaper-masthead fade-in">
+        <hr class="masthead-rule-top">
+        <hr class="masthead-rule-thin">
+        <div class="masthead-title">El Observador Militar</div>
+        <div class="masthead-subtitle">Órgano del Estado Mayor Español · Edición Clasificada · Solo para Uso Oficial</div>
+        <hr class="masthead-rule-thin">
+        <div class="masthead-dateline">
+          <span>Madrid — Agosto de 1914</span>
+          <span class="masthead-precio">RESERVADO</span>
+          <span>Año I · Número Especial de Guerra</span>
+        </div>
+      </div>
+
+      <!-- HISTORIA PRINCIPAL SOBRE LA FOTO -->
+      <div class="hero-story">
+        <div class="contenido-wrapper">
+          <div style="max-width: 800px;">
+            <span class="article-kicker fade-in-1">⚠ Edición de Guerra — Noticias Urgentes</span>
+            <h1 class="article-headline fade-in-2" style="font-size:clamp(2.5rem,6vw,5rem);line-height:1.05;margin-bottom:0.5rem;">
+              EUROPA EN LLAMAS:<br>LA GRAN GUERRA
+            </h1>
+            <div class="article-byline fade-in-3">
+              CRÓNICA ESPECIAL DEL CORRESPONSAL EN CAMPAÑA · FRENTE OCCIDENTAL · AGOSTO 1914
+            </div>
+            <div class="article-body fade-in-4" style="columns: 2; column-gap: 2rem; max-width: 720px;">
+              <p>En los primeros días de agosto de 1914, el mecanismo de alianzas que durante décadas había mantenido una paz tensa en Europa saltó hecho añicos. El asesinato de un archiduque en Sarajevo desencadenó una reacción en cadena de declaraciones de guerra que en apenas cinco semanas involucró a las mayores potencias del continente.</p>
+              <p>Las calles de París, Berlín, Londres y Viena se llenaron de jóvenes entusiastas convencidos de que estarían de vuelta en casa para Navidad. Los generales hablaban de ofensivas relámpago, de caballería gloriosa, de victorias decisivas. Nadie imaginaba lo que realmente les esperaba.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SECCIÓN I: COLUMNAS PRENSA — LAS CAUSAS ══════════ -->
+  <section class="main-newspaper">
+
+    <!-- BARRA SECCIÓN -->
+    <div class="black-bar">
+      <span class="black-bar-label">Sección I</span>
+      <div class="black-bar-line"></div>
+      <span class="black-bar-num">I</span>
+      <div class="black-bar-line"></div>
+      <span class="black-bar-label">Las Causas del Conflicto</span>
+    </div>
+
+    <div class="contenido-wrapper" style="padding-top: 1.8rem; padding-bottom: 2rem;">
+
+      <!-- LAYOUT 3 COLUMNAS PRENSA -->
+      <div class="press-columns reveal" style="grid-template-columns: 1fr 1.4fr 1fr;">
+
+        <!-- COL 1: Militarismo -->
+        <div class="press-col-border">
+          <span class="article-kicker">Factor I</span>
+          <h2 class="article-headline article-headline-md">El Militarismo Europeo</h2>
+          <div class="article-byline">ANÁLISIS DEL ESTADO MAYOR</div>
+          <div class="article-body">
+            <p>Durante las décadas previas a 1914, las potencias europeas habían embarcado en una frenética carrera armamentística. Alemania duplicó su flota naval desafiando a la Royal Navy. Francia y Rusia expandieron sus ejércitos hasta cifras sin precedentes.</p>
+            <p>Los presupuestos militares crecieron un 300% entre 1870 y 1914. Los estados mayores elaboraron planes de guerra meticulosos que comprometían a millones de soldados en movimientos coordinados como piezas de un reloj suizo. Un reloj que, una vez puesto en marcha, nadie podría detener.</p>
+          </div>
+        </div>
+
+        <!-- COL CENTRAL: Titular grande + FOTO -->
+        <div class="press-col-border" style="border-left: 1px solid rgba(26,20,9,0.2);">
+          <span class="article-kicker" style="color:var(--red-ink);border-color:var(--red-ink);">⬥ El Detonante ⬥</span>
+          <h2 class="article-headline article-headline-xl" style="text-align:center;border-bottom:3px double var(--ink);padding-bottom:0.8rem;margin-bottom:0.8rem;">
+            «UN PAPEL<br>MOJADO»
+          </h2>
+          <!-- FOTO HISTÓRICA: Sarajevo 1914 -->
+          <div class="press-photo photo-corners reveal-left" style="margin-bottom:0.5rem;">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Assassination_of_Archduke_Franz_Ferdinand%2C_1914.jpg/640px-Assassination_of_Archduke_Franz_Ferdinand%2C_1914.jpg"
+              alt="Asesinato del Archiduque Francisco Fernando, Sarajevo 1914"
+              loading="lazy"
+              onerror="this.parentElement.style.minHeight='160px';this.parentElement.style.background='var(--ink)';this.style.display='none';"
+            >
+            <div class="press-photo-overlay"></div>
+            <div class="press-photo-caption">
+              SARAJEVO, 28 DE JUNIO DE 1914 — El automóvil del Archiduque Francisco Fernando instantes antes del asesinato. Este suceso activó el sistema de alianzas que arrastró a Europa a la guerra.
+            </div>
+          </div>
+          <div class="article-body" style="font-size:0.82rem;">
+            <p>El Archiduque Francisco Fernando, heredero al trono austrohúngaro, fue asesinado por Gavrilo Princip en las calles de Sarajevo. El atentado activó un sistema de ultimátums y declaraciones de guerra que en 37 días convirtió una crisis regional en conflicto mundial.</p>
+          </div>
+        </div>
+
+        <!-- COL 3: Imperialismo y Nacionalismo -->
+        <div class="press-col-border" style="border-left: 1px solid rgba(26,20,9,0.2);">
+          <span class="article-kicker">Factor II</span>
+          <h2 class="article-headline article-headline-md">Imperios en Conflicto</h2>
+          <div class="article-byline">ANÁLISIS ESTRATÉGICO</div>
+          <div class="article-body">
+            <p>El imperialismo europeo había creado un sistema de rivalidades coloniales que envenenó las relaciones entre las potencias. Marruecos, los Balcanes, el África subsahariana: cada región colonial fue un campo de tensión diplomática que debilitó la cooperación internacional.</p>
+            <p>Simultáneamente, el nacionalismo exaltado sacudía los imperios multiétnicos. Los eslavos del sur soñaban con la Gran Serbia. Los alemanes con el dominio continental. Los franceses con recuperar Alsacia-Lorena. Fuerzas centrífugas que ningún estadista supo controlar.</p>
+          </div>
+          <hr class="article-rule">
+          <div class="pull-quote" style="font-size:0.88rem;">
+            "Los cañones de agosto resonarán en la historia como el epitafio del mundo que existió antes"
+          </div>
+        </div>
+      </div>
+
+      <!-- ESTADÍSTICAS -->
+      <div class="press-divider reveal">
+        <div class="press-divider-text">Cifras de la Gran Guerra</div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2.5rem;" class="reveal">
+        <div class="stat-block" data-label="Bajas totales">
+          <div class="stat-number stat-accent">17M</div>
+          <div class="stat-label">Muertos en combate y civiles</div>
+        </div>
+        <div class="stat-block" data-label="Heridos">
+          <div class="stat-number">20M</div>
+          <div class="stat-label">Soldados heridos o mutilados</div>
+        </div>
+        <div class="stat-block" data-label="Movilizados">
+          <div class="stat-number">65M</div>
+          <div class="stat-label">Hombres movilizados globalmente</div>
+        </div>
+        <div class="stat-block" data-label="Duración">
+          <div class="stat-number">4</div>
+          <div class="stat-label">Años, 3 meses y 14 días de guerra</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SECCIÓN II: FOTO-TESTIMONIO — LAS TRINCHERAS ═════ -->
+  <section style="background:var(--press-dark);padding:0;">
+    <div class="black-bar">
+      <span class="black-bar-label">Sección II</span>
+      <div class="black-bar-line"></div>
+      <span class="black-bar-num">II</span>
+      <div class="black-bar-line"></div>
+      <span class="black-bar-label">La Guerra de Trincheras</span>
+    </div>
+
+    <!-- FOTO GRANDE + TEXTO -->
+    <div class="foto-testimonio reveal" style="max-width:1200px;margin:0 auto;">
+      <div class="foto-testimonio-img">
+        <!-- Foto soldados en trinchera -->
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/WWI_-_Trench_warfare.jpg/800px-WWI_-_Trench_warfare.jpg"
+          alt="Soldados en trincheras del frente occidental, 1916"
+          loading="lazy"
+          style="min-height:340px;"
+          onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/British_55th_Division_gas_attack_Loos_19_July_1917.jpg/640px-British_55th_Division_gas_attack_Loos_19_July_1917.jpg';"
+        >
+        <div class="press-photo-overlay"></div>
+        <div class="mapa-caption" style="position:absolute;bottom:0;left:0;right:0;font-size:0.62rem;letter-spacing:0.1em;padding:1.5rem 1rem 0.6rem;background:linear-gradient(transparent,rgba(0,0,0,0.9));color:var(--paper-dark);line-height:1.4;text-align:left;">
+          FRENTE OCCIDENTAL, 1916 — Soldados aliados en las trincheras de Champagne. El sistema de trincheras se extendió 750 km desde el Canal de la Mancha hasta Suiza.
+        </div>
+      </div>
+      <div class="foto-testimonio-text">
+        <span class="article-kicker">El horror moderno</span>
+        <h2 class="article-headline" style="font-size:1.5rem;margin-bottom:0.8rem;">La Guerra que Nadie<br>Imaginaba</h2>
+        <div class="article-body">
+          <p>Los generales hablaban de ofensivas brillantes y victorias rápidas. La realidad fue la trinchera: un agujero en la tierra húmeda donde los soldados vivían y morían durante semanas sin avanzar un metro.</p>
+          <p>La batalla de Verdún duró 10 meses y costó 300,000 vidas. La del Somme comenzó con 60,000 bajas británicas en su primer día. El 1 de julio de 1916 es el día más sangriento de toda la historia militar británica.</p>
+          <p>Los hombres sobrevivían en condiciones infrahumanas: barro, ratas, piojos, gases venenosos, artillería constante. La psicología humana alcanzó sus límites. Lo llamaron "shell shock" —lo que hoy llamamos trauma de guerra.</p>
+        </div>
+        <div style="margin-top:1.2rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.1);">
+          <div class="article-kicker">Dato estratégico</div>
+          <div style="font-family:var(--font-display);font-size:1.8rem;font-weight:900;color:var(--gold);line-height:1;">750 km</div>
+          <div style="font-family:var(--font-typewriter);font-size:0.62rem;letter-spacing:0.12em;color:var(--paper-dark);text-transform:uppercase;">Extensión del Frente Occidental</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEGUNDA FOTO: AMETRALLADORA -->
+    <div class="foto-testimonio reveal" style="max-width:1200px;margin:0 auto;border-top:2px solid rgba(255,255,255,0.05);">
+      <div class="foto-testimonio-text">
+        <span class="article-kicker">Tecnología de muerte</span>
+        <h2 class="article-headline" style="font-size:1.5rem;margin-bottom:0.8rem;">La Industrialización<br>del Exterminio</h2>
+        <div class="article-body">
+          <p>La Primera Guerra Mundial fue la primera en emplear de forma masiva la metralladora, el tanque, el avión de combate, el submarino moderno y el gas venenoso. La ciencia y la industria al servicio de la destrucción sistemática.</p>
+          <p>Una sola ametralladora MG 08 alemana podía disparar 450 proyectiles por minuto, haciendo suicidas las cargas de infantería que los manuales militares decimonónicos prescribían. Los generales tardaron años en comprender que las tácticas del siglo XIX eran inútiles ante la tecnología del XX.</p>
+          <p>El gas mostaza, introducido en 1917, fue especialmente temible: invisible, persistente en el terreno y capaz de cegar y quemar la piel y los pulmones. Más de un millón de bajas se atribuyen a agentes químicos durante toda la guerra.</p>
+        </div>
+      </div>
+      <div class="foto-testimonio-img">
+        <!-- Foto ametralladora/gas -->
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/British_55th_Division_gas_attack_Loos_19_July_1917.jpg/640px-British_55th_Division_gas_attack_Loos_19_July_1917.jpg"
+          alt="Soldados con máscaras de gas, frente occidental 1917"
+          loading="lazy"
+          style="min-height:300px;object-position:center center;"
+          onerror="this.style.display='none';"
+        >
+        <div class="press-photo-overlay"></div>
+        <div class="mapa-caption" style="position:absolute;bottom:0;left:0;right:0;font-size:0.62rem;padding:1.5rem 1rem 0.6rem;background:linear-gradient(transparent,rgba(0,0,0,0.9));color:var(--paper-dark);line-height:1.4;text-align:left;">
+          LOOS, JULIO 1917 — Soldados de la 55ª División británica atacados por gas. Las máscaras antigás eran a menudo insuficientes contra los nuevos agentes químicos.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SECCIÓN III: LAS ALIANZAS ════════════════════════ -->
+  <section class="main-newspaper">
+    <div class="black-bar">
+      <span class="black-bar-label">Sección III</span>
+      <div class="black-bar-line"></div>
+      <span class="black-bar-num">III</span>
+      <div class="black-bar-line"></div>
+      <span class="black-bar-label">El Sistema de Alianzas</span>
+    </div>
+
+    <div class="contenido-wrapper" style="padding-top:2rem;padding-bottom:2rem;">
+
+      <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:2.5rem;align-items:start;">
+
+        <!-- COLUMNA ALIANZAS -->
+        <div class="reveal-left">
+          <span class="article-kicker">Análisis Geopolítico</span>
+          <h2 class="article-headline article-headline-lg" style="color:var(--ink);margin-bottom:1rem;">
+            Dos Bloques Enfrentados
+          </h2>
+          <div class="article-body" style="margin-bottom:1.5rem;">
+            <p>Europa en 1914 estaba dividida en dos sistemas de alianzas que convirtieron cada crisis local en una amenaza sistémica. La Triple Entente enfrentó a las Potencias Centrales en la mayor conflagración conocida hasta entonces.</p>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr 0.7fr;gap:1rem;">
+            <div class="alianza-card entente reveal">
+              <div class="alianza-card-title">La Entente</div>
+              <div class="alianza-pais">
+                <span>🇫🇷 Francia</span>
+                <span>🇬🇧 Imperio Británico</span>
+                <span>🇷🇺 Imperio Ruso</span>
+                <span style="color:var(--ink-faded);font-size:0.65em;">+ Italia (1915)</span>
+                <span style="color:var(--ink-faded);font-size:0.65em;">+ EE.UU. (1917)</span>
+              </div>
+            </div>
+            <div class="alianza-card centrales reveal" style="animation-delay:0.2s;">
+              <div class="alianza-card-title">Potencias Centrales</div>
+              <div class="alianza-pais">
+                <span>🇩🇪 Imperio Alemán</span>
+                <span>🇦🇹 Aus-Hungría</span>
+                <span>🇹🇷 Imp. Otomano</span>
+                <span>🇧🇬 Bulgaria</span>
+              </div>
+            </div>
+            <div class="alianza-card neutral reveal" style="animation-delay:0.4s;">
+              <div class="alianza-card-title" style="font-size:0.95rem;">Neutrales</div>
+              <div class="alianza-pais">
+                <span>🇪🇸 España</span>
+                <span>🇨🇭 Suiza</span>
+                <span>🇸🇪 Suecia</span>
+                <span style="color:var(--ink-faded);font-size:0.65em;">Observadores</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- INFORME CLASIFICADO -->
+          <div class="military-report reveal" style="margin-top:1.5rem;">
+            <div class="report-seal">
+              <span class="report-seal-inner">★</span>
+              ALTO<br>SECRETO<br>1914
+            </div>
+            <div class="report-header">
+              <div>
+                <div class="report-classification">Informe de Inteligencia · Clasificado</div>
+                <div class="report-title">Análisis de la Activación del<br>Sistema de Alianzas</div>
+              </div>
+              <div class="report-meta">
+                Ref: EM/INT/1914/0892<br>
+                Fecha: 5 Agosto 1914<br>
+                Clasificación: RESERVADO<br>
+                Destinatario: Estado Mayor
+              </div>
+            </div>
+            <div class="report-body" style="white-space:normal;">
+              <p style="margin-bottom:0.5rem;">La secuencia de activación del sistema de alianzas confirma el peor escenario posible para la estabilidad europea:</p>
+              <p style="margin-bottom:0.5rem;"><strong>28 Jun:</strong> Asesinato en Sarajevo → <strong>23 Jul:</strong> Ultimátum austro-húngaro a Serbia → <strong>28 Jul:</strong> Declaración de guerra AH→Serbia → <strong>1 Ago:</strong> Alemania declara guerra a Rusia → <strong>3 Ago:</strong> Alemania declara guerra a Francia → <strong>4 Ago:</strong> Gran Bretaña declara guerra a Alemania.</p>
+              <p><strong>CONCLUSIÓN:</strong> El sistema ha fallado catastrófico. Estimación: conflicto de larga duración inevitable. España debe mantener neutralidad absoluta.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- SIDEBAR DATOS -->
+        <div class="reveal-right">
+          <div class="sidebar-facts">
+            <div class="sidebar-facts-title">⬥ Datos Clave del Conflicto</div>
+            <div class="fact-item">
+              <div class="fact-label">Detonante</div>
+              <div class="fact-value">Sarajevo, 28 Jun 1914</div>
+            </div>
+            <div class="fact-item">
+              <div class="fact-label">Fin de la guerra</div>
+              <div class="fact-value">Armisticio, 11 Nov 1918</div>
+            </div>
+            <div class="fact-item">
+              <div class="fact-label">Países implicados</div>
+              <div class="fact-value">+30 naciones de 6 continentes</div>
+            </div>
+            <div class="fact-item">
+              <div class="fact-label">Coste económico</div>
+              <div class="fact-value">180,000 millones de dólares (1914)</div>
+            </div>
+            <div class="fact-item">
+              <div class="fact-label">Imperios destruidos</div>
+              <div class="fact-value">Alemán · Austrohúngaro<br>Ruso · Otomano</div>
+            </div>
+            <div class="fact-item">
+              <div class="fact-label">Posición española</div>
+              <div class="fact-value">Neutralidad bajo Alfonso XIII<br>Dividida entre aliados/germanos</div>
+            </div>
+          </div>
+
+          <!-- NOTA DE TELEGRAMA -->
+          <div class="telegrama reveal" style="margin-top:1.5rem;transform:rotate(1deg);">
+            <div class="telegrama-sello">ESTADO<br>MAYOR<br>1914</div>
+            <div class="telegrama-header">MINISTERIO DE ESTADO — MADRID</div>
+            <div class="telegrama-body">
+              URGENTE · 4 AGOSTO 1914<br><br>
+              ESPAÑA DECLARA NEUTRALIDAD<br>
+              OFICIAL EN CONFLICTO EUROPEO.<br><br>
+              Observadores del Estado Mayor<br>
+              autorizados a cruzar fronteras<br>
+              con credenciales diplomáticas.<br><br>
+              INFORMAR DE TODO LO OBSERVADO.<br>
+              — MINISTERIO DE ESTADO
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SECCIÓN IV: MAPA ══════════════════════════════════ -->
+  <section class="mapa-section">
+    <div class="mapa-wrapper">
+      <div class="mapa-section-title">Cartografía Militar · Clasificada</div>
+      <h2 class="fade-in-2" style="font-family:var(--font-display);font-size:clamp(1.5rem,3vw,2.2rem);">
+        Europa en Guerra — Teatro de Operaciones 1914–1918
+      </h2>
+
+      <div style="display:grid;grid-template-columns:1fr 300px;gap:1.5rem;align-items:start;" class="reveal">
+
+        <!-- MAPA HISTÓRICO REAL con SVG superpuesto -->
+        <div class="mapa-historico-container photo-corners">
+          <!-- Mapa real de Europa de Wikimedia -->
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Europe_1914.jpg/1280px-Europe_1914.jpg"
+            alt="Mapa de Europa en 1914 con las alianzas militares"
+            loading="lazy"
+            style="width:100%;min-height:400px;object-fit:cover;"
+            onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Westfront_1914-1918.jpg/800px-Westfront_1914-1918.jpg';"
+          >
+          <!-- SVG OVERLAY: Líneas de frente animadas -->
+          <svg class="mapa-overlay-svg" viewBox="0 0 1280 780" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+            <!-- FRENTE OCCIDENTAL (línea animada) -->
+            <path class="frente-line"
+              d="M 395 180 L 410 220 L 395 270 L 400 330 L 390 390 L 395 440 L 385 500"
+              stroke-width="3"/>
+            <!-- Etiqueta Frente Occidental -->
+            <rect x="280" y="290" width="105" height="20" fill="rgba(192,57,43,0.85)" rx="2"/>
+            <text x="335" y="304" class="frente-label" text-anchor="middle" fill="white">FRENTE OCCIDENTAL</text>
+
+            <!-- FRENTE ORIENTAL -->
+            <path class="frente-line"
+              d="M 820 130 L 800 200 L 790 280 L 800 360 L 780 440 L 800 520 L 790 600"
+              stroke-width="2.5" stroke="#c0891a" stroke-dasharray="6,4"
+              style="animation-duration:1.5s;"/>
+            <!-- Etiqueta Frente Oriental -->
+            <rect x="820" y="360" width="100" height="20" fill="rgba(139,90,20,0.85)" rx="2"/>
+            <text x="870" y="374" class="frente-label" text-anchor="middle" fill="white" style="fill:#f5e8c4;">FRENTE ORIENTAL</text>
+
+            <!-- CIUDADES CLAVE -->
+            <circle cx="450" cy="320" r="5" class="ciudad-dot"/>
+            <text x="460" y="315" class="ciudad-label">PARIS</text>
+
+            <circle cx="500" cy="178" r="5" class="ciudad-dot"/>
+            <text x="510" y="173" class="ciudad-label">BRUSELAS</text>
+
+            <circle cx="620" cy="200" r="6" class="ciudad-dot" stroke="var(--red-stamp)" fill="rgba(192,57,43,0.2)"/>
+            <text x="630" y="195" class="ciudad-label" style="fill:var(--red-stamp);font-weight:bold;">BERLIN</text>
+
+            <circle cx="440" cy="185" r="4" class="ciudad-dot"/>
+            <text x="450" y="180" class="ciudad-label">LONDON</text>
+
+            <circle cx="750" cy="220" r="5" class="ciudad-dot"/>
+            <text x="760" y="215" class="ciudad-label">VIENNA</text>
+
+            <circle cx="960" cy="200" r="5" class="ciudad-dot"/>
+            <text x="970" y="195" class="ciudad-label">MOSCÚ</text>
+
+            <!-- PIN ESPAÑA (observadores) -->
+            <circle cx="310" cy="500" r="7" fill="rgba(184,146,42,0.3)" stroke="var(--gold)" stroke-width="2"/>
+            <circle cx="310" cy="500" r="12" fill="none" stroke="var(--gold)" stroke-width="1" opacity="0.5">
+              <animate attributeName="r" values="7;18" dur="2s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.5;0" dur="2s" repeatCount="indefinite"/>
+            </circle>
+            <text x="325" y="494" class="ciudad-label" style="fill:var(--gold);font-weight:bold;">★ MADRID</text>
+            <text x="325" y="506" style="font-size:7px;fill:var(--gold);font-family:var(--font-typewriter);letter-spacing:0.06em;">OBSERVADORES</text>
+
+            <!-- LEYENDA -->
+            <rect x="20" y="700" width="220" height="72" fill="rgba(8,6,4,0.82)" rx="3"/>
+            <line x1="30" y1="715" x2="70" y2="715" stroke="var(--red-stamp)" stroke-width="3" stroke-dasharray="6,3"/>
+            <text x="78" y="719" style="font-size:8px;fill:var(--paper-warm);font-family:var(--font-typewriter);">Frente Occidental</text>
+            <line x1="30" y1="732" x2="70" y2="732" stroke="#c0891a" stroke-width="2" stroke-dasharray="5,4"/>
+            <text x="78" y="736" style="font-size:8px;fill:var(--paper-warm);font-family:var(--font-typewriter);">Frente Oriental</text>
+            <circle cx="40" cy="750" r="5" fill="none" stroke="var(--gold)" stroke-width="2"/>
+            <text x="78" y="754" style="font-size:8px;fill:var(--gold);font-family:var(--font-typewriter);">España — Neutral (Obs.)</text>
+          </svg>
+          <div class="mapa-caption">
+            EUROPA · 1914 — Mapa cartográfico con posición de los frentes de guerra y alianzas militares · Clasificado · Uso Exclusivo del Estado Mayor
+          </div>
+        </div>
+
+        <!-- LEYENDA MAPA -->
+        <div>
+          <div class="sidebar-facts" style="background:rgba(13,10,6,0.8);border:1px solid rgba(184,146,42,0.2);border-left:3px solid var(--gold);">
+            <div class="sidebar-facts-title">⬥ Lectura del Mapa</div>
+            <div class="fact-item">
+              <div class="fact-label" style="color:var(--red-stamp);">── Frente Occidental</div>
+              <div class="fact-value" style="font-size:0.78rem;">750 km desde el Canal de la Mancha hasta Suiza. El frente más sangriento de la historia.</div>
+            </div>
+            <div class="fact-item">
+              <div class="fact-label" style="color:#c0891a;">-- Frente Oriental</div>
+              <div class="fact-value" style="font-size:0.78rem;">Frente dinámico, más de 1,600 km. Colapso del Imperio Ruso en 1917.</div>
+            </div>
+            <div class="fact-item">
+              <div class="fact-label" style="color:var(--khaki-faded);">◼ Entente Aliada</div>
+              <div class="fact-value" style="font-size:0.78rem;">Francia, Gran Bretaña, Rusia, Italia (1915), EEUU (1917).</div>
+            </div>
+            <div class="fact-item">
+              <div class="fact-label" style="color:var(--red-ink);">◼ Potencias Centrales</div>
+              <div class="fact-value" style="font-size:0.78rem;">Alemania, Austria-Hungría, Imp. Otomano, Bulgaria.</div>
+            </div>
+            <div class="fact-item">
+              <div class="fact-label" style="color:var(--gold);">★ España</div>
+              <div class="fact-value" style="font-size:0.78rem;">Neutral. Sus observadores militares operan en todos los frentes con credenciales diplomáticas.</div>
+            </div>
+          </div>
+
+          <!-- NOTA SOBRE GALERÍA -->
+          <div style="margin-top:1rem;padding:1rem;background:rgba(8,6,4,0.6);border:1px solid rgba(184,146,42,0.15);">
+            <div style="font-family:var(--font-typewriter);font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem;">
+              Nota del Cartógrafo
+            </div>
+            <p style="font-family:var(--font-body);font-size:0.78rem;color:var(--paper-dark);line-height:1.6;">
+              Este mapa fue elaborado por el Departamento de Cartografía Militar del Estado Mayor usando fuentes de inteligencia de agosto de 1914. Las posiciones de los frentes son aproximadas y sujetas a cambios continuos.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SECCIÓN V: CRONOLOGÍA ════════════════════════════ -->
+  <section class="main-newspaper">
+    <div class="black-bar">
+      <span class="black-bar-label">Sección IV</span>
+      <div class="black-bar-line"></div>
+      <span class="black-bar-num">IV</span>
+      <div class="black-bar-line"></div>
+      <span class="black-bar-label">Cronología del Conflicto · 1914–1918</span>
+    </div>
+
+    <div class="contenido-wrapper" style="padding-top:2rem;padding-bottom:2.5rem;">
+      <div class="timeline">
+
+        <div class="tl-item reveal">
+          <div class="tl-content-left">
+            <div class="tl-year">28 Jun 1914</div>
+            <div class="tl-headline">Asesinato en Sarajevo</div>
+            <div class="tl-text">El archiduque Francisco Fernando y su esposa son asesinados por Gavrilo Princip, miembro de la Mano Negra serbia.</div>
+          </div>
+          <div class="tl-center"><div class="tl-dot"></div></div>
+          <div class="tl-empty"></div>
+        </div>
+
+        <div class="tl-item reveal">
+          <div class="tl-empty"></div>
+          <div class="tl-center"><div class="tl-dot"></div></div>
+          <div class="tl-content-right">
+            <div class="tl-year">4 Ago 1914</div>
+            <div class="tl-headline">Invasión de Bélgica</div>
+            <div class="tl-text">Alemania cruza la frontera belga. Gran Bretaña declara la guerra inmediatamente. El Plan Schlieffen en marcha.</div>
+          </div>
+        </div>
+
+        <div class="tl-item reveal">
+          <div class="tl-content-left">
+            <div class="tl-year">Sep 1914</div>
+            <div class="tl-headline">Milagro del Marne</div>
+            <div class="tl-text">Francia detiene el avance alemán. Los taxis de París transportan refuerzos. Se inicia la guerra de trincheras.</div>
+          </div>
+          <div class="tl-center"><div class="tl-dot"></div></div>
+          <div class="tl-empty"></div>
+        </div>
+
+        <div class="tl-item reveal">
+          <div class="tl-empty"></div>
+          <div class="tl-center"><div class="tl-dot"></div></div>
+          <div class="tl-content-right">
+            <div class="tl-year">Feb–Dic 1916</div>
+            <div class="tl-headline" style="color:var(--red-ink);">Verdún y el Somme</div>
+            <div class="tl-text">Las batallas más sangrientas de la historia. 600,000 muertos en Verdún. 60,000 bajas aliadas el primer día del Somme.</div>
+          </div>
+        </div>
+
+        <div class="tl-item reveal">
+          <div class="tl-content-left">
+            <div class="tl-year">1917</div>
+            <div class="tl-headline">Revolución Rusa</div>
+            <div class="tl-text">El Imperio Ruso colapsa. Rusia abandona la guerra con el Tratado de Brest-Litovsk. EE.UU. entra en el conflicto.</div>
+          </div>
+          <div class="tl-center"><div class="tl-dot"></div></div>
+          <div class="tl-empty"></div>
+        </div>
+
+        <div class="tl-item reveal">
+          <div class="tl-empty"></div>
+          <div class="tl-center"><div class="tl-dot"></div></div>
+          <div class="tl-content-right">
+            <div class="tl-year">11 Nov 1918</div>
+            <div class="tl-headline" style="color:var(--gold);">El Armisticio</div>
+            <div class="tl-text">A las 11:00 del 11/11/1918, los cañones callan en el frente occidental. Cuatro años de horror han terminado. El mundo nunca volverá a ser igual.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SECCIÓN VI: FRENTE ORIENTAL ══════════════════════ -->
+  <section style="background:var(--press-dark);padding:0;">
+    <div class="black-bar">
+      <span class="black-bar-label">Sección V</span>
+      <div class="black-bar-line"></div>
+      <span class="black-bar-num">V</span>
+      <div class="black-bar-line"></div>
+      <span class="black-bar-label">El Frente Oriental</span>
+    </div>
+
+    <div style="max-width:1200px;margin:0 auto;">
+      <div class="oriental-grid reveal">
+        <div class="oriental-foto">
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Bundesarchiv_Bild_183-R05148%2C_Erster_Weltkrieg%2C_Westfront%2C_Infanterie.jpg/640px-Bundesarchiv_Bild_183-R05148%2C_Erster_Weltkrieg%2C_Westfront%2C_Infanterie.jpg"
+            alt="Tropas en el frente oriental"
+            loading="lazy"
+            style="min-height:320px;object-fit:cover;"
+            onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Zossen-Bundesarchiv_Bild_183-R05148%2C_Erster_Weltkrieg%2C_Westfront.jpg/640px-Zossen-Bundesarchiv_Bild_183-R05148%2C_Erster_Weltkrieg%2C_Westfront.jpg';this.style.filter='grayscale(1) sepia(0.2) contrast(1.2) brightness(0.75)';"
+          >
+          <div class="press-photo-overlay"></div>
+        </div>
+        <div class="oriental-texto">
+          <span class="article-kicker" style="color:var(--gold);border-color:var(--gold);">Teatro Oriental</span>
+          <h2 class="article-headline" style="color:var(--paper-warm);font-size:1.6rem;margin-bottom:1rem;">
+            La Guerra Olvidada del Este
+          </h2>
+          <div class="article-body" style="color:rgba(230,210,172,0.87);">
+            <p>Mientras el frente occidental capturaba la atención mundial, una guerra igualmente devastadora se libraba en el este. Desde el Báltico hasta el Mar Negro, más de 1,600 km de frente donde el Imperio Ruso luchaba contra Alemania y Austria-Hungría.</p>
+            <p>La Ofensiva Brusilov de 1916 fue el mayor éxito aliado de toda la guerra: 500,000 prisioneros austro-húngaros capturados. Pero el esfuerzo agotó definitivamente al ejército ruso, preparando el camino para la Revolución de 1917.</p>
+            <p>El colapso del Imperio Zarista y el Tratado de Brest-Litovsk (marzo 1918) liberaron a Alemania de la guerra en dos frentes, aunque ya era demasiado tarde: los refuerzos americanos llegaban a Francia por miles cada semana.</p>
+          </div>
+          <div style="margin-top:1.2rem;display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;">
+            <div style="text-align:center;padding:0.8rem;border:1px solid rgba(184,146,42,0.2);">
+              <div style="font-family:var(--font-display);font-size:2rem;font-weight:900;color:var(--gold);">1,600</div>
+              <div style="font-family:var(--font-typewriter);font-size:0.6rem;letter-spacing:0.12em;color:var(--paper-dark);text-transform:uppercase;">km de frente oriental</div>
+            </div>
+            <div style="text-align:center;padding:0.8rem;border:1px solid rgba(184,146,42,0.2);">
+              <div style="font-family:var(--font-display);font-size:2rem;font-weight:900;color:var(--red-stamp);">2M</div>
+              <div style="font-family:var(--font-typewriter);font-size:0.6rem;letter-spacing:0.12em;color:var(--paper-dark);text-transform:uppercase;">soldados rusos muertos</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CTA FINAL — SIGUIENTE PASO ══════════════════════ -->
+  <section class="cta-section">
+    <div class="cta-inner">
+      <span class="article-kicker" style="display:inline-block;margin-bottom:1rem;">Misión Activada · Estado Mayor Español</span>
+      <h2>Habiendo Estudiado el Teatro de Operaciones,<br>Seleccione a su Comandante</h2>
+      <p>La misión de observación requiere un oficial de perfil específico.<br>Tres comandantes están disponibles para esta misión histórica.</p>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+        <a href="seleccion-personaje.html" class="btn btn-gold" style="font-size:0.9rem;padding:1rem 2.5rem;">
+          ⚔ Seleccionar Comandante →
+        </a>
+        <a href="../index.html" class="btn btn-secondary" style="font-size:0.85rem;">
+          ← Volver al Menú
+        </a>
+      </div>
+      <div style="margin-top:2rem;font-family:var(--font-typewriter);font-size:0.6rem;letter-spacing:0.2em;color:rgba(200,176,122,0.3);text-transform:uppercase;">
+        Proyecto Escolar · Historia · Primera Guerra Mundial · Curso 2024/25
+      </div>
+    </div>
+  </section>
+
+  <!-- LIBRETA FLOTANTE -->
+  <div id="libreta-flotante">
+    <button id="libreta-toggle">📓 Notas de Campaña <span class="libreta-arrow">▼</span></button>
+    <div id="libreta-body">
+      <textarea id="libreta-notas" placeholder="Anote sus observaciones históricas..."></textarea>
+      <div id="libreta-footer">
+        <span>Libreta del Observador</span>
+        <span id="libreta-guardado" style="color:var(--khaki-faded);"></span>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script>
+    /* ═══ SCROLL REVEAL ═══════════════════════════════════ */
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => {
+      observer.observe(el);
+    });
+
+    /* ═══ ANIMACIÓN NÚMERO ESTADÍSTICAS ══════════════════ */
+    const statObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const nums = entry.target.querySelectorAll('.stat-number');
+          nums.forEach(n => {
+            n.style.animation = 'countUp 0.8s ease both';
+          });
+        }
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('.stat-block').forEach(el => statObserver.observe(el));
+
+    /* ═══ PARALLAX HERO ══════════════════════════════════ */
+    const heroBg = document.querySelector('.hero-bg-photo');
+    if (heroBg) {
+      window.addEventListener('scroll', () => {
+        const scroll = window.scrollY;
+        heroBg.style.transform = `scale(1.04) translateY(${scroll * 0.3}px)`;
+      }, { passive: true });
+    }
+  </script>
+</body>
+</html>

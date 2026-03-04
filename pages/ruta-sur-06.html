@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ruta Sur 06 — Palestina — Tierra de Promesas — La Gran Guerra</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .nivel-layout {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 2rem;
+      margin: 1.5rem 0;
+    }
+    @media (max-width:768px) {
+      .nivel-layout { grid-template-columns: 1fr; }
+    }
+    .header-nivel {
+      background: linear-gradient(135deg, rgba(90,58,26,0.6), rgba(139,94,42,0.3));
+      border-bottom: 1px solid rgba(200,165,58,0.3);
+      padding: 1rem 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .ruta-badge {
+      background: linear-gradient(135deg, #8b5e2a, #5a3a1a);
+      color: var(--gold-medal);
+      font-family: var(--font-typewriter);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.8rem;
+      border: 1px solid var(--gold-medal);
+      border-radius: 3px;
+      margin-bottom: 0.3rem;
+      display: inline-block;
+    }
+    .mapa-mini {
+      background: linear-gradient(135deg, #d4a060, #b8803a);
+      border: 2px solid var(--sepia-mid);
+      border-radius: 8px;
+      padding: 1rem;
+      min-height: 140px;
+    }
+    .col-principal { display: flex; flex-direction: column; gap: 1.5rem; }
+    .col-lateral { display: flex; flex-direction: column; gap: 1.5rem; }
+    .acciones-nivel { display: flex; flex-direction: column; gap: 0.8rem; }
+    .telegrama-wrapper { animation: paperSlide 0.7s 0.5s ease both; }
+  </style>
+</head>
+<body class="page-bg">
+
+  <nav class="nav-principal">
+    <a href="../index.html" class="nav-logo">⚔ La Gran Guerra</a>
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <span class="text-typewriter" style="font-size:0.75rem;color:var(--sepia-light);">
+        Ruta Sur · Misión 06/07 · Cdte: <span class="nombre-comandante">—</span>
+      </span>
+    </div>
+  </nav>
+
+  <div class="header-nivel">
+    <div>
+      <div class="ruta-badge">🏜️ Ruta Sur</div>
+      <div style="font-family:var(--font-typewriter);font-size:0.78rem;letter-spacing:0.1em;color:var(--sepia-light);">Gaza a Jerusalén, 1917</div>
+    </div>
+    <div style="font-family:var(--font-display);font-size:2.5rem;color:rgba(200,165,58,0.2);">S·06</div>
+  </div>
+
+  <div style="background:rgba(0,0,0,0.3);padding:0.6rem 2rem;border-bottom:1px solid rgba(139,109,56,0.2);">
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <span class="text-typewriter" style="font-size:0.7rem;color:var(--sepia-light);">PROGRESO RUTA SUR:</span>
+      <div class="barra-nivel"></div>
+    </div>
+  </div>
+
+  <div id="libreta-flotante">
+    <button id="libreta-toggle">📓 Notas <span class="libreta-arrow">▼</span></button>
+    <div id="libreta-body">
+      <textarea id="libreta-notas" placeholder="Escriba sus notas..."></textarea>
+      <div id="libreta-footer">
+        <span>Libreta de Campaña</span>
+        <span id="libreta-guardado" style="color:var(--green-faded)"></span>
+      </div>
+    </div>
+  </div>
+
+  <main class="container">
+    <h1 class="fade-in" style="color:var(--gold-medal);margin:1.5rem 0 0.3rem;font-size:1.8rem;">Palestina — Tierra de Promesas</h1>
+    <div class="ornamento" style="margin:0.5rem 0 1.5rem;">✦ ✦ ✦</div>
+
+    <div class="nivel-layout">
+      <div class="col-principal">
+
+        <div>
+          <h3 style="font-family:var(--font-typewriter);font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--sepia-light);margin-bottom:0.8rem;">
+            📔 Diario del Comandante
+          </h3>
+          <div class="diario-entrada fade-in-delay-1">
+            <div class="diario-fecha">Entrada de campaña — Gaza a Jerusalén, 1917</div>
+            <p>El general Allenby es un hombre diferente a sus predecesores. Enérgico, directo y dispuesto a romper con la parálisis táctica que ha caracterizado esta guerra. 'No voy a atacar Gaza por el frente', me confía, 'cruzaré el desierto y atacaré Beersheba. Los turcos no lo esperarán'. Tiene razón. El 31 de octubre de 1917, la caballería australiana toma Beersheba al galope, en una de las últimas grandes cargas de caballería de la historia.</p>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-family:var(--font-typewriter);font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--sepia-light);margin-bottom:0.8rem;">
+            📨 Documento Oficial Recibido
+          </h3>
+          <div class="telegrama telegrama-wrapper fade-in-delay-2" style="transform:rotate(-0.5deg);">
+            <div class="telegrama-sello">RUTA<br>SUR<br>1915</div>
+            <div class="telegrama-header">CG FUERZA EXPEDICIONARIA EGIPCIA</div>
+            <div style="white-space:pre-line;font-size:0.82rem;line-height:1.7;">FECHA: 31.X.1917 // PARTE VICTORIA
+DE: GEN. ALLENBY — FEE
+PARA: WAR OFFICE — LONDRES
+
+OPERACIÓN TERCER GAZA — VICTORIA DECISIVA
+
+Beersheba ha caído al asalto de la 4ª Brigada de Caballería Ligera (australiana). El pozo de agua está intacto: las detonaciones turcas fallaron.
+
+La maniobra de engaño (documentos falsos sobre ataque a Gaza) funcionó perfectamente. El IV Ejército turco está desorganizado.
+
+PROXIMO OBJETIVO: Avance hacia Jerusalén.
+
+Esta campaña puede redimir todo el fracaso de Gallipoli.
+
+— ALLENBY</div>
+          </div>
+        </div>
+
+        <div style="text-align:center;">
+          <button class="btn btn-gold" onclick="abrirEscenario('https://deck.toys')">
+            🗺 Abrir Escenario Interactivo
+          </button>
+          <p class="text-typewriter" style="color:var(--sepia-mid);font-size:0.7rem;margin-top:0.5rem;letter-spacing:0.08em;">Se abrirá en nueva pestaña</p>
+        </div>
+
+      </div>
+
+      <div class="col-lateral">
+
+        <div>
+          <h3 style="font-family:var(--font-typewriter);font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--sepia-light);margin-bottom:0.8rem;">
+            🗺 Mapa de Avance
+          </h3>
+          <div class="mapa-mini fade-in-delay-2">
+            <div style="font-family:var(--font-typewriter);font-size:0.68rem;letter-spacing:0.1em;color:var(--ink-dark);margin-bottom:0.5rem;">RUTA SUR — PROGRESO:</div>
+            <div style="font-family:var(--font-manuscript);font-size:0.95rem;color:var(--ink-dark);font-weight:bold;margin-bottom:0.8rem;">Gaza → Beersheba → Jerusalén</div>
+            <div class="marcador-progreso">
+              <div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa activo"></div><div class="paso-mapa"></div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-family:var(--font-typewriter);font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--sepia-light);margin-bottom:0.8rem;">
+            🔍 Pistas Clasificadas
+          </h3>
+          <div class="fade-in-delay-3">
+            
+            <div class="pista-container">
+              <button class="pista-toggle">🔒 Pista 1 — El engaño de Haversack <span class="icono">▼</span></button>
+              <div class="pista-contenido">Allenby ordenó que un jinete herido 'perdiera' accidentalmente una bolsa con planes falsos indicando que el ataque principal sería en Gaza. Los turcos cayeron en el engaño.</div>
+            </div>
+            <div class="pista-container">
+              <button class="pista-toggle">🔒 Pista 2 — La toma de Jerusalén <span class="icono">▼</span></button>
+              <div class="pista-contenido">Allenby entró en Jerusalén el 11 de diciembre de 1917 A PIE, como gesto de respeto a la ciudad sagrada. Fue el primer cristiano en controlar Jerusalén desde las Cruzadas.</div>
+            </div>
+            <div class="pista-container">
+              <button class="pista-toggle">🔒 Pista 3 — Consecuencias <span class="icono">▼</span></button>
+              <div class="pista-contenido">La campaña de Palestina creó el Mandato Británico que durará hasta 1948, cuando se proclame el Estado de Israel, gestando el conflicto árabe-israelí aún no resuelto.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="acciones-nivel fade-in-delay-4">
+          <button id="btn-guardar" class="btn btn-primary">💾 Guardar Progreso</button>
+          <a href="ruta-sur-07.html" class="btn btn-gold" style="text-align:center;justify-content:center;">
+            Siguiente Misión →
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <script src="../js/main.js"></script>
+  <script>
+    initPuntosNivel(7, 6);
+  </script>
+</body>
+</html>

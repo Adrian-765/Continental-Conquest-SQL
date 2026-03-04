@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Prueba de Redmond — SQL: La Gran Guerra</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .nivel-layout{display:grid;grid-template-columns:1.15fr 0.85fr;gap:2rem;margin:1.5rem 0;}
+    @media(max-width:880px){.nivel-layout{grid-template-columns:1fr;}}
+    .header-nivel{background:linear-gradient(135deg,rgba(26,20,9,.98),rgba(42,48,32,.95));border-bottom:3px solid var(--gold);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;}
+    .nivel-badge{display:inline-block;background:var(--red-ink);color:var(--paper-warm);font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.2em;padding:.2rem .7rem;text-transform:uppercase;margin-bottom:.3rem;}
+    .nivel-num{font-family:var(--font-display);font-size:3.5rem;font-weight:900;color:rgba(184,146,42,.15);line-height:1;}
+    .col-p{display:flex;flex-direction:column;gap:1.5rem;}
+    .col-l{display:flex;flex-direction:column;gap:1.4rem;}
+    .sql-panel{background:#0a0d06;border:1px solid rgba(184,146,42,.2);border-top:3px solid var(--gold);overflow:hidden;}
+    .sql-header{background:rgba(184,146,42,.08);border-bottom:1px solid rgba(184,146,42,.15);padding:.6rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);}
+    .sql-dots{display:flex;gap:4px;}
+    .sql-dot{width:8px;height:8px;border-radius:50%;}
+    .sql-block{border-bottom:1px solid rgba(184,146,42,.08);padding:0;}
+    .sql-block:last-child{border-bottom:none;}
+    .sql-lbl{font-family:var(--font-typewriter);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(184,146,42,.6);padding:.5rem 1rem .2rem;border-left:2px solid var(--gold);}
+    .sql-pre{font-family:'Special Elite','Courier New',monospace;font-size:.75rem;line-height:1.7;color:#a8d4a0;padding:.3rem 1rem .7rem;overflow-x:auto;background:transparent;white-space:pre;margin:0;}
+    .schema-box{background:rgba(0,0,0,.3);border:1px dashed rgba(184,146,42,.2);margin:.5rem 1rem 1rem;}
+    .schema-lbl{font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(184,146,42,.5);padding:.4rem .8rem .2rem;}
+    .mapa-mini{background:linear-gradient(135deg,#c4b07a,#a8905a);border:2px solid var(--paper-stain);padding:1rem;min-height:120px;position:relative;overflow:hidden;box-shadow:3px 3px 0 rgba(0,0,0,.25);}
+    .mapa-mini::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(100,75,30,.05) 10px,rgba(100,75,30,.05) 11px);}
+    .mapa-ruta{font-family:var(--font-handwritten);font-size:1rem;color:var(--ink);font-weight:700;position:relative;line-height:1.6;}
+    .progreso-bar{background:rgba(0,0,0,.3);padding:.5rem 2rem;border-bottom:1px solid rgba(184,146,42,.1);display:flex;align-items:center;gap:1rem;}
+    .section-label{font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem;}
+    .exigencia-item{display:flex;gap:.8rem;padding:.7rem 0;border-bottom:1px solid rgba(184,146,42,.1);}
+    .exigencia-item:last-child{border-bottom:none;}
+    .exigencia-letra{flex-shrink:0;width:24px;height:24px;background:var(--red-ink);color:var(--paper-warm);font-family:var(--font-display);font-weight:900;font-size:.85rem;display:flex;align-items:center;justify-content:center;}
+    .exigencia-txt{font-family:var(--font-body);font-size:.82rem;color:var(--paper-aged);line-height:1.5;}
+    .tabla-datos{width:100%;border-collapse:collapse;font-family:var(--font-typewriter);font-size:.72rem;}
+    .tabla-datos th{background:var(--ink);color:var(--gold);padding:.35rem .6rem;text-align:left;letter-spacing:.08em;font-weight:normal;}
+    .tabla-datos td{padding:.3rem .6rem;border-bottom:1px solid rgba(184,146,42,.1);color:var(--paper-aged);}
+    .tabla-datos tr:last-child td{border-bottom:none;}
+    .tabla-datos tr:hover td{background:rgba(184,146,42,.05);}
+    .badge-ruta{display:inline-block;padding:.15rem .5rem;font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;}
+    .badge-alta{background:rgba(139,26,26,.3);color:#e88;border:1px solid rgba(139,26,26,.4);}
+    .badge-media{background:rgba(139,100,42,.3);color:#e8c8a0;border:1px solid rgba(139,100,42,.4);}
+    .badge-baja{background:rgba(42,48,32,.5);color:var(--khaki-faded);border:1px solid var(--khaki-mid);}
+    .badge-critica{background:rgba(192,57,43,.5);color:#ffc;border:1px solid var(--red-stamp);animation:pulseGold 1.5s infinite;}
+  </style>
+</head>
+<body class="page-bg">
+
+<nav class="nav-principal">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo-area">
+      <div class="nav-logo-text">SQL: La Gran Guerra</div>
+      <div class="nav-logo-sub">Conquista y Diplomacia · 1914–1918</div>
+    </a>
+    <div class="nav-center">Misión 1 de 7 · <span class='nombre-comandante'>Comandante</span> · España → Irlanda</div>
+    <div class="nav-actions">
+      <button id="btn-guardar" class="btn btn-primary" style="font-size:.72rem;padding:.5rem 1.2rem;">💾 Guardar partida</button>
+    </div>
+  </div>
+</nav>
+
+<div class="ticker-wrap">
+  <span class="ticker-content">
+    <span class="ticker-sep">⬥</span> SQL: CONQUISTA Y DIPLOMACIA EN LA GRAN GUERRA
+    <span class="ticker-sep">⬥</span> NIVEL 2 — NEGOCIACIÓN CON JOHN REDMOND Y LOS IRISH VOLUNTEERS · DUBLÍN, 1915
+    <span class="ticker-sep">⬥</span> OBJETIVO FINAL: DETENER AL TZAR RUSO — PROTEGER EL EQUILIBRIO DE EUROPA
+    <span class="ticker-sep">⬥</span>
+  </span>
+</div>
+
+<div class="header-nivel">
+  <div>
+    <div class="nivel-badge">Nivel 2 · Dublín, Irlanda</div>
+    <div style="font-family:var(--font-typewriter);font-size:.78rem;letter-spacing:.1em;color:var(--gold-bright);font-weight:bold;">La Prueba de Redmond</div>
+    <div style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.08em;color:var(--paper-dark);">3 de abril de 1915 — A bordo rumbo a Irlanda</div>
+  </div>
+  <div class="nivel-num">N·2</div>
+</div>
+
+<div class="progreso-bar">
+  <span style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.12em;color:var(--paper-dark);text-transform:uppercase;white-space:nowrap;">Progreso de la misión:</span>
+  <div class="barra-nivel"><div class="punto-nivel actual"></div><div class="punto-nivel"></div><div class="punto-nivel"></div><div class="punto-nivel"></div><div class="punto-nivel"></div><div class="punto-nivel"></div><div class="punto-nivel"></div></div>
+</div>
+
+<div id="libreta-flotante">
+  <button id="libreta-toggle">📓 Notas de Campaña <span class="libreta-arrow">▼</span></button>
+  <div id="libreta-body">
+    <textarea id="libreta-notas" placeholder="Anote sus observaciones..."></textarea>
+    <div id="libreta-footer">
+      <span>Libreta del Comandante</span>
+      <span id="libreta-guardado" style="color:var(--khaki-faded);"></span>
+    </div>
+  </div>
+</div>
+
+<main class="container">
+  <div class="nivel-layout">
+
+    <!-- ══ COLUMNA PRINCIPAL ══════════════════════════ -->
+    <div class="col-p">
+
+      <!-- DIARIO -->
+      <div class="fade-in-1">
+        <div class="section-label">📔 Diario del Comandante — Entrada 14</div>
+        <div class="diario-entrada">
+          <div class="diario-fecha">3 de abril de 1915 — A bordo rumbo a Irlanda</div>
+          <p>El mar está tranquilo, pero no hay paz en mi cabeza. Las olas golpean el casco del barco con un ritmo monótono, y cada golpe parece recordarme la magnitud de lo que está por venir. Hoy dejamos España, nuestras costas familiares, y nos dirigimos hacia Irlanda. No es un simple viaje: debo ganarme la confianza de John Redmond, el hombre que puede inclinar la balanza de toda Europa.</p>
+<p>Redmond no duda del ideal irlandés. Duda de Europa. Sabe que si las Potencias Centrales y el Imperio Austrohúngaro caen, el Imperio Ruso se alzará con una fuerza capaz de rivalizar con los grandes de Occidente. No entregará los Irish Volunteers a una misión mal planificada.</p>
+<p><em>—"Demostradme que sabéis equilibrar fuerzas. Que comprendéis el peso real de cada aliado. Que no improvisáis."</em></p>
+<p>El peso de la responsabilidad es insoportable a veces. Cada decisión que tome hoy podría determinar la vida de cientos de hombres y el destino de naciones enteras. Pero siento una llama dentro de mí: determinación pura.</p>
+        </div>
+      </div>
+
+      <!-- TELEGRAMA / DOCUMENTO -->
+      <div class="fade-in-2">
+        <div class="section-label">📨 Informe de Inteligencia — Ministerio de Estado</div>
+        <div class="telegrama" style="transform:rotate(-.5deg);">
+          <div class="telegrama-sello">ESTADO<br>MAYOR<br>1915</div>
+          <div class="telegrama-header">GOBIERNO ESPAÑOL — MINISTERIO DE ESTADO · MADRID</div>
+          <div class="telegrama-body">FECHA: 01.IV.1915 · CLASIFICACIÓN: MÁXIMO SECRETO<br>
+DE: PRESIDENCIA DEL GOBIERNO<br>
+PARA: COMANDANTE EN MISIÓN ESPECIAL<br><br>
+Ha desembarcado discretamente en la costa irlandesa.<br>
+Solicite audiencia privada con John Redmond, líder del Irish Parliamentary Party.<br><br>
+Condiciones de la alianza propuesta:<br>
+— Apoyo militar español a los Irish Volunteers<br>
+— Reconocimiento diplomático de Irlanda<br>
+— A cambio: cooperación táctica en campaña europea<br><br>
+ADVERTENCIA: Redmond exigirá análisis de datos reales.<br>
+No aceptará promesas sin cifras. Prepárese.<br><br>
+— DIRECCIÓN DE INTELIGENCIA · MADRID</div>
+        </div>
+      </div>
+
+      <div class="fade-in-2">
+  <div class="section-label">🔴 Las Cuatro Exigencias de Redmond</div>
+  <div style="background:rgba(0,0,0,.25);border:1px solid rgba(184,146,42,.15);padding:.8rem 1rem;"><div class="exigencia-item"><div class="exigencia-letra">A</div><div class="exigencia-txt">Demostrar la fuerza total combinada de tropas y suministros de los aliados actuales para evaluar si Irlanda entraría en una coalición sólida.</div></div><div class="exigencia-item"><div class="exigencia-letra">B</div><div class="exigencia-txt">Calcular cuántos efectivos aportarían los voluntarios irlandeses si se movilizan por región, para medir el impacto real en el equilibrio militar.</div></div><div class="exigencia-item"><div class="exigencia-letra">C</div><div class="exigencia-txt">Determinar qué frentes europeos soportan mayor presión militar, para justificar la necesidad de abrir un nuevo foco de inestabilidad en el este.</div></div><div class="exigencia-item"><div class="exigencia-letra">D</div><div class="exigencia-txt">Simular el nuevo equilibrio de tropas si Irlanda se suma a la coalición, comprobando que el total supere el umbral estratégico mínimo.</div></div></div>
+</div>
+
+      <!-- CTA DECK.TOYS -->
+      <div style="text-align:center;" class="fade-in-3">
+        <button class="btn btn-gold" onclick="abrirEscenario('https://deck.toys')">
+          🗺 Abrir escenario interactivo en deck.toys
+        </button>
+        <div style="font-family:var(--font-typewriter);font-size:.62rem;letter-spacing:.1em;color:var(--paper-dark);margin-top:.4rem;text-transform:uppercase;">Se abrirá en nueva pestaña</div>
+      </div>
+
+    </div>
+
+    <!-- ══ COLUMNA LATERAL ════════════════════════════ -->
+    <div class="col-l">
+
+      <!-- MAPA MINI -->
+      <div class="fade-in-1">
+        <div class="section-label">🗺 Ruta de la Misión</div>
+        <div class="mapa-mini">
+          <div style="font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faded);margin-bottom:.4rem;position:relative;">Trayecto actual</div>
+          <div class="mapa-ruta">España → Atlántico → Dublín</div>
+          <div style="margin-top:.8rem;position:relative;">
+            <div style="font-family:var(--font-typewriter);font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-faded);margin-bottom:.3rem;">Progreso total:</div>
+            <div class="marcador-progreso"><div class="paso-mapa activo"></div><div class="paso-mapa"></div><div class="paso-mapa"></div><div class="paso-mapa"></div><div class="paso-mapa"></div><div class="paso-mapa"></div><div class="paso-mapa"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL SQL -->
+      <div class="fade-in-2">
+        <div class="section-label">💾 Consultas SQL de este Nivel</div>
+        <div class="sql-panel">
+          <div class="sql-header">
+            <div class="sql-dots">
+              <div class="sql-dot" style="background:#c0392b;"></div>
+              <div class="sql-dot" style="background:#f39c12;"></div>
+              <div class="sql-dot" style="background:#27ae60;"></div>
+            </div>
+            mysql — gran_guerra.sql
+          </div>
+          <div class="sql-block"><div class="sql-lbl">A · Fuerza total de la coalición</div><pre class="sql-pre">SELECT SUM(tropas)       AS total_tropas,
+       SUM(suministros) AS total_suministros
+FROM aliados;</pre></div><div class="sql-block"><div class="sql-lbl">B · Voluntarios por región</div><pre class="sql-pre">SELECT region,
+       SUM(efectivos) AS total_region
+FROM voluntarios_irlandeses
+GROUP BY region;</pre></div><div class="sql-block"><div class="sql-lbl">C · Frentes por presión militar</div><pre class="sql-pre">SELECT nombre,
+       presion_militar
+FROM frentes_europeos
+ORDER BY presion_militar DESC;</pre></div><div class="sql-block"><div class="sql-lbl">D · Nuevo total con Irlanda</div><pre class="sql-pre">SELECT
+  (SELECT SUM(tropas)    FROM aliados) +
+  (SELECT SUM(efectivos) FROM voluntarios_irlandeses)
+  AS nuevo_total_coalicion;</pre></div>
+          <div class="schema-box"><div class="schema-lbl">📋 Estructura de tablas</div><pre class="sql-pre">CREATE TABLE aliados (
+    id_aliado  INT PRIMARY KEY,
+    pais       VARCHAR(50),
+    tropas     INT,
+    suministros INT
+);
+CREATE TABLE voluntarios_irlandeses (
+    id_voluntario INT PRIMARY KEY,
+    region        VARCHAR(50),
+    efectivos     INT
+);
+CREATE TABLE frentes_europeos (
+    id_frente       INT PRIMARY KEY,
+    nombre          VARCHAR(50),
+    presion_militar INT
+);</pre></div>
+        </div>
+      </div>
+
+      <!-- PISTAS -->
+      <div class="fade-in-3">
+        <div class="section-label">🔍 Análisis Clasificado</div>
+        <div class="pista-container">
+  <button class="pista-toggle">🔒 Consulta A — SUM con dos columnas<span class="pista-icono">▼</span></button>
+  <div class="pista-contenido">Usa SUM() dos veces en el mismo SELECT para obtener el total de tropas y suministros a la vez. Ambos valores deben superar los umbrales mínimos que Redmond exige.</div>
+</div><div class="pista-container">
+  <button class="pista-toggle">🔒 Consulta B — GROUP BY región<span class="pista-icono">▼</span></button>
+  <div class="pista-contenido">GROUP BY region agrupa los voluntarios por zona geográfica irlandesa. SUM(efectivos) calcula cuántos hombres aporta cada región. Redmond quiere ver distribución territorial, no solo totales.</div>
+</div><div class="pista-container">
+  <button class="pista-toggle">🔒 Consulta C — ORDER BY DESC<span class="pista-icono">▼</span></button>
+  <div class="pista-contenido">ORDER BY presion_militar DESC ordena los frentes del más presionado al menos. Esto justifica por qué es urgente abrir un nuevo frente en el este contra el Imperio Ruso.</div>
+</div><div class="pista-container">
+  <button class="pista-toggle">🔒 Consulta D — Subconsultas anidadas<span class="pista-icono">▼</span></button>
+  <div class="pista-contenido">La consulta D usa dos subconsultas dentro de un SELECT para sumar tropas aliadas + efectivos irlandeses en un solo resultado. Si el total supera el umbral, Irlanda se une.</div>
+</div>
+      </div>
+
+      <!-- NAVEGACIÓN -->
+      <div class="fade-in-4" style="display:flex;flex-direction:column;gap:.7rem;">
+        <a href="nivel-02.html" class="btn btn-gold" style="text-align:center;justify-content:center;">
+          Siguiente misión →
+        </a>
+        <button id="btn-guardar2" class="btn btn-primary" style="text-align:center;justify-content:center;" onclick="document.getElementById('btn-guardar').click()">
+          💾 Guardar progreso
+        </button>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script src="../js/main.js"></script>
+<script>initPuntosNivel(7, 1);</script>
+</body>
+</html>

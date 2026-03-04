@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sombras sobre el Mediterráneo — SQL: La Gran Guerra</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .nivel-layout{display:grid;grid-template-columns:1.15fr 0.85fr;gap:2rem;margin:1.5rem 0;}
+    @media(max-width:880px){.nivel-layout{grid-template-columns:1fr;}}
+    .header-nivel{background:linear-gradient(135deg,rgba(26,20,9,.98),rgba(42,48,32,.95));border-bottom:3px solid var(--gold);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;}
+    .nivel-badge{display:inline-block;background:var(--khaki-mid);color:var(--paper-warm);font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.2em;padding:.2rem .7rem;text-transform:uppercase;margin-bottom:.3rem;}
+    .nivel-num{font-family:var(--font-display);font-size:3.5rem;font-weight:900;color:rgba(184,146,42,.15);line-height:1;}
+    .col-p{display:flex;flex-direction:column;gap:1.5rem;}
+    .col-l{display:flex;flex-direction:column;gap:1.4rem;}
+    .sql-panel{background:#0a0d06;border:1px solid rgba(184,146,42,.2);border-top:3px solid var(--gold);overflow:hidden;}
+    .sql-header{background:rgba(184,146,42,.08);border-bottom:1px solid rgba(184,146,42,.15);padding:.6rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);}
+    .sql-dots{display:flex;gap:4px;}
+    .sql-dot{width:8px;height:8px;border-radius:50%;}
+    .sql-block{border-bottom:1px solid rgba(184,146,42,.08);padding:0;}
+    .sql-block:last-child{border-bottom:none;}
+    .sql-lbl{font-family:var(--font-typewriter);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(184,146,42,.6);padding:.5rem 1rem .2rem;border-left:2px solid var(--gold);}
+    .sql-pre{font-family:'Special Elite','Courier New',monospace;font-size:.75rem;line-height:1.7;color:#a8d4a0;padding:.3rem 1rem .7rem;overflow-x:auto;background:transparent;white-space:pre;margin:0;}
+    .schema-box{background:rgba(0,0,0,.3);border:1px dashed rgba(184,146,42,.2);margin:.5rem 1rem 1rem;}
+    .schema-lbl{font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(184,146,42,.5);padding:.4rem .8rem .2rem;}
+    .mapa-mini{background:linear-gradient(135deg,#c4b07a,#a8905a);border:2px solid var(--paper-stain);padding:1rem;min-height:120px;position:relative;overflow:hidden;box-shadow:3px 3px 0 rgba(0,0,0,.25);}
+    .mapa-mini::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(100,75,30,.05) 10px,rgba(100,75,30,.05) 11px);}
+    .mapa-ruta{font-family:var(--font-handwritten);font-size:1rem;color:var(--ink);font-weight:700;position:relative;line-height:1.6;}
+    .progreso-bar{background:rgba(0,0,0,.3);padding:.5rem 2rem;border-bottom:1px solid rgba(184,146,42,.1);display:flex;align-items:center;gap:1rem;}
+    .section-label{font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem;}
+    .exigencia-item{display:flex;gap:.8rem;padding:.7rem 0;border-bottom:1px solid rgba(184,146,42,.1);}
+    .exigencia-item:last-child{border-bottom:none;}
+    .exigencia-letra{flex-shrink:0;width:24px;height:24px;background:var(--red-ink);color:var(--paper-warm);font-family:var(--font-display);font-weight:900;font-size:.85rem;display:flex;align-items:center;justify-content:center;}
+    .exigencia-txt{font-family:var(--font-body);font-size:.82rem;color:var(--paper-aged);line-height:1.5;}
+    .tabla-datos{width:100%;border-collapse:collapse;font-family:var(--font-typewriter);font-size:.72rem;}
+    .tabla-datos th{background:var(--ink);color:var(--gold);padding:.35rem .6rem;text-align:left;letter-spacing:.08em;font-weight:normal;}
+    .tabla-datos td{padding:.3rem .6rem;border-bottom:1px solid rgba(184,146,42,.1);color:var(--paper-aged);}
+    .tabla-datos tr:last-child td{border-bottom:none;}
+    .tabla-datos tr:hover td{background:rgba(184,146,42,.05);}
+    .badge-ruta{display:inline-block;padding:.15rem .5rem;font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;}
+    .badge-alta{background:rgba(139,26,26,.3);color:#e88;border:1px solid rgba(139,26,26,.4);}
+    .badge-media{background:rgba(139,100,42,.3);color:#e8c8a0;border:1px solid rgba(139,100,42,.4);}
+    .badge-baja{background:rgba(42,48,32,.5);color:var(--khaki-faded);border:1px solid var(--khaki-mid);}
+    .badge-critica{background:rgba(192,57,43,.5);color:#ffc;border:1px solid var(--red-stamp);animation:pulseGold 1.5s infinite;}
+  </style>
+</head>
+<body class="page-bg">
+
+<nav class="nav-principal">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo-area">
+      <div class="nav-logo-text">SQL: La Gran Guerra</div>
+      <div class="nav-logo-sub">Conquista y Diplomacia · 1914–1918</div>
+    </a>
+    <div class="nav-center">Misión 4 de 7 · <span class='nombre-comandante'>Comandante</span> · Ruta Sur — Mediterráneo</div>
+    <div class="nav-actions">
+      <button id="btn-guardar" class="btn btn-primary" style="font-size:.72rem;padding:.5rem 1.2rem;">💾 Guardar partida</button>
+    </div>
+  </div>
+</nav>
+
+<div class="ticker-wrap">
+  <span class="ticker-content">
+    <span class="ticker-sep">⬥</span> SQL: CONQUISTA Y DIPLOMACIA EN LA GRAN GUERRA
+    <span class="ticker-sep">⬥</span> NIVEL 5 — RUTA AMARILLA · PORT-SAINT-AUBIN → ARGELIA FRANCESA → PORT-HENRI D'ORAN
+    <span class="ticker-sep">⬥</span> OBJETIVO FINAL: DETENER AL TZAR RUSO — PROTEGER EL EQUILIBRIO DE EUROPA
+    <span class="ticker-sep">⬥</span>
+  </span>
+</div>
+
+<div class="header-nivel">
+  <div>
+    <div class="nivel-badge">Nivel 5 · Ruta Sur · Port-Henri d'Oran</div>
+    <div style="font-family:var(--font-typewriter);font-size:.78rem;letter-spacing:.1em;color:var(--gold-bright);font-weight:bold;">Sombras sobre el Mediterráneo</div>
+    <div style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.08em;color:var(--paper-dark);">Verano 1915 — Port-Henri d'Oran, Argelia Francesa</div>
+  </div>
+  <div class="nivel-num">N·5</div>
+</div>
+
+<div class="progreso-bar">
+  <span style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.12em;color:var(--paper-dark);text-transform:uppercase;white-space:nowrap;">Progreso de la misión:</span>
+  <div class="barra-nivel"><div class="punto-nivel hecho"></div><div class="punto-nivel hecho"></div><div class="punto-nivel hecho"></div><div class="punto-nivel actual"></div><div class="punto-nivel"></div><div class="punto-nivel"></div><div class="punto-nivel"></div></div>
+</div>
+
+<div id="libreta-flotante">
+  <button id="libreta-toggle">📓 Notas de Campaña <span class="libreta-arrow">▼</span></button>
+  <div id="libreta-body">
+    <textarea id="libreta-notas" placeholder="Anote sus observaciones..."></textarea>
+    <div id="libreta-footer">
+      <span>Libreta del Comandante</span>
+      <span id="libreta-guardado" style="color:var(--khaki-faded);"></span>
+    </div>
+  </div>
+</div>
+
+<main class="container">
+  <div class="nivel-layout">
+
+    <!-- ══ COLUMNA PRINCIPAL ══════════════════════════ -->
+    <div class="col-p">
+
+      <!-- DIARIO -->
+      <div class="fade-in-1">
+        <div class="section-label">📔 Diario del Comandante — Entrada 16</div>
+        <div class="diario-entrada">
+          <div class="diario-fecha">Verano 1915 — Port-Henri d'Oran, Argelia Francesa</div>
+          <p>Hoy tomé la decisión que marcaría la ruta de nuestra misión: no cruzaremos los Alpes. Siguiendo la recomendación del Generaloberst von Adlerheim, nos replegamos hacia la costa francesa.</p>
+<p>Alcanzamos Port-Saint-Aubin-sur-Mer. Aquí nos esperaba Kapitän Otto Weissmann. Su embarcación, <em>Die Morgenstern</em>, está registrada para transportar suministros agrícolas hacia Argelia Francesa. El encuentro fue tenso; debimos pronunciar la contraseña: <em>"Rhein und Schatten"</em>.</p>
+<p>Finalmente desembarcamos en Port-Henri d'Oran. Allí sobornamos a Youssef Ben Amar, un pescador local, quien aceptó trasladarnos clandestinamente hacia la península itálica. Desembarcamos en una cala apartada cerca de Chioggia, al sur de Venecia.</p>
+<p>Pero antes de continuar hacia Venecia, un oficial francés exige revisar la base de datos logística. <strong>El juego de memoria comienza.</strong></p>
+        </div>
+      </div>
+
+      <!-- TELEGRAMA / DOCUMENTO -->
+      <div class="fade-in-2">
+        <div class="section-label">📨 Informe logístico — Oficial francés, Port-Henri</div>
+        <div class="telegrama" style="transform:rotate(-.5deg);">
+          <div class="telegrama-sello">KAPITÄN<br>WEISSMANN<br>1915</div>
+          <div class="telegrama-header">KAPITÄN OTTO WEISSMANN — DIE MORGENSTERN · PORT-SAINT-AUBIN-SUR-MER</div>
+          <div class="telegrama-body">FECHA: VERANO 1915 · CONTRASEÑA: RHEIN UND SCHATTEN<br>
+DE: KAPITÄN OTTO WEISSMANN<br>
+PARA: COMANDANTE EMBARCADO<br><br>
+"Si quiere que lo lleve más allá de Argelia…<br>
+demuéstreme que sabe organizar una operación<br>
+sin que el sistema colapse."<br><br>
+Un oficial francés en Port-Henri exige revisar<br>
+la base de datos logística antes de autorizar el traslado.<br><br>
+TABLA: operacion_mediterraneo<br>
+Unidades a bordo: Milicia Irlandesa · Escolta Francesa<br>
+Grupo Logístico Español · Grupo Avanzado Alemán<br><br>
+Demuestre dominio de COUNT, SUM, GROUP BY y WHERE.<br>
+— WEISSMANN</div>
+        </div>
+      </div>
+
+      <div class="fade-in-2">
+  <div class="section-label">📋 Tabla de la Operación Mediterránea</div>
+  <table class="tabla-datos"><thead><tr><th>id</th><th>Unidad</th><th>Soldados</th><th>Munición</th><th>Puerto salida</th><th>Coste</th></tr></thead><tbody><tr><td>1</td><td>Milicia Irlandesa</td><td>80</td><td>120</td><td>Port-Henri</td><td>3.000</td></tr><tr><td>2</td><td>Escolta Francesa</td><td>40</td><td>90</td><td>Port-Henri</td><td>1.500</td></tr><tr><td>3</td><td>Grupo Logístico Español</td><td>25</td><td>40</td><td>Port-Henri</td><td>1.000</td></tr><tr><td>4</td><td>Grupo Avanzado Alemán</td><td>30</td><td>50</td><td>Marsella</td><td>1.200</td></tr></tbody></table>
+  <div style="margin-top:1rem;" class="section-label">🧠 Une cada concepto SQL con su función sobre esta tabla</div>
+  <div style="background:rgba(0,0,0,.25);border:1px solid rgba(184,146,42,.15);padding:.8rem 1rem;"><div class="exigencia-item"><div class="exigencia-letra">COUNT(*)</div><div class="exigencia-txt">Cuenta cuántos grupos militares hay registrados en total en la tabla.</div></div><div class="exigencia-item"><div class="exigencia-letra">SUM(municion)</div><div class="exigencia-txt">Calcula la cantidad total de munición disponible sumando todas las unidades.</div></div><div class="exigencia-item"><div class="exigencia-letra">GROUP BY puerto_salida</div><div class="exigencia-txt">Agrupa los datos según el puerto desde donde salen las tropas.</div></div><div class="exigencia-item"><div class="exigencia-letra">WHERE soldados &gt; 30</div><div class="exigencia-txt">Filtra únicamente las unidades que tienen más de 30 soldados.</div></div></div>
+</div>
+
+      <!-- CTA DECK.TOYS -->
+      <div style="text-align:center;" class="fade-in-3">
+        <button class="btn btn-gold" onclick="abrirEscenario('https://deck.toys')">
+          🗺 Abrir escenario interactivo en deck.toys
+        </button>
+        <div style="font-family:var(--font-typewriter);font-size:.62rem;letter-spacing:.1em;color:var(--paper-dark);margin-top:.4rem;text-transform:uppercase;">Se abrirá en nueva pestaña</div>
+      </div>
+
+    </div>
+
+    <!-- ══ COLUMNA LATERAL ════════════════════════════ -->
+    <div class="col-l">
+
+      <!-- MAPA MINI -->
+      <div class="fade-in-1">
+        <div class="section-label">🗺 Ruta de la Misión</div>
+        <div class="mapa-mini">
+          <div style="font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faded);margin-bottom:.4rem;position:relative;">Trayecto actual</div>
+          <div class="mapa-ruta">Breisach → Barcelona → Port-Henri d'Oran → Chioggia → Venecia</div>
+          <div style="margin-top:.8rem;position:relative;">
+            <div style="font-family:var(--font-typewriter);font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-faded);margin-bottom:.3rem;">Progreso total:</div>
+            <div class="marcador-progreso"><div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa activo"></div><div class="paso-mapa"></div><div class="paso-mapa"></div><div class="paso-mapa"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL SQL -->
+      <div class="fade-in-2">
+        <div class="section-label">💾 Consultas SQL de este Nivel</div>
+        <div class="sql-panel">
+          <div class="sql-header">
+            <div class="sql-dots">
+              <div class="sql-dot" style="background:#c0392b;"></div>
+              <div class="sql-dot" style="background:#f39c12;"></div>
+              <div class="sql-dot" style="background:#27ae60;"></div>
+            </div>
+            mysql — gran_guerra.sql
+          </div>
+          <div class="sql-block"><div class="sql-lbl">COUNT(*) — Total de grupos</div><pre class="sql-pre">SELECT COUNT(*) AS total_grupos
+FROM operacion_mediterraneo;</pre></div><div class="sql-block"><div class="sql-lbl">SUM — Total de munición</div><pre class="sql-pre">SELECT SUM(municion) AS total_municion
+FROM operacion_mediterraneo;</pre></div><div class="sql-block"><div class="sql-lbl">GROUP BY — Por puerto de salida</div><pre class="sql-pre">SELECT puerto_salida, COUNT(*) AS grupos
+FROM operacion_mediterraneo
+GROUP BY puerto_salida;</pre></div><div class="sql-block"><div class="sql-lbl">WHERE — Unidades con >30 soldados</div><pre class="sql-pre">SELECT unidad, soldados
+FROM operacion_mediterraneo
+WHERE soldados > 30;</pre></div>
+          <div class="schema-box"><div class="schema-lbl">📋 Estructura de tablas</div><pre class="sql-pre">CREATE TABLE operacion_mediterraneo (
+    id_grupo      INT PRIMARY KEY,
+    unidad        VARCHAR(50),
+    soldados      INT,
+    municion      INT,
+    puerto_salida VARCHAR(50),
+    coste         INT
+);</pre></div>
+        </div>
+      </div>
+
+      <!-- PISTAS -->
+      <div class="fade-in-3">
+        <div class="section-label">🔍 Análisis Clasificado</div>
+        <div class="pista-container">
+  <button class="pista-toggle">🔒 COUNT(*) → Respuesta A<span class="pista-icono">▼</span></button>
+  <div class="pista-contenido">COUNT(*) cuenta TODAS las filas sin excepción. Sobre esta tabla devuelve 4, el número total de grupos militares registrados.</div>
+</div><div class="pista-container">
+  <button class="pista-toggle">🔒 SUM(municion) → Respuesta B<span class="pista-icono">▼</span></button>
+  <div class="pista-contenido">SUM(municion) suma 120+90+40+50 = 300. Hay 300 unidades de munición en total disponibles en la operación mediterránea.</div>
+</div><div class="pista-container">
+  <button class="pista-toggle">🔒 GROUP BY puerto_salida → Respuesta C<span class="pista-icono">▼</span></button>
+  <div class="pista-contenido">GROUP BY puerto_salida genera dos grupos: Port-Henri (3 unidades) y Marsella (1 unidad). Muestra la distribución por punto de embarque.</div>
+</div><div class="pista-container">
+  <button class="pista-toggle">🔒 WHERE soldados > 30 → Respuesta D<span class="pista-icono">▼</span></button>
+  <div class="pista-contenido">El filtro WHERE soldados > 30 devuelve: Milicia Irlandesa (80) y Escolta Francesa (40). El Grupo Logístico (25) y Avanzado Alemán (30) quedan excluidos.</div>
+</div>
+      </div>
+
+      <!-- NAVEGACIÓN -->
+      <div class="fade-in-4" style="display:flex;flex-direction:column;gap:.7rem;">
+        <a href="nivel-alemania.html" class="btn btn-gold" style="text-align:center;justify-content:center;">
+          Siguiente misión →
+        </a>
+        <button id="btn-guardar2" class="btn btn-primary" style="text-align:center;justify-content:center;" onclick="document.getElementById('btn-guardar').click()">
+          💾 Guardar progreso
+        </button>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script src="../js/main.js"></script>
+<script>initPuntosNivel(7, 4);</script>
+</body>
+</html>

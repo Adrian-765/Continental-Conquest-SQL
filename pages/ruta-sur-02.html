@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>El Colapso del Imperio — SQL: La Gran Guerra</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .nivel-layout{display:grid;grid-template-columns:1.15fr 0.85fr;gap:2rem;margin:1.5rem 0;}
+    @media(max-width:880px){.nivel-layout{grid-template-columns:1fr;}}
+    .header-nivel{background:linear-gradient(135deg,rgba(26,20,9,.98),rgba(42,48,32,.95));border-bottom:3px solid var(--gold);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;}
+    .nivel-badge{display:inline-block;background:var(--red-stamp);color:var(--paper-warm);font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.2em;padding:.2rem .7rem;text-transform:uppercase;margin-bottom:.3rem;}
+    .nivel-num{font-family:var(--font-display);font-size:3.5rem;font-weight:900;color:rgba(184,146,42,.15);line-height:1;}
+    .col-p{display:flex;flex-direction:column;gap:1.5rem;}
+    .col-l{display:flex;flex-direction:column;gap:1.4rem;}
+    .sql-panel{background:#0a0d06;border:1px solid rgba(184,146,42,.2);border-top:3px solid var(--gold);overflow:hidden;}
+    .sql-header{background:rgba(184,146,42,.08);border-bottom:1px solid rgba(184,146,42,.15);padding:.6rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);}
+    .sql-dots{display:flex;gap:4px;}
+    .sql-dot{width:8px;height:8px;border-radius:50%;}
+    .sql-block{border-bottom:1px solid rgba(184,146,42,.08);padding:0;}
+    .sql-block:last-child{border-bottom:none;}
+    .sql-lbl{font-family:var(--font-typewriter);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(184,146,42,.6);padding:.5rem 1rem .2rem;border-left:2px solid var(--gold);}
+    .sql-pre{font-family:'Special Elite','Courier New',monospace;font-size:.75rem;line-height:1.7;color:#a8d4a0;padding:.3rem 1rem .7rem;overflow-x:auto;background:transparent;white-space:pre;margin:0;}
+    .schema-box{background:rgba(0,0,0,.3);border:1px dashed rgba(184,146,42,.2);margin:.5rem 1rem 1rem;}
+    .schema-lbl{font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(184,146,42,.5);padding:.4rem .8rem .2rem;}
+    .mapa-mini{background:linear-gradient(135deg,#c4b07a,#a8905a);border:2px solid var(--paper-stain);padding:1rem;min-height:120px;position:relative;overflow:hidden;box-shadow:3px 3px 0 rgba(0,0,0,.25);}
+    .mapa-mini::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(100,75,30,.05) 10px,rgba(100,75,30,.05) 11px);}
+    .mapa-ruta{font-family:var(--font-handwritten);font-size:1rem;color:var(--ink);font-weight:700;position:relative;line-height:1.6;}
+    .progreso-bar{background:rgba(0,0,0,.3);padding:.5rem 2rem;border-bottom:1px solid rgba(184,146,42,.1);display:flex;align-items:center;gap:1rem;}
+    .section-label{font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem;}
+    .exigencia-item{display:flex;gap:.8rem;padding:.7rem 0;border-bottom:1px solid rgba(184,146,42,.1);}
+    .exigencia-item:last-child{border-bottom:none;}
+    .exigencia-letra{flex-shrink:0;width:24px;height:24px;background:var(--red-ink);color:var(--paper-warm);font-family:var(--font-display);font-weight:900;font-size:.85rem;display:flex;align-items:center;justify-content:center;}
+    .exigencia-txt{font-family:var(--font-body);font-size:.82rem;color:var(--paper-aged);line-height:1.5;}
+    .tabla-datos{width:100%;border-collapse:collapse;font-family:var(--font-typewriter);font-size:.72rem;}
+    .tabla-datos th{background:var(--ink);color:var(--gold);padding:.35rem .6rem;text-align:left;letter-spacing:.08em;font-weight:normal;}
+    .tabla-datos td{padding:.3rem .6rem;border-bottom:1px solid rgba(184,146,42,.1);color:var(--paper-aged);}
+    .tabla-datos tr:last-child td{border-bottom:none;}
+    .tabla-datos tr:hover td{background:rgba(184,146,42,.05);}
+    .badge-ruta{display:inline-block;padding:.15rem .5rem;font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;}
+    .badge-alta{background:rgba(139,26,26,.3);color:#e88;border:1px solid rgba(139,26,26,.4);}
+    .badge-media{background:rgba(139,100,42,.3);color:#e8c8a0;border:1px solid rgba(139,100,42,.4);}
+    .badge-baja{background:rgba(42,48,32,.5);color:var(--khaki-faded);border:1px solid var(--khaki-mid);}
+    .badge-critica{background:rgba(192,57,43,.5);color:#ffc;border:1px solid var(--red-stamp);animation:pulseGold 1.5s infinite;}
+  </style>
+</head>
+<body class="page-bg">
+
+<nav class="nav-principal">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo-area">
+      <div class="nav-logo-text">SQL: La Gran Guerra</div>
+      <div class="nav-logo-sub">Conquista y Diplomacia · 1914–1918</div>
+    </a>
+    <div class="nav-center">Misión 7 de 7 · <span class='nombre-comandante'>Comandante</span> · Interior Ruso → Moscú</div>
+    <div class="nav-actions">
+      <button id="btn-guardar" class="btn btn-primary" style="font-size:.72rem;padding:.5rem 1.2rem;">💾 Guardar partida</button>
+    </div>
+  </div>
+</nav>
+
+<div class="ticker-wrap">
+  <span class="ticker-content">
+    <span class="ticker-sep">⬥</span> SQL: CONQUISTA Y DIPLOMACIA EN LA GRAN GUERRA
+    <span class="ticker-sep">⬥</span> NIVEL 8 — EL COLAPSO DEL IMPERIO · NOVOTROITSKAYA · ROSTOV · MOSCÚ · FASE FINAL
+    <span class="ticker-sep">⬥</span> OBJETIVO FINAL: DETENER AL TZAR RUSO — PROTEGER EL EQUILIBRIO DE EUROPA
+    <span class="ticker-sep">⬥</span>
+  </span>
+</div>
+
+<div class="header-nivel">
+  <div>
+    <div class="nivel-badge">Nivel 8 · Imperio Ruso · Fase Final</div>
+    <div style="font-family:var(--font-typewriter);font-size:.78rem;letter-spacing:.1em;color:var(--gold-bright);font-weight:bold;">El Colapso del Imperio</div>
+    <div style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.08em;color:var(--paper-dark);">1915–1916 — Novotroitskaya · Rostov · Don · Hacia Moscú</div>
+  </div>
+  <div class="nivel-num">N·8</div>
+</div>
+
+<div class="progreso-bar">
+  <span style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.12em;color:var(--paper-dark);text-transform:uppercase;white-space:nowrap;">Progreso de la misión:</span>
+  <div class="barra-nivel"><div class="punto-nivel hecho"></div><div class="punto-nivel hecho"></div><div class="punto-nivel hecho"></div><div class="punto-nivel hecho"></div><div class="punto-nivel hecho"></div><div class="punto-nivel hecho"></div><div class="punto-nivel actual"></div></div>
+</div>
+
+<div id="libreta-flotante">
+  <button id="libreta-toggle">📓 Notas de Campaña <span class="libreta-arrow">▼</span></button>
+  <div id="libreta-body">
+    <textarea id="libreta-notas" placeholder="Anote sus observaciones..."></textarea>
+    <div id="libreta-footer">
+      <span>Libreta del Comandante</span>
+      <span id="libreta-guardado" style="color:var(--khaki-faded);"></span>
+    </div>
+  </div>
+</div>
+
+<main class="container">
+  <div class="nivel-layout">
+
+    <!-- ══ COLUMNA PRINCIPAL ══════════════════════════ -->
+    <div class="col-p">
+
+      <!-- DIARIO -->
+      <div class="fade-in-1">
+        <div class="section-label">📔 Diario del Comandante — Entrada — Imperio Ruso</div>
+        <div class="diario-entrada">
+          <div class="diario-fecha">1915–1916 — Novotroitskaya · Rostov · Don · Hacia Moscú</div>
+          <p>El puerto de Novorossiysk queda atrás, y la milicia avanza con paso medido hacia el corazón del Imperio Ruso. Las primeras carreteras y ferrocarriles revelan un paisaje vasto y ajeno: llanuras interminables, bosques que bordean el Don, pequeños pueblos bajo la atenta mirada del Zar.</p>
+<p>Al llegar a Novotroitskaya establecemos campamento. Los contactos bolcheviques manejan información dispersa: soldados, armas, suministros, posiciones estratégicas en rutas ferroviarias y fluviales. <em>"Organizar el caos antes de que despierte el Zar."</em></p>
+<p>La campaña avanza. Las ciudades clave: Rostov (control del Don), el Volga (arteria fluvial), Novocherkassk (centro militar) y el objetivo final: <strong>Moscú</strong>, el corazón del poder zarista.</p>
+<p>La ofensiva hacia Moscú exige precisión total. Cada error puede costar la misión.</p>
+        </div>
+      </div>
+
+      <!-- TELEGRAMA / DOCUMENTO -->
+      <div class="fade-in-2">
+        <div class="section-label">📨 Orden de Operaciones — Ofensiva Final hacia Moscú</div>
+        <div class="telegrama" style="transform:rotate(-.5deg);">
+          <div class="telegrama-sello">OBJETIVO<br>MOSCÚ<br>CRÍTICO</div>
+          <div class="telegrama-header">ESTADO MAYOR — OPERACIÓN ZARISTA · FASE FINAL</div>
+          <div class="telegrama-body">FECHA: 1916 · OBJETIVO: MOSCÚ<br>
+DE: ESTADO MAYOR DE LA COALICIÓN<br>
+PARA: COMANDANTE EN CAMPO — RUSIA<br><br>
+La campaña avanza. Se añade nuevo destino crítico: MOSCÚ.<br><br>
+TABLA RUTAS ACTUALIZADA:<br>
+1 · Rostov         · 400 km · ALTA<br>
+2 · Volga          · 600 km · MEDIA<br>
+3 · Novocherkassk  · 500 km · BAJA<br>
+4 · Moscú          · 800 km · CRÍTICA ← NUEVO<br><br>
+CUATRO DECISIONES ESTRATÉGICAS FINALES:<br>
+A — Fuerza total disponible por tipo antes de enviar a Moscú<br>
+B — Soldados y munición asignados a una ruta específica<br>
+C — Filtrar exclusivamente las rutas críticas<br>
+D — Crear procedimiento que impida asignación excesiva<br><br>
+La ofensiva hacia Moscú exige precisión total.<br>
+— ESTADO MAYOR</div>
+        </div>
+      </div>
+
+      <div class="fade-in-2">
+  <div class="section-label">📋 Tabla unidades — Campamento Novotroitskaya</div>
+  <table class="tabla-datos"><thead><tr><th>id</th><th>Nombre unidad</th><th>Tipo</th><th>Soldados</th><th>Munición</th></tr></thead><tbody><tr><td>1</td><td>Milicia Irlandesa</td><td>extranjera</td><td>80</td><td>120</td></tr><tr><td>2</td><td>Escolta Francesa</td><td>extranjera</td><td>40</td><td>90</td></tr><tr><td>3</td><td>Grupo Logístico Español</td><td>logística</td><td>25</td><td>40</td></tr><tr><td>4</td><td>Unidad Bolchevique 1</td><td>local</td><td>100</td><td>80</td></tr><tr><td>5</td><td>Unidad Bolchevique 2</td><td>local</td><td>60</td><td>50</td></tr><tr><td>6</td><td>Unidad Bolchevique 3</td><td>local</td><td>80</td><td>60</td></tr></tbody></table>
+  <div style="margin-top:.8rem;" class="section-label">📋 Tabla rutas — Objetivos de campaña</div>
+  <table class="tabla-datos"><thead><tr><th>id</th><th>Destino</th><th>Distancia</th><th>Prioridad</th></tr></thead><tbody><tr><td>1</td><td>Rostov</td><td>400 km</td><td><span class="badge-ruta badge-alta">Alta</span></td></tr><tr><td>2</td><td>Volga</td><td>600 km</td><td><span class="badge-ruta badge-media">Media</span></td></tr><tr><td>3</td><td>Novocherkassk</td><td>500 km</td><td><span class="badge-ruta badge-baja">Baja</span></td></tr><tr><td>4</td><td>Moscú</td><td>800 km</td><td><span class="badge-ruta badge-critica">⚠ Crítica</span></td></tr></tbody></table>
+  <div style="margin-top:1rem;" class="section-label">🔴 Cuatro Decisiones Estratégicas Finales</div>
+  <div style="background:rgba(0,0,0,.25);border:1px solid rgba(184,146,42,.15);padding:.8rem 1rem;"><div class="exigencia-item"><div class="exigencia-letra">A</div><div class="exigencia-txt">Obtener la fuerza total disponible por tipo antes de decidir qué enviar a Moscú. (GROUP BY tipo)</div></div><div class="exigencia-item"><div class="exigencia-letra">B</div><div class="exigencia-txt">Calcular soldados y munición asignados a una ruta específica antes de avanzar. (SUM + WHERE id_ruta)</div></div><div class="exigencia-item"><div class="exigencia-letra">C</div><div class="exigencia-txt">Filtrar exclusivamente las rutas críticas para priorizar todos los recursos disponibles. (WHERE prioridad = 'Crítica')</div></div><div class="exigencia-item"><div class="exigencia-letra">D</div><div class="exigencia-txt">Crear un procedimiento que impida registrar una asignación si supera la capacidad real de la unidad. (CREATE PROCEDURE)</div></div></div>
+</div>
+
+      <!-- CTA DECK.TOYS -->
+      <div style="text-align:center;" class="fade-in-3">
+        <button class="btn btn-gold" onclick="abrirEscenario('https://deck.toys')">
+          🗺 Abrir escenario interactivo en deck.toys
+        </button>
+        <div style="font-family:var(--font-typewriter);font-size:.62rem;letter-spacing:.1em;color:var(--paper-dark);margin-top:.4rem;text-transform:uppercase;">Se abrirá en nueva pestaña</div>
+      </div>
+
+    </div>
+
+    <!-- ══ COLUMNA LATERAL ════════════════════════════ -->
+    <div class="col-l">
+
+      <!-- MAPA MINI -->
+      <div class="fade-in-1">
+        <div class="section-label">🗺 Ruta de la Misión</div>
+        <div class="mapa-mini">
+          <div style="font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faded);margin-bottom:.4rem;position:relative;">Trayecto actual</div>
+          <div class="mapa-ruta">Novorossiysk → Novotroitskaya → Rostov → Volga → Moscú</div>
+          <div style="margin-top:.8rem;position:relative;">
+            <div style="font-family:var(--font-typewriter);font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-faded);margin-bottom:.3rem;">Progreso total:</div>
+            <div class="marcador-progreso"><div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa activo"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL SQL -->
+      <div class="fade-in-2">
+        <div class="section-label">💾 Consultas SQL de este Nivel</div>
+        <div class="sql-panel">
+          <div class="sql-header">
+            <div class="sql-dots">
+              <div class="sql-dot" style="background:#c0392b;"></div>
+              <div class="sql-dot" style="background:#f39c12;"></div>
+              <div class="sql-dot" style="background:#27ae60;"></div>
+            </div>
+            mysql — gran_guerra.sql
+          </div>
+          <div class="sql-block"><div class="sql-lbl">A · Fuerza por tipo</div><pre class="sql-pre">SELECT tipo,
+       SUM(soldados) AS total_soldados,
+       SUM(municion)  AS total_municion
+FROM unidades
+GROUP BY tipo;</pre></div><div class="sql-block"><div class="sql-lbl">B · Asignados a una ruta</div><pre class="sql-pre">SELECT SUM(soldados_asignados) AS soldados_totales,
+       SUM(municion_asignada)  AS municion_total
+FROM asignaciones
+WHERE id_ruta = 4; -- Moscú</pre></div><div class="sql-block"><div class="sql-lbl">C · Solo rutas críticas</div><pre class="sql-pre">SELECT *
+FROM rutas
+WHERE prioridad = 'Crítica';</pre></div><div class="sql-block"><div class="sql-lbl">D · Procedimiento de validación</div><pre class="sql-pre">CREATE PROCEDURE validar_asignacion(
+    IN unidad_id     INT,
+    IN soldados_nuevos INT
+)
+BEGIN
+  DECLARE capacidad    INT;
+  DECLARE ya_asignados INT;
+  SELECT soldados INTO capacidad
+  FROM unidades WHERE id_unidad = unidad_id;
+  SELECT COALESCE(SUM(soldados_asignados),0)
+  INTO ya_asignados
+  FROM asignaciones WHERE id_unidad = unidad_id;
+  IF ya_asignados + soldados_nuevos > capacidad THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT =
+      'Asignación excede capacidad';
+  END IF;
+END;</pre></div>
+          <div class="schema-box"><div class="schema-lbl">📋 Estructura de tablas</div><pre class="sql-pre">CREATE TABLE asignaciones (
+    id_asignacion     INT PRIMARY KEY,
+    id_unidad         INT,
+    id_ruta           INT,
+    soldados_asignados INT,
+    municion_asignada  INT
+);
+-- La tabla está vacía al inicio del nivel.
+-- Debe rellenarse con asignaciones válidas
+-- antes de avanzar hacia Moscú.</pre></div>
+        </div>
+      </div>
+
+      <!-- PISTAS -->
+      <div class="fade-in-3">
+        <div class="section-label">🔍 Análisis Clasificado</div>
+        <div class="pista-container">
+  <button class="pista-toggle">🔒 Consulta A — GROUP BY tipo<span class="pista-icono">▼</span></button>
+  <div class="pista-contenido">GROUP BY tipo agrupa: extranjera (80+40=120 soldados), logística (25), local (100+60+80=240). Permite ver qué tipo de unidad tiene más fuerza antes de asignarlas a Moscú.</div>
+</div><div class="pista-container">
+  <button class="pista-toggle">🔒 Consulta B — SUM con WHERE id_ruta<span class="pista-icono">▼</span></button>
+  <div class="pista-contenido">WHERE id_ruta = 4 filtra solo las asignaciones hacia Moscú. SUM suma los soldados y munición asignados en esa ruta. Si la tabla asignaciones está vacía, el resultado será NULL o 0.</div>
+</div><div class="pista-container">
+  <button class="pista-toggle">🔒 Consulta C — WHERE prioridad = 'Crítica'<span class="pista-icono">▼</span></button>
+  <div class="pista-contenido">Solo la ruta 4 (Moscú, 800 km) tiene prioridad 'Crítica'. Este SELECT devolverá únicamente esa fila. Es la ruta que concentra todos los recursos finales.</div>
+</div><div class="pista-container">
+  <button class="pista-toggle">🔒 Consulta D — CREATE PROCEDURE<span class="pista-icono">▼</span></button>
+  <div class="pista-contenido">El procedimiento usa DECLARE para variables locales, SELECT INTO para capturar valores y una estructura IF con SIGNAL para lanzar un error si la asignación supera la capacidad real de la unidad.</div>
+</div>
+      </div>
+
+      <!-- NAVEGACIÓN -->
+      <div class="fade-in-4" style="display:flex;flex-direction:column;gap:.7rem;">
+        <a href="final.html" class="btn btn-gold" style="text-align:center;justify-content:center;">
+          Siguiente misión →
+        </a>
+        <button id="btn-guardar2" class="btn btn-primary" style="text-align:center;justify-content:center;" onclick="document.getElementById('btn-guardar').click()">
+          💾 Guardar progreso
+        </button>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script src="../js/main.js"></script>
+<script>initPuntosNivel(7, 7);</script>
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>El Laberinto de Versalles — SQL: La Gran Guerra</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .nivel-layout{display:grid;grid-template-columns:1.15fr 0.85fr;gap:2rem;margin:1.5rem 0;}
+    @media(max-width:880px){.nivel-layout{grid-template-columns:1fr;}}
+    .header-nivel{background:linear-gradient(135deg,rgba(26,20,9,.98),rgba(42,48,32,.95));border-bottom:3px solid var(--gold);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;}
+    .nivel-badge{display:inline-block;background:var(--red-ink);color:var(--paper-warm);font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.2em;padding:.2rem .7rem;text-transform:uppercase;margin-bottom:.3rem;}
+    .nivel-num{font-family:var(--font-display);font-size:3.5rem;font-weight:900;color:rgba(184,146,42,.15);line-height:1;}
+    .col-p{display:flex;flex-direction:column;gap:1.5rem;}
+    .col-l{display:flex;flex-direction:column;gap:1.4rem;}
+    .sql-panel{background:#0a0d06;border:1px solid rgba(184,146,42,.2);border-top:3px solid var(--gold);overflow:hidden;}
+    .sql-header{background:rgba(184,146,42,.08);border-bottom:1px solid rgba(184,146,42,.15);padding:.6rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);}
+    .sql-dots{display:flex;gap:4px;}
+    .sql-dot{width:8px;height:8px;border-radius:50%;}
+    .sql-block{border-bottom:1px solid rgba(184,146,42,.08);padding:0;}
+    .sql-block:last-child{border-bottom:none;}
+    .sql-lbl{font-family:var(--font-typewriter);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(184,146,42,.6);padding:.5rem 1rem .2rem;border-left:2px solid var(--gold);}
+    .sql-pre{font-family:'Special Elite','Courier New',monospace;font-size:.75rem;line-height:1.7;color:#a8d4a0;padding:.3rem 1rem .7rem;overflow-x:auto;background:transparent;white-space:pre;margin:0;}
+    .schema-box{background:rgba(0,0,0,.3);border:1px dashed rgba(184,146,42,.2);margin:.5rem 1rem 1rem;}
+    .schema-lbl{font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(184,146,42,.5);padding:.4rem .8rem .2rem;}
+    .mapa-mini{background:linear-gradient(135deg,#c4b07a,#a8905a);border:2px solid var(--paper-stain);padding:1rem;min-height:120px;position:relative;overflow:hidden;box-shadow:3px 3px 0 rgba(0,0,0,.25);}
+    .mapa-mini::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(100,75,30,.05) 10px,rgba(100,75,30,.05) 11px);}
+    .mapa-ruta{font-family:var(--font-handwritten);font-size:1rem;color:var(--ink);font-weight:700;position:relative;line-height:1.6;}
+    .progreso-bar{background:rgba(0,0,0,.3);padding:.5rem 2rem;border-bottom:1px solid rgba(184,146,42,.1);display:flex;align-items:center;gap:1rem;}
+    .section-label{font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem;}
+    .exigencia-item{display:flex;gap:.8rem;padding:.7rem 0;border-bottom:1px solid rgba(184,146,42,.1);}
+    .exigencia-item:last-child{border-bottom:none;}
+    .exigencia-letra{flex-shrink:0;width:24px;height:24px;background:var(--red-ink);color:var(--paper-warm);font-family:var(--font-display);font-weight:900;font-size:.85rem;display:flex;align-items:center;justify-content:center;}
+    .exigencia-txt{font-family:var(--font-body);font-size:.82rem;color:var(--paper-aged);line-height:1.5;}
+    .tabla-datos{width:100%;border-collapse:collapse;font-family:var(--font-typewriter);font-size:.72rem;}
+    .tabla-datos th{background:var(--ink);color:var(--gold);padding:.35rem .6rem;text-align:left;letter-spacing:.08em;font-weight:normal;}
+    .tabla-datos td{padding:.3rem .6rem;border-bottom:1px solid rgba(184,146,42,.1);color:var(--paper-aged);}
+    .tabla-datos tr:last-child td{border-bottom:none;}
+    .tabla-datos tr:hover td{background:rgba(184,146,42,.05);}
+    .badge-ruta{display:inline-block;padding:.15rem .5rem;font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;}
+    .badge-alta{background:rgba(139,26,26,.3);color:#e88;border:1px solid rgba(139,26,26,.4);}
+    .badge-media{background:rgba(139,100,42,.3);color:#e8c8a0;border:1px solid rgba(139,100,42,.4);}
+    .badge-baja{background:rgba(42,48,32,.5);color:var(--khaki-faded);border:1px solid var(--khaki-mid);}
+    .badge-critica{background:rgba(192,57,43,.5);color:#ffc;border:1px solid var(--red-stamp);animation:pulseGold 1.5s infinite;}
+  </style>
+</head>
+<body class="page-bg">
+
+<nav class="nav-principal">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo-area">
+      <div class="nav-logo-text">SQL: La Gran Guerra</div>
+      <div class="nav-logo-sub">Conquista y Diplomacia · 1914–1918</div>
+    </a>
+    <div class="nav-center">Misión 2 de 7 · <span class='nombre-comandante'>Comandante</span> · Irlanda → Francia</div>
+    <div class="nav-actions">
+      <button id="btn-guardar" class="btn btn-primary" style="font-size:.72rem;padding:.5rem 1.2rem;">💾 Guardar partida</button>
+    </div>
+  </div>
+</nav>
+
+<div class="ticker-wrap">
+  <span class="ticker-content">
+    <span class="ticker-sep">⬥</span> SQL: CONQUISTA Y DIPLOMACIA EN LA GRAN GUERRA
+    <span class="ticker-sep">⬥</span> NIVEL 3 — EL LABERINTO DE VERSALLES · CRUZANDO FRANCIA SIN SER DETECTADOS · 1915
+    <span class="ticker-sep">⬥</span> OBJETIVO FINAL: DETENER AL TZAR RUSO — PROTEGER EL EQUILIBRIO DE EUROPA
+    <span class="ticker-sep">⬥</span>
+  </span>
+</div>
+
+<div class="header-nivel">
+  <div>
+    <div class="nivel-badge">Nivel 3 · Versalles, Francia</div>
+    <div style="font-family:var(--font-typewriter);font-size:.78rem;letter-spacing:.1em;color:var(--gold-bright);font-weight:bold;">El Laberinto de Versalles</div>
+    <div style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.08em;color:var(--paper-dark);">Primavera de 1915 — Palacio de Versalles</div>
+  </div>
+  <div class="nivel-num">N·3</div>
+</div>
+
+<div class="progreso-bar">
+  <span style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.12em;color:var(--paper-dark);text-transform:uppercase;white-space:nowrap;">Progreso de la misión:</span>
+  <div class="barra-nivel"><div class="punto-nivel hecho"></div><div class="punto-nivel actual"></div><div class="punto-nivel"></div><div class="punto-nivel"></div><div class="punto-nivel"></div><div class="punto-nivel"></div><div class="punto-nivel"></div></div>
+</div>
+
+<div id="libreta-flotante">
+  <button id="libreta-toggle">📓 Notas de Campaña <span class="libreta-arrow">▼</span></button>
+  <div id="libreta-body">
+    <textarea id="libreta-notas" placeholder="Anote sus observaciones..."></textarea>
+    <div id="libreta-footer">
+      <span>Libreta del Comandante</span>
+      <span id="libreta-guardado" style="color:var(--khaki-faded);"></span>
+    </div>
+  </div>
+</div>
+
+<main class="container">
+  <div class="nivel-layout">
+
+    <!-- ══ COLUMNA PRINCIPAL ══════════════════════════ -->
+    <div class="col-p">
+
+      <!-- DIARIO -->
+      <div class="fade-in-1">
+        <div class="section-label">📔 Diario del Comandante — Entrada 15</div>
+        <div class="diario-entrada">
+          <div class="diario-fecha">Primavera de 1915 — Palacio de Versalles</div>
+          <p>Francia nos recibe con un silencio inquietante. Las calles de la costa parecen vacías, como si la guerra misma contuviera la respiración ante nuestro paso. Tras semanas de viaje desde Irlanda, la milicia y yo nos adentramos en territorio enemigo, y cada paso se siente más peligroso que el anterior.</p>
+<p>El contacto secreto nos ha guiado hasta el Palacio de Versalles, pero no para admirar su grandeza. Aquí, en los pasillos oscuros y los jardines laberínticos, cada camino serpenteante representa una decisión estratégica.</p>
+<p>En el corazón del laberinto se encuentra la mesa de piedra donde nuestro contacto despliega un mapa táctico. Cada ruta, cada bosque, cada río está marcado; cada ciudad es un punto de riesgo.</p>
+<p>El laberinto es un espejo de la guerra misma: complejo, peligroso, y lleno de caminos que pueden llevar tanto a la victoria como a la derrota.</p>
+        </div>
+      </div>
+
+      <!-- TELEGRAMA / DOCUMENTO -->
+      <div class="fade-in-2">
+        <div class="section-label">📨 Mensaje del Contacto Secreto — Versalles</div>
+        <div class="telegrama" style="transform:rotate(-.5deg);">
+          <div class="telegrama-sello">CONTACTO<br>ALFA<br>1915</div>
+          <div class="telegrama-header">CONTACTO SECRETO — PALACIO DE VERSALLES · IDENTIDAD RESERVADA</div>
+          <div class="telegrama-body">FECHA: PRIMAVERA 1915 · OPERACIÓN: LABERINTO<br>
+DE: CONTACTO ALFA — VERSALLES<br>
+PARA: COMANDANTE EN TRÁNSITO<br><br>
+Si vais a cruzar Francia sin ser detectados, no basta con tener tropas.<br>
+Debéis organizaros. Coordinar hombres, suministros y rutas<br>
+será la única forma de salir intactos.<br><br>
+CUATRO ACCIONES REQUERIDAS:<br>
+A — Unir tropas y munición para saber qué unidades están listas<br>
+B — Detectar unidades que no tienen munición asignada<br>
+C — Calcular el total de tropas por país de origen<br>
+D — Filtrar solo rutas de bajo riesgo para el desplazamiento inicial<br><br>
+Sin esta información, la travesía por Francia es un suicidio.<br>
+— CONTACTO ALFA</div>
+        </div>
+      </div>
+
+      <div class="fade-in-2">
+  <div class="section-label">🔴 Cuatro Acciones para Cruzar Francia</div>
+  <div style="background:rgba(0,0,0,.25);border:1px solid rgba(184,146,42,.15);padding:.8rem 1rem;"><div class="exigencia-item"><div class="exigencia-letra">A</div><div class="exigencia-txt">Unir tropas y munición para saber qué unidades están listas para avanzar. (JOIN entre unidades y suministros)</div></div><div class="exigencia-item"><div class="exigencia-letra">B</div><div class="exigencia-txt">Detectar unidades que no tienen munición asignada — un hueco logístico puede costar la misión. (LEFT JOIN + WHERE IS NULL)</div></div><div class="exigencia-item"><div class="exigencia-letra">C</div><div class="exigencia-txt">Calcular el total de tropas por país antes de cruzar territorio enemigo para conocer la fuerza real por origen. (GROUP BY pais_origen)</div></div><div class="exigencia-item"><div class="exigencia-letra">D</div><div class="exigencia-txt">Filtrar solo rutas de bajo riesgo para el desplazamiento inicial y evitar patrullas. (WHERE nivel_riesgo &lt; 3)</div></div></div>
+</div>
+
+      <!-- CTA DECK.TOYS -->
+      <div style="text-align:center;" class="fade-in-3">
+        <button class="btn btn-gold" onclick="abrirEscenario('https://deck.toys')">
+          🗺 Abrir escenario interactivo en deck.toys
+        </button>
+        <div style="font-family:var(--font-typewriter);font-size:.62rem;letter-spacing:.1em;color:var(--paper-dark);margin-top:.4rem;text-transform:uppercase;">Se abrirá en nueva pestaña</div>
+      </div>
+
+    </div>
+
+    <!-- ══ COLUMNA LATERAL ════════════════════════════ -->
+    <div class="col-l">
+
+      <!-- MAPA MINI -->
+      <div class="fade-in-1">
+        <div class="section-label">🗺 Ruta de la Misión</div>
+        <div class="mapa-mini">
+          <div style="font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faded);margin-bottom:.4rem;position:relative;">Trayecto actual</div>
+          <div class="mapa-ruta">Dublín → Atlántico → Costa francesa → Versalles</div>
+          <div style="margin-top:.8rem;position:relative;">
+            <div style="font-family:var(--font-typewriter);font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-faded);margin-bottom:.3rem;">Progreso total:</div>
+            <div class="marcador-progreso"><div class="paso-mapa completado"></div><div class="paso-mapa activo"></div><div class="paso-mapa"></div><div class="paso-mapa"></div><div class="paso-mapa"></div><div class="paso-mapa"></div><div class="paso-mapa"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL SQL -->
+      <div class="fade-in-2">
+        <div class="section-label">💾 Consultas SQL de este Nivel</div>
+        <div class="sql-panel">
+          <div class="sql-header">
+            <div class="sql-dots">
+              <div class="sql-dot" style="background:#c0392b;"></div>
+              <div class="sql-dot" style="background:#f39c12;"></div>
+              <div class="sql-dot" style="background:#27ae60;"></div>
+            </div>
+            mysql — gran_guerra.sql
+          </div>
+          <div class="sql-block"><div class="sql-lbl">A · Unidades listas — JOIN</div><pre class="sql-pre">SELECT u.id_unidad, tropas, municion
+FROM unidades u
+JOIN suministros s USING(id_unidad);</pre></div><div class="sql-block"><div class="sql-lbl">B · Sin munición — LEFT JOIN</div><pre class="sql-pre">SELECT u.id_unidad
+FROM unidades u
+LEFT JOIN suministros s USING(id_unidad)
+WHERE s.id_unidad IS NULL;</pre></div><div class="sql-block"><div class="sql-lbl">C · Tropas por país — GROUP BY</div><pre class="sql-pre">SELECT pais_origen, SUM(tropas)
+FROM unidades
+GROUP BY pais_origen;</pre></div><div class="sql-block"><div class="sql-lbl">D · Rutas seguras — WHERE</div><pre class="sql-pre">SELECT *
+FROM rutas
+WHERE nivel_riesgo < 3;</pre></div>
+          <div class="schema-box"><div class="schema-lbl">📋 Estructura de tablas</div><pre class="sql-pre">CREATE TABLE unidades (
+    id_unidad   INT PRIMARY KEY,
+    nombre      VARCHAR(50),
+    pais_origen VARCHAR(50),
+    tipo        VARCHAR(30),
+    tropas      INT
+);
+CREATE TABLE suministros (
+    id_suministro      INT PRIMARY KEY,
+    id_unidad          INT,
+    alimento           INT,
+    municion           INT,
+    descuento_logistico DECIMAL(5,2)
+);
+CREATE TABLE rutas (
+    id_ruta     INT PRIMARY KEY,
+    origen      VARCHAR(50),
+    destino     VARCHAR(50),
+    nivel_riesgo INT
+);</pre></div>
+        </div>
+      </div>
+
+      <!-- PISTAS -->
+      <div class="fade-in-3">
+        <div class="section-label">🔍 Análisis Clasificado</div>
+        <div class="pista-container">
+  <button class="pista-toggle">🔒 JOIN — Unir dos tablas<span class="pista-icono">▼</span></button>
+  <div class="pista-contenido">JOIN une unidades con suministros usando el campo id_unidad compartido (USING). Solo devuelve unidades que TIENEN suministros asignados.</div>
+</div><div class="pista-container">
+  <button class="pista-toggle">🔒 LEFT JOIN — Detectar ausencias<span class="pista-icono">▼</span></button>
+  <div class="pista-contenido">LEFT JOIN devuelve TODAS las unidades, aunque no tengan suministros. WHERE s.id_unidad IS NULL filtra solo las que NO tienen munición asignada — las más vulnerables.</div>
+</div><div class="pista-container">
+  <button class="pista-toggle">🔒 GROUP BY pais_origen<span class="pista-icono">▼</span></button>
+  <div class="pista-contenido">GROUP BY agrupa todas las filas con el mismo país de origen y SUM(tropas) suma sus efectivos. Permite ver de qué país proviene más fuerza militar.</div>
+</div><div class="pista-container">
+  <button class="pista-toggle">🔒 WHERE nivel_riesgo < 3<span class="pista-icono">▼</span></button>
+  <div class="pista-contenido">El operador < filtra solo las rutas con valor numérico inferior a 3. Valores más bajos = menos riesgo. Son las rutas seguras por las que debe moverse la milicia.</div>
+</div>
+      </div>
+
+      <!-- NAVEGACIÓN -->
+      <div class="fade-in-4" style="display:flex;flex-direction:column;gap:.7rem;">
+        <a href="nivel-03.html" class="btn btn-gold" style="text-align:center;justify-content:center;">
+          Siguiente misión →
+        </a>
+        <button id="btn-guardar2" class="btn btn-primary" style="text-align:center;justify-content:center;" onclick="document.getElementById('btn-guardar').click()">
+          💾 Guardar progreso
+        </button>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script src="../js/main.js"></script>
+<script>initPuntosNivel(7, 2);</script>
+</body>
+</html>

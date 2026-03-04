@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ruta Sur 05 — La Revuelta Árabe — El Agente del Desierto — La Gran Guerra</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .nivel-layout {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 2rem;
+      margin: 1.5rem 0;
+    }
+    @media (max-width:768px) {
+      .nivel-layout { grid-template-columns: 1fr; }
+    }
+    .header-nivel {
+      background: linear-gradient(135deg, rgba(90,58,26,0.6), rgba(139,94,42,0.3));
+      border-bottom: 1px solid rgba(200,165,58,0.3);
+      padding: 1rem 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .ruta-badge {
+      background: linear-gradient(135deg, #8b5e2a, #5a3a1a);
+      color: var(--gold-medal);
+      font-family: var(--font-typewriter);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.8rem;
+      border: 1px solid var(--gold-medal);
+      border-radius: 3px;
+      margin-bottom: 0.3rem;
+      display: inline-block;
+    }
+    .mapa-mini {
+      background: linear-gradient(135deg, #d4a060, #b8803a);
+      border: 2px solid var(--sepia-mid);
+      border-radius: 8px;
+      padding: 1rem;
+      min-height: 140px;
+    }
+    .col-principal { display: flex; flex-direction: column; gap: 1.5rem; }
+    .col-lateral { display: flex; flex-direction: column; gap: 1.5rem; }
+    .acciones-nivel { display: flex; flex-direction: column; gap: 0.8rem; }
+    .telegrama-wrapper { animation: paperSlide 0.7s 0.5s ease both; }
+  </style>
+</head>
+<body class="page-bg">
+
+  <nav class="nav-principal">
+    <a href="../index.html" class="nav-logo">⚔ La Gran Guerra</a>
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <span class="text-typewriter" style="font-size:0.75rem;color:var(--sepia-light);">
+        Ruta Sur · Misión 05/07 · Cdte: <span class="nombre-comandante">—</span>
+      </span>
+    </div>
+  </nav>
+
+  <div class="header-nivel">
+    <div>
+      <div class="ruta-badge">🏜️ Ruta Sur</div>
+      <div style="font-family:var(--font-typewriter);font-size:0.78rem;letter-spacing:0.1em;color:var(--sepia-light);">Arabia, Siria, 1916–1917</div>
+    </div>
+    <div style="font-family:var(--font-display);font-size:2.5rem;color:rgba(200,165,58,0.2);">S·05</div>
+  </div>
+
+  <div style="background:rgba(0,0,0,0.3);padding:0.6rem 2rem;border-bottom:1px solid rgba(139,109,56,0.2);">
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <span class="text-typewriter" style="font-size:0.7rem;color:var(--sepia-light);">PROGRESO RUTA SUR:</span>
+      <div class="barra-nivel"></div>
+    </div>
+  </div>
+
+  <div id="libreta-flotante">
+    <button id="libreta-toggle">📓 Notas <span class="libreta-arrow">▼</span></button>
+    <div id="libreta-body">
+      <textarea id="libreta-notas" placeholder="Escriba sus notas..."></textarea>
+      <div id="libreta-footer">
+        <span>Libreta de Campaña</span>
+        <span id="libreta-guardado" style="color:var(--green-faded)"></span>
+      </div>
+    </div>
+  </div>
+
+  <main class="container">
+    <h1 class="fade-in" style="color:var(--gold-medal);margin:1.5rem 0 0.3rem;font-size:1.8rem;">La Revuelta Árabe — El Agente del Desierto</h1>
+    <div class="ornamento" style="margin:0.5rem 0 1.5rem;">✦ ✦ ✦</div>
+
+    <div class="nivel-layout">
+      <div class="col-principal">
+
+        <div>
+          <h3 style="font-family:var(--font-typewriter);font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--sepia-light);margin-bottom:0.8rem;">
+            📔 Diario del Comandante
+          </h3>
+          <div class="diario-entrada fade-in-delay-1">
+            <div class="diario-fecha">Entrada de campaña — Arabia, Siria, 1916–1917</div>
+            <p>Me han asignado contactar con el agente más singular de esta guerra: el teniente T.E. Lawrence. Un arqueólogo convertido en oficial de inteligencia que ahora dirige la revuelta árabe contra el Imperio Otomano. Lo encuentro en Yeda, vestido con ropas beduinas. 'Los árabes pelean mejor que nadie en el desierto', me dice, 'sólo necesitan un objetivo que valga la pena'. Ha prometido a Hussein bin Ali un reino árabe unificado. No sabe que Londres ha prometido lo mismo a los sionistas y lo ha dividido con Francia.</p>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-family:var(--font-typewriter);font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--sepia-light);margin-bottom:0.8rem;">
+            📨 Documento Oficial Recibido
+          </h3>
+          <div class="telegrama telegrama-wrapper fade-in-delay-2" style="transform:rotate(-0.5deg);">
+            <div class="telegrama-sello">RUTA<br>SUR<br>1915</div>
+            <div class="telegrama-header">BUREAU ÁRABE — EL CAIRO</div>
+            <div style="white-space:pre-line;font-size:0.82rem;line-height:1.7;">FECHA: 10.VI.1916 // MÁXIMO SECRETO
+DE: T.E. LAWRENCE — AGENTE EN CAMPO
+PARA: BUREAU ÁRABE — EL CAIRO / GEN. CLAYTON
+
+REVUELTA ÁRABE: INICIO EXITOSO
+
+El Jerife Hussein ha proclamado la revuelta árabe el 5 de junio. Las fuerzas tribales han tomado Meca y atacan la guarnición de Medina.
+
+ESTRATEGIA PROPUESTA: Guerrilla de desgaste contra el ferrocarril del Hiyaz (línea de suministro otomana). No tomar ciudades: destruir infraestructura y movilidad del enemigo.
+
+ADVERTENCIA INTERNA: Las promesas realizadas a Hussein y las realizadas a los franceses (Sykes-Picot) son incompatibles. Esta contradicción nos perseguirá.
+
+— T.E.L.</div>
+          </div>
+        </div>
+
+        <div style="text-align:center;">
+          <button class="btn btn-gold" onclick="abrirEscenario('https://deck.toys')">
+            🗺 Abrir Escenario Interactivo
+          </button>
+          <p class="text-typewriter" style="color:var(--sepia-mid);font-size:0.7rem;margin-top:0.5rem;letter-spacing:0.08em;">Se abrirá en nueva pestaña</p>
+        </div>
+
+      </div>
+
+      <div class="col-lateral">
+
+        <div>
+          <h3 style="font-family:var(--font-typewriter);font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--sepia-light);margin-bottom:0.8rem;">
+            🗺 Mapa de Avance
+          </h3>
+          <div class="mapa-mini fade-in-delay-2">
+            <div style="font-family:var(--font-typewriter);font-size:0.68rem;letter-spacing:0.1em;color:var(--ink-dark);margin-bottom:0.5rem;">RUTA SUR — PROGRESO:</div>
+            <div style="font-family:var(--font-manuscript);font-size:0.95rem;color:var(--ink-dark);font-weight:bold;margin-bottom:0.8rem;">El Cairo → Meca → Siria</div>
+            <div class="marcador-progreso">
+              <div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa activo"></div><div class="paso-mapa"></div><div class="paso-mapa"></div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-family:var(--font-typewriter);font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--sepia-light);margin-bottom:0.8rem;">
+            🔍 Pistas Clasificadas
+          </h3>
+          <div class="fade-in-delay-3">
+            
+            <div class="pista-container">
+              <button class="pista-toggle">🔒 Pista 1 — T.E. Lawrence <span class="icono">▼</span></button>
+              <div class="pista-contenido">Lawrence de Arabia (1888-1935) fue un oficial de inteligencia británico que coordinó la revuelta árabe. Sus memorias 'Los siete pilares de la sabiduría' narran esta campaña.</div>
+            </div>
+            <div class="pista-container">
+              <button class="pista-toggle">🔒 Pista 2 — El Acuerdo Sykes-Picot <span class="icono">▼</span></button>
+              <div class="pista-contenido">En secreto, Francia y Gran Bretaña acordaron dividir el Oriente Medio entre ellas (1916). Esto contradecía las promesas hechas a los árabes, sembrando el germen de conflictos futuros.</div>
+            </div>
+            <div class="pista-container">
+              <button class="pista-toggle">🔒 Pista 3 — La Declaración Balfour <span class="icono">▼</span></button>
+              <div class="pista-contenido">En 1917, el gobierno británico prometió a los sionistas un 'hogar nacional' en Palestina. Tres promesas incompatibles a tres partes distintas sobre el mismo territorio.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="acciones-nivel fade-in-delay-4">
+          <button id="btn-guardar" class="btn btn-primary">💾 Guardar Progreso</button>
+          <a href="ruta-sur-06.html" class="btn btn-gold" style="text-align:center;justify-content:center;">
+            Siguiente Misión →
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <script src="../js/main.js"></script>
+  <script>
+    initPuntosNivel(7, 5);
+  </script>
+</body>
+</html>

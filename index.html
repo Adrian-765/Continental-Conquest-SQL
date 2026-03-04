@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Gran Guerra — 1914–1918</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* ── PANTALLA CARGA ── */
+    #intro-screen {
+      position: fixed; inset: 0;
+      background: #0a0703;
+      z-index: 9998;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 1.5rem;
+    }
+    #intro-screen .linea-intro {
+      font-family: var(--font-typewriter);
+      font-size: 0.85rem;
+      letter-spacing: 0.25em;
+      color: var(--sepia-light);
+      text-transform: uppercase;
+      opacity: 0;
+    }
+    #intro-screen .titulo-intro {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      color: var(--gold-medal);
+      text-align: center;
+      text-shadow: 0 0 40px rgba(200,165,58,0.4);
+      opacity: 0;
+      line-height: 1;
+    }
+    #intro-screen .anio-intro {
+      font-family: var(--font-typewriter);
+      font-size: 1.2rem;
+      letter-spacing: 0.5em;
+      color: var(--sepia-mid);
+      opacity: 0;
+    }
+    #intro-screen .barra-carga {
+      width: 200px; height: 2px;
+      background: rgba(139,109,56,0.2);
+      margin-top: 1rem;
+    }
+    #intro-screen .barra-progreso-inner {
+      height: 100%;
+      background: var(--gold-medal);
+      width: 0;
+      transition: width 2.5s ease;
+    }
+
+    /* ── FONDO ANIMADO ── */
+    #lienzo-fondo {
+      position: fixed; inset: 0;
+      z-index: -1;
+    }
+
+    /* ── MENÚ PRINCIPAL ── */
+    #menu-principal {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 2rem;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+    #menu-principal.visible { opacity: 1; }
+
+    .emblema-central {
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      border: 3px solid var(--gold-medal);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: radial-gradient(circle, rgba(61,79,46,0.6), rgba(0,0,0,0.8));
+      box-shadow:
+        0 0 30px rgba(200,165,58,0.2),
+        0 0 80px rgba(200,165,58,0.05),
+        inset 0 0 30px rgba(0,0,0,0.5);
+      margin-bottom: 2rem;
+      animation: pulseGlow 4s infinite;
+    }
+    .emblema-icono-grande { font-size: 3.5rem; }
+    .emblema-subtexto {
+      font-family: var(--font-typewriter);
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: var(--gold-medal);
+      text-transform: uppercase;
+      text-align: center;
+      margin-top: 0.3rem;
+    }
+
+    .titulo-menu {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      color: var(--gold-medal);
+      text-align: center;
+      text-shadow: 0 2px 30px rgba(200,165,58,0.3);
+      letter-spacing: 0.05em;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .subtitulo-menu {
+      font-family: var(--font-typewriter);
+      font-size: 0.85rem;
+      letter-spacing: 0.3em;
+      color: var(--sepia-light);
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+    .anio-menu {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      color: var(--sepia-mid);
+      text-align: center;
+      font-style: italic;
+      margin-bottom: 3rem;
+    }
+
+    .menu-botones {
+      display: flex; flex-direction: column;
+      gap: 1rem; align-items: center;
+      width: 100%; max-width: 360px;
+    }
+    .menu-botones .btn {
+      width: 100%;
+      justify-content: center;
+      font-size: 0.9rem;
+      padding: 1rem 2rem;
+    }
+
+    .menu-separador {
+      display: flex; align-items: center; gap: 1rem;
+      width: 100%; color: var(--sepia-mid);
+      font-size: 0.8rem; font-family: var(--font-typewriter);
+      letter-spacing: 0.1em; margin: 0.5rem 0;
+    }
+    .menu-separador::before, .menu-separador::after {
+      content: ''; flex: 1;
+      border-top: 1px solid rgba(139,109,56,0.3);
+    }
+
+    .menu-footer {
+      position: fixed; bottom: 1.5rem; left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-typewriter);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: rgba(139,109,56,0.4);
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    /* Partículas fondo */
+    .particula {
+      position: fixed;
+      width: 2px; height: 2px;
+      border-radius: 50%;
+      background: rgba(200,165,58,0.4);
+      animation: flotar linear infinite;
+      pointer-events: none;
+    }
+    @keyframes flotar {
+      from { transform: translateY(100vh); opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 1; }
+      to   { transform: translateY(-100px); opacity: 0; }
+    }
+  </style>
+</head>
+<body class="page-bg">
+
+  <!-- PANTALLA DE INTRODUCCIÓN -->
+  <div id="intro-screen">
+    <div class="linea-intro" id="intro-l1">Proyecto Educativo</div>
+    <div class="titulo-intro" id="intro-titulo">La Gran<br>Guerra</div>
+    <div class="anio-intro" id="intro-anio">1914 — 1918</div>
+    <div class="barra-carga">
+      <div class="barra-progreso-inner" id="barra-intro"></div>
+    </div>
+  </div>
+
+  <!-- LIBRETA FLOTANTE -->
+  <div id="libreta-flotante">
+    <button id="libreta-toggle">
+      📓 Notas del Comandante <span class="libreta-arrow">▼</span>
+    </button>
+    <div id="libreta-body">
+      <textarea id="libreta-notas" placeholder="Escriba sus notas aquí..."></textarea>
+      <div id="libreta-footer">
+        <span>Libreta de Campaña</span>
+        <span id="libreta-guardado" style="color:var(--green-faded)"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MENÚ PRINCIPAL -->
+  <main id="menu-principal">
+    <div class="emblema-central fade-in-delay-1">
+      <div class="emblema-icono-grande">⚔️</div>
+      <div class="emblema-subtexto">Estado Mayor<br>1914</div>
+    </div>
+
+    <h1 class="titulo-menu fade-in-delay-1">La Gran Guerra</h1>
+    <p class="subtitulo-menu fade-in-delay-2">Proyecto Educativo · Primera Guerra Mundial</p>
+    <p class="anio-menu fade-in-delay-2">MCMXIV — MCMXVIII</p>
+
+    <div class="ornamento fade-in-delay-2">✦ ✦ ✦</div>
+
+    <div class="menu-botones fade-in-delay-3">
+      <button id="btn-nueva-partida" class="btn btn-primary">
+        ⚔ Nueva Partida
+      </button>
+
+      <div class="menu-separador">o bien</div>
+
+      <button id="btn-cargar-partida" class="btn btn-secondary">
+        📂 Cargar Partida
+      </button>
+
+      <div class="menu-separador"></div>
+
+      <a href="pages/contexto-historico.html" class="btn btn-secondary">
+        📖 Contexto Histórico
+      </a>
+    </div>
+  </main>
+
+  <!-- PIE -->
+  <footer class="menu-footer">
+    Proyecto Escolar · Historia — Primera Guerra Mundial · Curso 2024/25
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    /* ── ANIMACIÓN DE INTRODUCCIÓN ── */
+    (function() {
+      const l1 = document.getElementById('intro-l1');
+      const titulo = document.getElementById('intro-titulo');
+      const anio = document.getElementById('intro-anio');
+      const barra = document.getElementById('barra-intro');
+      const screen = document.getElementById('intro-screen');
+      const menu = document.getElementById('menu-principal');
+
+      // Secuencia de aparición
+      setTimeout(() => { l1.style.transition = 'opacity 0.8s'; l1.style.opacity = '1'; }, 400);
+      setTimeout(() => { titulo.style.transition = 'opacity 1.2s, transform 1s'; titulo.style.opacity = '1'; titulo.style.transform = 'translateY(0)'; titulo.style.transform = 'scale(1)'; }, 900);
+      setTimeout(() => { anio.style.transition = 'opacity 0.8s'; anio.style.opacity = '1'; }, 1600);
+      setTimeout(() => { barra.style.width = '100%'; }, 2000);
+
+      // Ocultar intro y mostrar menú
+      setTimeout(() => {
+        screen.style.transition = 'opacity 0.8s';
+        screen.style.opacity = '0';
+        setTimeout(() => {
+          screen.remove();
+          menu.classList.add('visible');
+          crearParticulas();
+        }, 800);
+      }, 4200);
+    })();
+
+    /* ── PARTÍCULAS FLOTANTES ── */
+    function crearParticulas() {
+      for (let i = 0; i < 20; i++) {
+        setTimeout(() => {
+          const p = document.createElement('div');
+          p.className = 'particula';
+          p.style.left = Math.random() * 100 + 'vw';
+          p.style.animationDuration = (8 + Math.random() * 12) + 's';
+          p.style.animationDelay = (Math.random() * 5) + 's';
+          p.style.width = p.style.height = (1 + Math.random() * 3) + 'px';
+          p.style.opacity = (0.2 + Math.random() * 0.5).toString();
+          document.body.appendChild(p);
+        }, i * 200);
+      }
+    }
+  </script>
+</body>
+</html>
