@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>El Despacho Real — La Gran Guerra</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html, body {
+      margin: 0; padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #050402;
+    }
+
+    /* ══════════════════════════════════════════
+       ESCENA DE FONDO — despacho.png
+    ══════════════════════════════════════════ */
+    #escena {
+      position: fixed; inset: 0;
+      background-image: url('../img/despacho.png');
+      background-size: cover;
+      background-position: center top;
+      background-repeat: no-repeat;
+      /* Entrada suave */
+      animation: escenaFade 1.8s ease forwards;
+    }
+    @keyframes escenaFade {
+      from { opacity: 0; filter: brightness(0.2); }
+      to   { opacity: 1; filter: brightness(1); }
+    }
+
+    /* Velo: claro en el centro, oscuro abajo */
+    #escena-velo {
+      position: absolute; inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(4,3,1,0.30) 0%,
+        rgba(4,3,1,0.05) 35%,
+        rgba(4,3,1,0.05) 52%,
+        rgba(4,3,1,0.75) 72%,
+        rgba(4,3,1,0.96) 100%
+      );
+    }
+
+    
+
+    /* ══════════════════════════════════════════
+       CAJA DE DIÁLOGO — pegada al fondo
+    ══════════════════════════════════════════ */
+    #dialogo-wrap {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 20;
+    }
+
+    #dialogo-box {
+      background: linear-gradient(to bottom, rgba(7,5,3,0.90), rgba(10,7,4,0.97));
+      border-top: 1px solid rgba(200,165,58,0.35);
+      padding: 1.5rem 3rem 1.8rem;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+    }
+
+    /* Línea dorada superior central */
+    #dialogo-box::before {
+      content: '';
+      position: absolute;
+      top: -1px; left: 50%;
+      transform: translateX(-50%);
+      width: 80px; height: 2px;
+      background: var(--gold-medal);
+    }
+
+    /* ── CABECERA DEL HABLANTE ── */
+    #hablante-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    #hab-avatar {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      border: 2px solid rgba(200,165,58,0.40);
+      background: rgba(20,15,8,0.9);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+      transition: border-color 0.5s, box-shadow 0.5s;
+    }
+    #hab-avatar.activo {
+      border-color: rgba(200,165,58,0.75);
+      box-shadow: 0 0 14px rgba(200,165,58,0.22);
+    }
+
+    #hab-nombre {
+      font-family: var(--font-typewriter);
+      font-size: 0.80rem;
+      letter-spacing: 0.20em;
+      text-transform: uppercase;
+      color: var(--gold-medal);
+      line-height: 1.3;
+      transition: color 0.4s;
+    }
+    #hab-cargo {
+      font-family: var(--font-typewriter);
+      font-size: 0.60rem;
+      letter-spacing: 0.12em;
+      color: rgba(200,165,58,0.42);
+      margin-top: 0.1rem;
+    }
+
+    /* ── TEXTO DEL MENSAJE ── */
+    #texto-mensaje {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 1.08rem;
+      line-height: 1.78;
+      color: rgba(232,215,180,0.94);
+      min-height: 86px;
+    }
+
+    /* Cursor parpadeante */
+    #cursor {
+      display: inline-block;
+      width: 2px; height: 1.05em;
+      background: var(--gold-medal);
+      vertical-align: text-bottom;
+      margin-left: 1px;
+      animation: blink 0.72s step-end infinite;
+    }
+    #cursor.off { display: none; }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    /* ── CONTROLES ── */
+    #dialogo-controles {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #progreso-dots {
+      display: flex;
+      gap: 7px;
+      align-items: center;
+    }
+    .pdot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: rgba(200,165,58,0.15);
+      border: 1px solid rgba(200,165,58,0.30);
+      transition: background 0.35s, transform 0.35s;
+    }
+    .pdot.act { background: var(--gold-medal); transform: scale(1.3); }
+    .pdot.done { background: rgba(200,165,58,0.42); }
+
+    #hint-tecla {
+      font-family: var(--font-typewriter);
+      font-size: 0.58rem;
+      letter-spacing: 0.14em;
+      color: rgba(200,165,58,0.32);
+      text-transform: uppercase;
+      animation: pulseHint 2.2s ease-in-out infinite;
+      visibility: hidden;
+    }
+    #hint-tecla.visible { visibility: visible; }
+    @keyframes pulseHint {
+      0%, 100% { opacity: 0.32; }
+      50%       { opacity: 0.65; }
+    }
+
+    #btn-continuar {
+      font-family: var(--font-typewriter);
+      font-size: 0.70rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      background: transparent;
+      border: 1px solid rgba(200,165,58,0.32);
+      color: rgba(200,165,58,0.60);
+      padding: 0.45rem 1.3rem;
+      cursor: pointer;
+      transition: all 0.25s;
+      visibility: hidden;
+    }
+    #btn-continuar.visible { visibility: visible; }
+    #btn-continuar:hover {
+      background: rgba(200,165,58,0.10);
+      border-color: var(--gold-medal);
+      color: var(--gold-medal);
+    }
+
+    /* ── BOTÓN FINAL: ACEPTAR MISIÓN ── */
+    #btn-aceptar {
+      display: block;
+      width: 100%;
+      font-family: var(--font-typewriter);
+      font-size: 0.92rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      text-align: center;
+      text-decoration: none;
+      color: var(--gold-medal);
+      background: linear-gradient(135deg, rgba(139,109,56,0.22), rgba(200,165,58,0.12));
+      border: 2px solid var(--gold-medal);
+      padding: 1.05rem 2rem;
+      cursor: pointer;
+      transition: all 0.35s;
+      /* empieza oculto */
+      opacity: 0;
+      transform: translateY(14px);
+      pointer-events: none;
+    }
+    #btn-aceptar.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: all;
+      animation: glowPulse 2.8s ease-in-out infinite;
+    }
+    #btn-aceptar:hover {
+      background: linear-gradient(135deg, rgba(200,165,58,0.25), rgba(200,165,58,0.15));
+      color: #fff;
+      letter-spacing: 0.34em;
+    }
+    @keyframes glowPulse {
+      0%, 100% { box-shadow: 0 0 10px rgba(200,165,58,0.15); }
+      50%       { box-shadow: 0 0 30px rgba(200,165,58,0.40), 0 0 60px rgba(200,165,58,0.12); }
+    }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════════ */
+    @media (max-width: 680px) {
+      #dialogo-box { padding: 1.2rem 1.5rem 1.5rem; }
+      #texto-mensaje { font-size: 0.95rem; }
+    }
+
+    @media (min-width: 1200px) {
+      #dialogo-box { padding: 1.6rem 8rem 2rem; }
+      #texto-mensaje { font-size: 1.12rem; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ══ FONDO: DESPACHO ══════════════════════════════════ -->
+  <div id="escena">
+    <div id="escena-velo"></div>
+  </div>
+
+
+  <!-- ══ CAJA DE DIÁLOGO ════════════════════════════════ -->
+  <div id="dialogo-wrap">
+    <div id="dialogo-box">
+
+      <!-- Quién habla -->
+      <div id="hablante-row">
+        <div id="hab-avatar">👑</div>
+        <div>
+          <div id="hab-nombre">S.M. Alfonso XIII</div>
+          <div id="hab-cargo">Rey de España · Palacio Real, Madrid · 1915</div>
+        </div>
+      </div>
+
+      <!-- Texto con typewriter -->
+      <div id="texto-mensaje">
+        <span id="txt-span"></span><span id="cursor"></span>
+      </div>
+
+      <!-- Controles -->
+      <div id="dialogo-controles">
+        <div id="progreso-dots"></div>
+        <span id="hint-tecla">[ Pulsa para continuar ]</span>
+        <button id="btn-continuar">Continuar ▶</button>
+      </div>
+
+      <!-- Botón final -->
+      <a href="nivel-01.html" id="btn-aceptar" role="button">
+        ⚔&ensp;Acepto la misión — Comenzar la campaña
+      </a>
+
+    </div>
+  </div>
+
+  <script>
+  /* ═══════════════════════════════════════════════════
+     DIÁLOGOS DE LA ESCENA
+  ═══════════════════════════════════════════════════ */
+  var DIALOGOS = [
+    {
+      quien:  "S.M. Alfonso XIII",
+      cargo:  "Rey de España · Palacio Real, Madrid · 1915",
+      avatar: "👑",
+      color:  "#c8a53a",
+      texto:  "Comandante, le agradezco que haya acudido con tanta discreción. Lo que voy a encomendarle esta tarde no puede salir de estas cuatro paredes. España se mantiene neutral ante Europa… pero la neutralidad tiene su precio, y ese precio lo pagará usted."
+    },
+    {
+      quien:  "Eduardo Dato e Iradier",
+      cargo:  "Presidente del Consejo de Ministros · Madrid, 1915",
+      avatar: "🎖",
+      color:  "#a89462",
+      texto:  "Permítame ser directo, comandante. Los servicios de inteligencia confirman que si las Potencias Centrales caen, el Imperio Ruso emergería como la primera potencia continental. Eso rompe el equilibrio que hemos mantenido durante siglos. No podemos permitirlo."
+    },
+    {
+      quien:  "S.M. Alfonso XIII",
+      cargo:  "Rey de España · Palacio Real, Madrid · 1915",
+      avatar: "👑",
+      color:  "#c8a53a",
+      texto:  "Su misión partirá desde Irlanda. Allí deberá ganarse la confianza de John Redmond y los Irish Volunteers. Sin su milicia, no habrá campaña posible. Redmond es desconfiado y exigirá pruebas concretas de que nuestra estrategia está fundamentada en datos reales, no en promesas vacías."
+    },
+    {
+      quien:  "Eduardo Dato e Iradier",
+      cargo:  "Presidente del Consejo de Ministros · Madrid, 1915",
+      avatar: "🎖",
+      color:  "#a89462",
+      texto:  "Cada movimiento de esta operación se coordinará mediante consultas SQL sobre nuestros sistemas de inteligencia: análisis de tropas, rutas seguras, capacidades logísticas, alianzas… Su dominio de esas herramientas será tan decisivo como cualquier arma. Los datos son el nuevo campo de batalla."
+    },
+    {
+      quien:  "S.M. Alfonso XIII",
+      cargo:  "Rey de España · Palacio Real, Madrid · 1915",
+      avatar: "👑",
+      color:  "#c8a53a",
+      texto:  "Desde Irlanda navegará hacia el sur: cruzará Francia, alcanzará el Mediterráneo y atravesará medio continente bajo identidades falsas hasta infiltrarse en el Imperio Ruso. La ruta está trazada: Irlanda, costa francesa, Argelia, Venecia, Atenas y el Mar Negro. Su objetivo: desestabilizar el poder del Zar desde dentro, antes de que sea demasiado tarde para Europa."
+    },
+    {
+      quien:  "Eduardo Dato e Iradier",
+      cargo:  "Presidente del Consejo de Ministros · Madrid, 1915",
+      avatar: "🎖",
+      color:  "#a89462",
+      texto:  "España no puede aparecer oficialmente en esta misión. Si es capturado, el gobierno lo negará. No habrá rescate, no habrá reconocimiento público. Pero si tiene éxito… sabrá que salvó el equilibrio de Europa. Eso tendrá que ser recompensa suficiente."
+    },
+    {
+      quien:  "S.M. Alfonso XIII",
+      cargo:  "Rey de España · Palacio Real, Madrid · 1915",
+      avatar: "👑",
+      color:  "#c8a53a",
+      texto:  "El continente entero aguarda su decisión, comandante. La Historia no da segundas oportunidades. ¿Está dispuesto a aceptar la misión en nombre de España y de la paz de Europa?"
+    }
+  ];
+
+  /* ═══════════════════════════════════════════════════
+     ESTADO Y REFERENCIAS DOM
+  ═══════════════════════════════════════════════════ */
+  var indice      = 0;
+  var escribiendo = false;
+  var txtCompleto = "";
+  var txtMostrado = "";
+  var timerTW     = null;
+
+  var MS_CHAR  = 20;   // ms por carácter
+  var MS_PAUSA = 85;   // ms en puntuación
+
+  var elAvatar = document.getElementById('hab-avatar');
+  var elNombre = document.getElementById('hab-nombre');
+  var elCargo  = document.getElementById('hab-cargo');
+  var elSpan   = document.getElementById('txt-span');
+  var elCursor = document.getElementById('cursor');
+  var elDots   = document.getElementById('progreso-dots');
+  var elHint   = document.getElementById('hint-tecla');
+  var elBtn    = document.getElementById('btn-continuar');
+  var elFinal  = document.getElementById('btn-aceptar');
+  var elBox    = document.getElementById('dialogo-box');
+
+  /* ═══════════════════════════════════════════════════
+     PUNTOS DE PROGRESO
+  ═══════════════════════════════════════════════════ */
+  function initDots() {
+    elDots.innerHTML = '';
+    DIALOGOS.forEach(function(_, i) {
+      var d = document.createElement('div');
+      d.className = 'pdot';
+      d.id = 'pd' + i;
+      elDots.appendChild(d);
+    });
+  }
+
+  function updateDots() {
+    DIALOGOS.forEach(function(_, i) {
+      var d = document.getElementById('pd' + i);
+      if (!d) return;
+      if (i < indice)       d.className = 'pdot done';
+      else if (i === indice) d.className = 'pdot act';
+      else                   d.className = 'pdot';
+    });
+  }
+
+  /* ═══════════════════════════════════════════════════
+     EFECTO MÁQUINA DE ESCRIBIR
+  ═══════════════════════════════════════════════════ */
+  function siguienteCaracter() {
+    if (txtMostrado.length >= txtCompleto.length) {
+      escribiendo = false;
+      elCursor.classList.add('off');
+      mostrarControles();
+      return;
+    }
+    var c = txtCompleto[txtMostrado.length];
+    txtMostrado += c;
+    elSpan.textContent = txtMostrado;
+
+    var delay = ['.', ',', ';', ':', '?', '!', '…'].includes(c) ? MS_PAUSA : MS_CHAR;
+    timerTW = setTimeout(siguienteCaracter, delay);
+  }
+
+  function mostrarControles() {
+    var esUltimo = (indice === DIALOGOS.length - 1);
+    if (esUltimo) {
+      elBtn.classList.remove('visible');
+      elHint.classList.remove('visible');
+      // Mostrar etiquetas y botón de misión con delay
+      setTimeout(function(){
+        elFinal.classList.add('visible');
+      }, 700);
+    } else {
+      elBtn.classList.add('visible');
+      elHint.classList.add('visible');
+    }
+  }
+
+  /* ═══════════════════════════════════════════════════
+     CARGAR DIÁLOGO
+  ═══════════════════════════════════════════════════ */
+  function cargarDialogo(i) {
+    var d = DIALOGOS[i];
+
+    // Animar cambio de hablante
+    elAvatar.classList.remove('activo');
+    elNombre.style.opacity = '0';
+
+    setTimeout(function() {
+      elAvatar.textContent        = d.avatar;
+      elNombre.textContent        = d.quien;
+      elNombre.style.color        = d.color;
+      elAvatar.style.borderColor  = d.color + '99';
+      elCargo.textContent         = d.cargo;
+      elNombre.style.opacity      = '1';
+      elAvatar.classList.add('activo');
+    }, 180);
+
+    // Reset texto
+    txtCompleto  = d.texto;
+    txtMostrado  = '';
+    elSpan.textContent = '';
+    elCursor.classList.remove('off');
+    elBtn.classList.remove('visible');
+    elHint.classList.remove('visible');
+
+    updateDots();
+    escribiendo = true;
+    clearTimeout(timerTW);
+    timerTW = setTimeout(siguienteCaracter, 280);
+  }
+
+  /* ═══════════════════════════════════════════════════
+     AVANZAR (completar texto o ir al siguiente)
+  ═══════════════════════════════════════════════════ */
+  function avanzar() {
+    if (escribiendo) {
+      // Completar de golpe
+      clearTimeout(timerTW);
+      escribiendo = false;
+      elSpan.textContent = txtCompleto;
+      elCursor.classList.add('off');
+      mostrarControles();
+      return;
+    }
+    var esUltimo = (indice === DIALOGOS.length - 1);
+    if (esUltimo) return;
+    indice++;
+    cargarDialogo(indice);
+  }
+
+  /* ═══════════════════════════════════════════════════
+     EVENTOS
+  ═══════════════════════════════════════════════════ */
+  elBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    avanzar();
+  });
+
+  elBox.addEventListener('click', function(e) {
+    // No interferir con el botón de aceptar misión ni el de continuar
+    if (e.target === elFinal || elFinal.contains(e.target)) return;
+    if (e.target === elBtn   || elBtn.contains(e.target))   return;
+    avanzar();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (['Space', 'Enter', 'ArrowRight'].includes(e.code)) {
+      e.preventDefault();
+      avanzar();
+    }
+  });
+
+  /* ═══════════════════════════════════════════════════
+     INICIO
+  ═══════════════════════════════════════════════════ */
+  initDots();
+  // Pequeño delay para que la imagen cargue antes de empezar
+  setTimeout(function() {
+    cargarDialogo(0);
+  }, 1800);
+
+  </script>
+</body>
+</html>

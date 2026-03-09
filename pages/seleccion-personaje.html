@@ -3,331 +3,501 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Selección de Comandante — La Gran Guerra</title>
+  <title>Selección de Comandante — Continental Conquest SQL</title>
   <link rel="stylesheet" href="../css/styles.css">
   <style>
     .seleccion-layout {
       display: grid;
-      grid-template-columns: 1fr 1.4fr;
-      gap: 2rem;
+      grid-template-columns: 1fr 1.45fr;
+      gap: 2.2rem;
       align-items: start;
-      margin: 2rem 0;
+      margin: 2rem 0 3rem;
     }
-    @media (max-width:768px) {
-      .seleccion-layout { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 820px) { .seleccion-layout { grid-template-columns: 1fr; } }
 
-    /* CARTA PRINCIPAL */
-    .carta-nav {
-      display: flex; align-items: center; gap: 1rem;
-      justify-content: center; margin-top: 1.2rem;
+    /* ── CARTA ── */
+    .carta-wrapper {
+      perspective: 1000px;
     }
-    .btn-nav-carta {
-      background: rgba(61,79,46,0.6);
-      border: 2px solid var(--green-faded);
-      color: var(--sepia-pale);
-      width: 44px; height: 44px;
-      border-radius: 50%;
-      font-size: 1.2rem;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: all 0.2s;
-    }
-    .btn-nav-carta:hover {
-      background: var(--green-light);
-      transform: scale(1.1);
-    }
-    .indicadores-carta {
-      display: flex; gap: 8px;
-    }
-    .carta-indicador {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      background: rgba(139,109,56,0.3);
-      border: 2px solid var(--sepia-mid);
-      transition: all 0.3s;
-      cursor: pointer;
-    }
-    .carta-indicador.activo {
-      background: var(--gold-medal);
-      border-color: var(--gold-medal);
-    }
-
-    /* PANEL DERECHO */
-    .panel-info {
-      display: flex; flex-direction: column; gap: 1.5rem;
-    }
-
-    .bloque-habilidades {
-      background: rgba(0,0,0,0.25);
-      border: 1px solid rgba(139,109,56,0.25);
-      border-radius: 8px;
-      padding: 1.5rem;
-    }
-    .bloque-habilidades h3 {
-      font-family: var(--font-typewriter);
-      font-size: 0.78rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--gold-medal);
-      margin-bottom: 1.2rem;
-    }
-
-    .bloque-informe {
-      background: linear-gradient(135deg, #f5ead7, #e8d5a8);
-      border-radius: 8px;
-      padding: 1.5rem;
-      color: var(--ink-dark);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-      background-image: var(--paper-texture);
+    .carta-inner {
       position: relative;
+      width: 100%;
+      min-height: 400px;
+      transform-style: preserve-3d;
+      transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
     }
-    .bloque-informe::before {
-      content: 'INFORME CLASIFICADO';
-      position: absolute; top: -10px; left: 50%;
-      transform: translateX(-50%);
-      background: var(--red-wax);
-      color: white;
-      font-family: var(--font-typewriter);
-      font-size: 0.62rem;
-      letter-spacing: 0.2em;
-      padding: 2px 12px;
-      border-radius: 2px;
+    .carta-inner.flipped { transform: rotateY(180deg); }
+
+    .carta-frente,
+    .carta-dorso {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      background: linear-gradient(160deg, #1a1409, #0d0a06);
+      background-image: var(--grain-overlay);
+      border: 1px solid rgba(184,146,42,0.28);
+      border-top: 4px solid var(--gold);
+      box-shadow: 4px 4px 0 rgba(0,0,0,0.4), 0 8px 40px rgba(0,0,0,0.5);
+      padding: 1.8rem 1.5rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-    .informe-titulo {
+    .carta-dorso { transform: rotateY(180deg); }
+
+    .carta-foto {
+      font-size: 4.5rem;
+      margin-bottom: 0.8rem;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+    }
+    .carta-nombre {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 900;
+      color: var(--paper-aged);
+      text-align: center;
+      margin-bottom: 0.3rem;
+    }
+    .carta-rango {
       font-family: var(--font-typewriter);
-      font-size: 0.75rem;
-      letter-spacing: 0.12em;
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: var(--sepia-mid);
-      border-bottom: 1px solid rgba(139,109,56,0.3);
-      padding-bottom: 0.5rem;
+      color: var(--gold);
+      text-align: center;
+      margin-bottom: 0.9rem;
+    }
+    .carta-estrellas {
+      display: flex; gap: 4px; margin-bottom: 1rem;
+    }
+    .carta-estrellas span {
+      color: var(--gold-bright);
+      font-size: 1rem;
+    }
+    .carta-div {
+      width: 60%; height: 1px;
+      background: linear-gradient(to right, transparent, rgba(184,146,42,0.5), transparent);
+      margin: 0.8rem 0;
+    }
+    .carta-hint {
+      font-family: var(--font-typewriter);
+      font-size: 0.58rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(184,146,42,0.40);
+      margin-top: auto;
+      padding-top: 0.8rem;
+      animation: pulseHint 2.5s ease-in-out infinite;
+    }
+    @keyframes pulseHint { 0%,100%{opacity:.4} 50%{opacity:.75} }
+
+    /* Barras de habilidad en dorso */
+    .hab-barra {
+      width: 100%;
       margin-bottom: 1rem;
     }
-    #personaje-informe {
-      font-family: var(--font-serif);
-      font-size: 0.92rem;
-      line-height: 1.8;
-      color: var(--ink-dark);
-      transition: opacity 0.4s;
-    }
-
-    .bloque-bio {
-      background: rgba(0,0,0,0.2);
-      border-left: 3px solid var(--sepia-mid);
-      padding: 1rem 1.5rem;
-      border-radius: 0 6px 6px 0;
-    }
-    .bio-titulo {
+    .hab-label-row {
+      display: flex;
+      justify-content: space-between;
       font-family: var(--font-typewriter);
-      font-size: 0.72rem;
-      letter-spacing: 0.15em;
-      color: var(--sepia-light);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      margin-bottom: 0.6rem;
+      color: var(--gold);
+      margin-bottom: 0.3rem;
     }
-    #personaje-bio {
-      font-family: var(--font-serif);
-      font-size: 0.9rem;
-      font-style: italic;
-      color: var(--sepia-pale);
-      line-height: 1.7;
-      transition: opacity 0.4s;
+    .hab-track {
+      height: 6px;
+      background: rgba(184,146,42,0.12);
+      border: 1px solid rgba(184,146,42,0.20);
+      position: relative;
     }
-
-    .acciones-seleccion {
-      display: flex; gap: 1rem; flex-wrap: wrap;
-    }
-
-    /* Animación voltear carta */
-    .btn-voltear-texto {
-      font-size: 0.75rem;
-    }
-
-    /* Dorso carta contenido */
-    .carta-dorso-inner {
-      display: flex; flex-direction: column;
-      height: 100%; justify-content: center;
+    .hab-fill {
+      height: 100%;
+      background: linear-gradient(to right, var(--gold), var(--gold-bright));
+      transition: width 0.8s ease;
     }
     .dorso-titulo {
       font-family: var(--font-typewriter);
-      font-size: 0.7rem;
-      letter-spacing: 0.15em;
+      font-size: 0.68rem;
+      letter-spacing: 0.20em;
       text-transform: uppercase;
-      color: var(--sepia-mid);
+      color: var(--gold);
       text-align: center;
-      margin-bottom: 1rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid rgba(184,146,42,0.25);
+      margin-bottom: 1.2rem;
+      width: 100%;
+    }
+
+    /* ── NAVEGACIÓN CARTA ── */
+    .carta-nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.2rem;
+      margin-top: 1.2rem;
+    }
+    .btn-nav-carta {
+      background: rgba(26,20,9,0.8);
+      border: 1px solid rgba(184,146,42,0.30);
+      color: var(--gold);
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .btn-nav-carta:hover {
+      background: rgba(184,146,42,0.12);
+      border-color: var(--gold);
+    }
+    .indicadores-carta { display: flex; gap: 6px; }
+    .carta-indicador {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: rgba(184,146,42,0.20);
+      border: 1px solid rgba(184,146,42,0.35);
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .carta-indicador.activo {
+      background: var(--gold);
+      transform: scale(1.3);
+    }
+
+    /* ── PANEL DERECHO ── */
+    .panel-info { display: flex; flex-direction: column; gap: 1.4rem; }
+
+    .bloque-informe {
+      background: linear-gradient(160deg, #13110d, #0d0a06);
+      background-image: var(--grain-overlay);
+      border: 1px solid rgba(184,146,42,0.18);
+      border-left: 4px solid var(--gold);
+      padding: 1.5rem 1.6rem;
+    }
+    .informe-titulo {
+      font-family: var(--font-typewriter);
+      font-size: 0.62rem;
+      letter-spacing: 0.20em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.9rem;
       padding-bottom: 0.5rem;
-      border-bottom: 1px solid rgba(139,109,56,0.3);
+      border-bottom: 1px solid rgba(184,146,42,0.20);
+    }
+    #personaje-informe {
+      font-family: var(--font-body);
+      font-size: 0.92rem;
+      line-height: 1.82;
+      color: rgba(200,175,130,0.82);
+    }
+
+    .bloque-bio {
+      background: rgba(0,0,0,0.25);
+      border: 1px solid rgba(184,146,42,0.14);
+      padding: 1.2rem 1.5rem;
+    }
+    .bio-titulo {
+      font-family: var(--font-typewriter);
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(184,146,42,0.55);
+      margin-bottom: 0.7rem;
+    }
+    #personaje-bio {
+      font-family: Georgia, serif;
+      font-style: italic;
+      font-size: 0.88rem;
+      line-height: 1.78;
+      color: rgba(180,155,105,0.70);
+    }
+
+    .acciones-seleccion {
+      display: flex;
+      gap: 0.8rem;
+    }
+
+    .section-label {
+      font-family: var(--font-typewriter);
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.6rem;
+    }
+
+    .encabezado-pagina {
+      background: linear-gradient(135deg, rgba(26,20,9,.98), rgba(42,48,32,.95));
+      border-bottom: 3px solid var(--gold);
+      padding: 1.2rem 2rem;
+      text-align: center;
+    }
+    .encabezado-pagina h1 {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-weight: 900;
+      color: var(--paper-aged);
+      margin: 0 0 0.2rem;
+    }
+    .encabezado-pagina p {
+      font-family: var(--font-typewriter);
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin: 0;
     }
   </style>
 </head>
 <body class="page-bg">
 
-  <!-- NAV -->
-  <nav class="nav-principal">
-    <a href="../index.html" class="nav-logo">⚔ La Gran Guerra</a>
-    <div class="nav-links">
-      <a href="contexto-historico.html" class="btn btn-secondary" style="padding:0.4rem 1rem;font-size:0.78rem;">
+<nav class="nav-principal">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo-area">
+      <div class="nav-logo-text">SQL: La Gran Guerra</div>
+      <div class="nav-logo-sub">Conquista y Diplomacia · 1914–1918</div>
+    </a>
+    <div class="nav-center">Estado Mayor · Selección de Comandante</div>
+    <div class="nav-actions">
+      <a href="contexto-historico.html" class="btn btn-secondary" style="font-size:.72rem;padding:.5rem 1.1rem;text-decoration:none;">
         ← Contexto
       </a>
     </div>
-  </nav>
+  </div>
+</nav>
 
-  <!-- LIBRETA FLOTANTE -->
-  <div id="libreta-flotante">
-    <button id="libreta-toggle">📓 Notas <span class="libreta-arrow">▼</span></button>
-    <div id="libreta-body">
-      <textarea id="libreta-notas" placeholder="Escriba sus notas..."></textarea>
-      <div id="libreta-footer">
-        <span>Libreta de Campaña</span>
-        <span id="libreta-guardado" style="color:var(--green-faded)"></span>
+<div class="ticker-wrap">
+  <span class="ticker-content">
+    <span class="ticker-sep">⬥</span> SQL: CONQUISTA Y DIPLOMACIA EN LA GRAN GUERRA
+    <span class="ticker-sep">⬥</span> ESTADO MAYOR ESPAÑOL — SELECCIÓN DE COMANDANTE · MADRID 1915
+    <span class="ticker-sep">⬥</span> ELIJA AL OFICIAL QUE DIRIGIRÁ LA MISIÓN
+    <span class="ticker-sep">⬥</span>
+  </span>
+</div>
+
+<div class="encabezado-pagina">
+  <div style="font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;">Estado Mayor Español</div>
+  <h1>Selección de Comandante</h1>
+  <p>Su elección determinará las habilidades disponibles y el enfoque narrativo de la misión</p>
+</div>
+
+<div class="ornamento">✦ ✦ ✦</div>
+
+<main class="container">
+  <div class="seleccion-layout">
+
+    <!-- ══ COLUMNA IZQUIERDA: CARTA ══ -->
+    <div class="fade-in-1">
+      <div class="section-label">📋 Ficha de Oficial — Confidencial</div>
+      <div class="carta-wrapper">
+        <div class="carta-inner" id="carta-principal" onclick="CartaPersonaje.voltear()">
+
+          <!-- FRENTE -->
+          <div class="carta-frente">
+            <div class="carta-foto" id="carta-foto">⚔️</div>
+            <div class="carta-nombre" id="carta-nombre">Cargando…</div>
+            <div class="carta-rango" id="carta-rango">—</div>
+            <div class="carta-estrellas" id="carta-estrellas"></div>
+            <div class="carta-div"></div>
+            <div class="carta-hint">[ Toque para voltear la ficha ]</div>
+          </div>
+
+          <!-- DORSO: habilidades -->
+          <div class="carta-dorso">
+            <div class="dorso-titulo">⚙ Evaluación de Habilidades</div>
+
+            <div class="hab-barra">
+              <div class="hab-label-row">
+                <span>⚔ Estrategia</span>
+                <span id="hab-estrategia-pct">—</span>
+              </div>
+              <div class="hab-track">
+                <div class="hab-fill" id="hab-estrategia" style="width:0%"></div>
+              </div>
+            </div>
+
+            <div class="hab-barra">
+              <div class="hab-label-row">
+                <span>🤝 Diplomacia</span>
+                <span id="hab-diplomacia-pct">—</span>
+              </div>
+              <div class="hab-track">
+                <div class="hab-fill" id="hab-diplomacia" style="width:0%"></div>
+              </div>
+            </div>
+
+            <div class="hab-barra">
+              <div class="hab-label-row">
+                <span>🔍 Inteligencia</span>
+                <span id="hab-inteligencia-pct">—</span>
+              </div>
+              <div class="hab-track">
+                <div class="hab-fill" id="hab-inteligencia" style="width:0%"></div>
+              </div>
+            </div>
+
+            <div class="hab-barra">
+              <div class="hab-label-row">
+                <span>🎖 Mando</span>
+                <span id="hab-mando-pct">—</span>
+              </div>
+              <div class="hab-track">
+                <div class="hab-fill" id="hab-mando" style="width:0%"></div>
+              </div>
+            </div>
+
+            <div style="margin-top:auto;font-family:var(--font-typewriter);font-size:.62rem;letter-spacing:.1em;color:rgba(184,146,42,.4);text-align:center;padding-top:.8rem;border-top:1px solid rgba(184,146,42,.15);">
+              Consulte el informe detallado en el panel lateral
+            </div>
+          </div>
+
+        </div>
       </div>
+
+      <!-- Navegación cartas -->
+      <div class="carta-nav">
+        <button class="btn-nav-carta" id="btn-carta-prev" onclick="CartaPersonaje.anterior()">◀</button>
+        <div class="indicadores-carta">
+          <div class="carta-indicador activo" id="ind-0" onclick="CartaPersonaje.irA(0)"></div>
+          <div class="carta-indicador" id="ind-1" onclick="CartaPersonaje.irA(1)"></div>
+          <div class="carta-indicador" id="ind-2" onclick="CartaPersonaje.irA(2)"></div>
+        </div>
+        <button class="btn-nav-carta" id="btn-carta-next" onclick="CartaPersonaje.siguiente()">▶</button>
+      </div>
+
+      <div style="display:flex;gap:.7rem;justify-content:center;margin-top:1rem;">
+        <button class="btn btn-secondary" onclick="CartaPersonaje.voltear()" style="font-size:.75rem;padding:.5rem 1.2rem;">
+          🔄 Voltear ficha
+        </button>
+      </div>
+    </div>
+
+    <!-- ══ COLUMNA DERECHA: INFORME ══ -->
+    <div class="panel-info fade-in-2">
+
+      <div class="bloque-informe">
+        <div class="informe-titulo">⚙ Evaluación del Estado Mayor · Informe Clasificado</div>
+        <p id="personaje-informe">Cargando evaluación…</p>
+      </div>
+
+      <div class="bloque-bio">
+        <div class="bio-titulo">📜 Nota Biográfica</div>
+        <p id="personaje-bio">Cargando biografía…</p>
+      </div>
+
+      <div class="acciones-seleccion">
+        <button class="btn btn-gold" id="btn-elegir-personaje" style="flex:1;justify-content:center;font-size:.82rem;padding:.85rem 1.2rem;">
+          ⚔ Elegir este Comandante — Comenzar Misión
+        </button>
+      </div>
+
+      <div style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.08em;color:rgba(184,146,42,.45);text-align:center;line-height:1.7;margin-top:.5rem;">
+        La selección de comandante es permanente para esta partida.<br>
+        Cada oficial tiene fortalezas distintas que afectan la narrativa.
+      </div>
+
     </div>
   </div>
+</main>
 
-  <main class="container">
+<script src="../js/main.js"></script>
+<script>
+/* ══════════════════════════════════════
+   CARTA DE PERSONAJE
+══════════════════════════════════════ */
+var CartaPersonaje = {
+  indiceActual: 0,
+  volteada: false,
 
-    <div class="titulo-principal fade-in" style="padding-top:1.5rem;padding-bottom:1rem;">
-      <div class="subtitulo">Estado Mayor Español</div>
-      <h1>Selección de Comandante</h1>
-      <p class="text-typewriter" style="color:var(--sepia-light);font-size:0.85rem;margin-top:0.5rem;letter-spacing:0.1em;">
-        Elija al oficial que dirigirá la misión. Su elección determinará la narrativa.
-      </p>
-    </div>
+  voltear: function() {
+    var carta = document.getElementById('carta-principal');
+    this.volteada = !this.volteada;
+    if (this.volteada) {
+      carta.classList.add('flipped');
+      // Animar barras con pequeño delay
+      setTimeout(function() { CartaPersonaje.animarBarras(); }, 200);
+    } else {
+      carta.classList.remove('flipped');
+    }
+  },
 
-    <div class="ornamento">✦ ✦ ✦</div>
+  irA: function(i) {
+    this.indiceActual = i;
+    this.volteada = false;
+    document.getElementById('carta-principal').classList.remove('flipped');
+    this.renderizar();
+  },
 
-    <div class="seleccion-layout">
+  anterior: function() {
+    this.irA((this.indiceActual - 1 + PERSONAJES.length) % PERSONAJES.length);
+  },
 
-      <!-- COLUMNA IZQUIERDA: CARTA -->
-      <div class="fade-in-delay-1">
-        <!-- CARTA -->
-        <div class="carta-wrapper">
-          <div class="carta-inner" id="carta-principal">
+  siguiente: function() {
+    this.irA((this.indiceActual + 1) % PERSONAJES.length);
+  },
 
-            <!-- FRENTE -->
-            <div class="carta-frente">
-              <div class="carta-foto" id="carta-foto">⚔️</div>
-              <div class="carta-nombre" id="carta-nombre">Cargando...</div>
-              <div class="carta-rango" id="carta-rango">—</div>
-              <div class="carta-estrellas" id="carta-estrellas"></div>
-              <div style="margin-top:auto;font-family:var(--font-typewriter);font-size:0.65rem;letter-spacing:0.15em;color:var(--sepia-light);opacity:0.7;text-align:center;">
-                Toque para voltear
-              </div>
-            </div>
+  animarBarras: function() {
+    var p = PERSONAJES[this.indiceActual];
+    if (!p) return;
+    var h = p.habilidades;
+    ['estrategia','diplomacia','inteligencia','mando'].forEach(function(k) {
+      var fill = document.getElementById('hab-' + k);
+      var pct  = document.getElementById('hab-' + k + '-pct');
+      if (fill) fill.style.width = h[k] + '%';
+      if (pct)  pct.textContent  = h[k] + '%';
+    });
+  },
 
-            <!-- DORSO (habilidades resumidas) -->
-            <div class="carta-dorso">
-              <div class="carta-dorso-inner">
-                <div class="dorso-titulo">📊 Habilidades de Mando</div>
+  renderizar: function() {
+    var p = PERSONAJES[this.indiceActual];
+    if (!p) return;
 
-                <div class="habilidad-barra">
-                  <div class="habilidad-label">
-                    <span>⚔ Estrategia</span>
-                    <span id="hab-estrategia-pct">—</span>
-                  </div>
-                  <div class="habilidad-track">
-                    <div class="habilidad-fill" id="hab-estrategia"></div>
-                  </div>
-                </div>
+    // Frente
+    document.getElementById('carta-foto').textContent   = p.emoji;
+    document.getElementById('carta-nombre').textContent = p.nombre;
+    document.getElementById('carta-rango').textContent  = p.rango;
 
-                <div class="habilidad-barra" style="margin-top:0.8rem;">
-                  <div class="habilidad-label">
-                    <span>🤝 Diplomacia</span>
-                    <span id="hab-diplomacia-pct">—</span>
-                  </div>
-                  <div class="habilidad-track">
-                    <div class="habilidad-fill" id="hab-diplomacia"></div>
-                  </div>
-                </div>
+    var starsEl = document.getElementById('carta-estrellas');
+    starsEl.innerHTML = '';
+    for (var s = 0; s < p.estrellas; s++) {
+      var sp = document.createElement('span');
+      sp.textContent = '★';
+      starsEl.appendChild(sp);
+    }
 
-                <div class="habilidad-barra" style="margin-top:0.8rem;">
-                  <div class="habilidad-label">
-                    <span>🔍 Inteligencia</span>
-                    <span id="hab-inteligencia-pct">—</span>
-                  </div>
-                  <div class="habilidad-track">
-                    <div class="habilidad-fill" id="hab-inteligencia"></div>
-                  </div>
-                </div>
+    // Panel lateral
+    document.getElementById('personaje-informe').textContent = p.informe;
+    document.getElementById('personaje-bio').textContent     = p.biografia;
 
-                <div class="habilidad-barra" style="margin-top:0.8rem;">
-                  <div class="habilidad-label">
-                    <span>🎖 Mando</span>
-                    <span id="hab-mando-pct">—</span>
-                  </div>
-                  <div class="habilidad-track">
-                    <div class="habilidad-fill" id="hab-mando"></div>
-                  </div>
-                </div>
+    // Indicadores
+    for (var i = 0; i < 3; i++) {
+      var ind = document.getElementById('ind-' + i);
+      if (ind) ind.className = 'carta-indicador' + (i === this.indiceActual ? ' activo' : '');
+    }
+  }
+};
 
-                <hr class="divisor" style="margin:1rem 0;">
-                <p style="font-family:var(--font-serif);font-size:0.78rem;color:var(--sepia-mid);text-align:center;font-style:italic;">
-                  Consulte el informe detallado en el panel lateral
-                </p>
-              </div>
-            </div>
+// Botón elegir
+document.getElementById('btn-elegir-personaje').addEventListener('click', function() {
+  var p = PERSONAJES[CartaPersonaje.indiceActual];
+  if (!p) return;
+  var partida = Partidas.getCurrent();
+  if (partida) {
+    partida.personaje = p.id;
+    Partidas.save(partida);
+  }
+  window.location.href = 'despacho.html';
+});
 
-          </div>
-        </div>
-
-        <!-- NAVEGACIÓN CARTAS -->
-        <div class="carta-nav">
-          <button class="btn-nav-carta" id="btn-carta-prev">◀</button>
-
-          <div class="indicadores-carta">
-            <div class="carta-indicador activo" onclick="CartaPersonaje.indiceActual=0;CartaPersonaje.renderizar()"></div>
-            <div class="carta-indicador" onclick="CartaPersonaje.indiceActual=1;CartaPersonaje.renderizar()"></div>
-            <div class="carta-indicador" onclick="CartaPersonaje.indiceActual=2;CartaPersonaje.renderizar()"></div>
-          </div>
-
-          <button class="btn-nav-carta" id="btn-carta-next">▶</button>
-        </div>
-
-        <!-- BOTONES CARTA -->
-        <div style="display:flex;gap:0.8rem;justify-content:center;margin-top:1rem;">
-          <button class="btn btn-secondary" id="btn-voltear" style="font-size:0.78rem;padding:0.5rem 1rem;">
-            🔄 Voltear
-          </button>
-        </div>
-      </div>
-
-      <!-- COLUMNA DERECHA: INFORME + BIO -->
-      <div class="panel-info fade-in-delay-2">
-
-        <!-- INFORME DE HABILIDADES -->
-        <div class="bloque-informe">
-          <div class="informe-titulo">⚙ Evaluación del Estado Mayor · Confidencial</div>
-          <p id="personaje-informe">Cargando evaluación...</p>
-        </div>
-
-        <!-- BIOGRAFÍA -->
-        <div class="bloque-bio">
-          <div class="bio-titulo">📜 Nota Biográfica</div>
-          <p id="personaje-bio">Cargando biografía...</p>
-        </div>
-
-        <!-- BOTÓN ELEGIR -->
-        <div class="acciones-seleccion">
-          <button class="btn btn-gold" id="btn-elegir-personaje" style="flex:1;justify-content:center;">
-            ⚔ Elegir este Comandante
-          </button>
-        </div>
-
-        <!-- AVISO -->
-        <p class="text-typewriter" style="color:var(--sepia-mid);font-size:0.72rem;text-align:center;letter-spacing:0.08em;">
-          La selección de comandante determinará las habilidades disponibles<br>
-          y el enfoque narrativo de la misión
-        </p>
-
-      </div>
-    </div>
-
-    <div style="margin-bottom:3rem;"></div>
-
-  </main>
-
-  <script src="../js/main.js"></script>
+// Iniciar
+document.addEventListener('DOMContentLoaded', function() {
+  CartaPersonaje.renderizar();
+});
+</script>
 </body>
 </html>

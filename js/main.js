@@ -313,7 +313,7 @@ const CartaPersonaje = {
       btn.textContent = '✓ ' + p.nombre + ' seleccionado';
       btn.classList.add('btn-gold');
       setTimeout(() => {
-        window.location.href = 'nivel-01.html';
+        window.location.href = 'despacho.html';
       }, 1200);
     }
   }
@@ -444,9 +444,54 @@ const ModalPartida = {
   confirmarNueva() {
     const nombre = document.getElementById('input-nombre')?.value?.trim();
     if (!nombre) return;
-    const p = Partidas.crear(nombre);
+    Partidas.crear(nombre);
+    this.cerrar();
+    this.mostrarEleccionContexto();
+  },
+
+  mostrarEleccionContexto() {
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+      <div class="modal-box" style="max-width:520px;">
+        <h2 class="modal-titulo">Antes de partir…</h2>
+        <p style="font-family:var(--font-typewriter);font-size:0.82rem;color:var(--sepia-light);line-height:1.75;text-align:center;margin-bottom:0.5rem;letter-spacing:0.04em;">
+          Es 1914. Europa está al borde del abismo.<br>
+          ¿Desea conocer el contexto histórico de la Gran Guerra<br>antes de iniciar su misión?
+        </p>
+        <div style="border-top:1px solid rgba(184,146,42,0.15);margin:1.4rem 0 1.6rem;"></div>
+        <div style="display:flex;flex-direction:column;gap:0.9rem;">
+          <button class="btn btn-secondary" style="justify-content:flex-start;gap:1rem;padding:1rem 1.4rem;text-align:left;"
+                  onclick="ModalPartida.irContexto()">
+            <span style="font-size:1.1rem;">📖</span>
+            <span style="display:flex;flex-direction:column;gap:0.15rem;">
+              <span style="font-family:var(--font-typewriter);font-size:0.8rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold-bright);">Conocer el contexto histórico</span>
+              <span style="font-family:var(--font-body);font-size:0.75rem;color:var(--paper-dark);font-style:italic;text-transform:none;letter-spacing:0;">Los antecedentes de la Gran Guerra, 1914–1918</span>
+            </span>
+          </button>
+          <button class="btn btn-primary" style="justify-content:flex-start;gap:1rem;padding:1rem 1.4rem;text-align:left;"
+                  onclick="ModalPartida.irSeleccionPersonaje()">
+            <span style="font-size:1.1rem;">⚔</span>
+            <span style="display:flex;flex-direction:column;gap:0.15rem;">
+              <span style="font-family:var(--font-typewriter);font-size:0.8rem;letter-spacing:0.12em;text-transform:uppercase;">Seleccionar personaje</span>
+              <span style="font-family:var(--font-body);font-size:0.75rem;color:rgba(200,180,140,0.7);font-style:italic;text-transform:none;letter-spacing:0;">Ir directamente a elegir su comandante</span>
+            </span>
+          </button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    this._overlay = overlay;
+  },
+
+  irContexto() {
     this.cerrar();
     window.location.href = 'pages/contexto-historico.html';
+  },
+
+  irSeleccionPersonaje() {
+    this.cerrar();
+    window.location.href = 'pages/seleccion-personaje.html';
   },
 
   mostrarCargar() {
