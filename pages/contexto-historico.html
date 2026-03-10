@@ -113,19 +113,6 @@
       position: relative;
       padding: 2.5rem 0 3rem;
     }
-    .timeline-wrapper::before {
-      content: '·−·· ·· −·· · ·−·  −·− ·· −·−· −·−· −';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      font-family: var(--font-typewriter);
-      font-size: 0.52rem;
-      letter-spacing: 0.35em;
-      color: rgba(184,146,42,0.10);
-      text-align: center;
-      overflow: hidden;
-      white-space: nowrap;
-      pointer-events: none;
-    }
 
     .timeline {
       position: relative;
@@ -245,27 +232,24 @@
         0 6px 32px rgba(0,0,0,0.7);
     }
 
-    /* Año — matasellos circular */
+    /* Año — recuadro rectangular */
     .tl-node-year {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 56px; height: 56px;
-      border-radius: 50%;
+      display: inline-block;
       background: var(--press-dark);
-      border: 2px solid rgba(184,146,42,0.35);
+      border: 1px solid rgba(184,146,42,0.45);
       color: var(--gold);
       font-family: var(--font-typewriter);
-      font-size: 0.60rem;
+      font-size: 0.65rem;
       font-weight: bold;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.08em;
       text-align: center;
-      line-height: 1.2;
+      line-height: 1.3;
       white-space: nowrap;
-      margin-top: 8px;
+      padding: 0.28rem 0.65rem;
+      margin-top: 14px;
       position: relative;
       z-index: 2;
-      box-shadow: 0 0 0 3px var(--press-dark), 0 0 0 5px rgba(184,146,42,0.15);
+      box-shadow: 0 0 0 2px var(--press-dark), 0 0 0 3px rgba(184,146,42,0.20);
     }
 
     /* Cadena de puntos telegráfica como conector */
@@ -948,7 +932,7 @@
       <!-- HISTORIA PRINCIPAL SOBRE LA FOTO -->
       <div class="hero-story">
         <div class="contenido-wrapper">
-          <div style="max-width: 800px;">
+          <div>
             <span class="article-kicker fade-in-1">⚠ Edición de Guerra — Noticias Urgentes</span>
             <h1 class="article-headline fade-in-2" style="font-size:clamp(2.5rem,6vw,5rem);line-height:1.05;margin-bottom:0.5rem;color:var(--paper-warm);text-shadow:0 2px 16px rgba(0,0,0,0.92),0 1px 4px rgba(0,0,0,1),3px 3px 0 rgba(0,0,0,0.7);">
               EUROPA EN LLAMAS:<br>LA GRAN GUERRA
@@ -956,7 +940,7 @@
             <div class="article-byline fade-in-3">
               CRÓNICA ESPECIAL DEL CORRESPONSAL EN CAMPAÑA · FRENTE OCCIDENTAL · AGOSTO 1914
             </div>
-            <div class="article-body fade-in-4" style="columns: 2; column-gap: 2rem; max-width: 720px;">
+            <div class="article-body fade-in-4" style="columns: 2; column-gap: 2rem;">
               <p>En los primeros días de agosto de 1914, el mecanismo de alianzas que durante décadas había mantenido una paz tensa en Europa saltó hecho añicos. El asesinato de un archiduque en Sarajevo desencadenó una reacción en cadena de declaraciones de guerra que en apenas cinco semanas involucró a las mayores potencias del continente.</p>
               <p>Las calles de París, Berlín, Londres y Viena se llenaron de jóvenes entusiastas convencidos de que estarían de vuelta en casa para Navidad. Los generales hablaban de ofensivas relámpago, de caballería gloriosa, de victorias decisivas. Nadie imaginaba lo que realmente les esperaba.</p>
             </div>
@@ -1003,7 +987,7 @@
           <!-- FOTO HISTÓRICA: Sarajevo 1914 -->
           <div class="press-photo photo-corners reveal-left" style="margin-bottom:0.5rem;">
             <img
-              src="../img/sarajevo1914.jpg"
+              src="../img/sarajevo1914.png"
               alt="Asesinato del Archiduque Francisco Fernando, Sarajevo 1914"
               loading="lazy"
               style="width:100%;object-fit:cover;min-height:160px;display:block;"
@@ -1075,14 +1059,14 @@
       <div class="foto-testimonio-img">
         <!-- Foto soldados en trinchera -->
         <img
-          src="../img/trincheras.jpg"
+          src="../img/trincheras.png"
           alt="Soldados en trincheras del frente occidental, 1916"
           loading="lazy"
           style="min-height:380px;"
           
         >
         <div class="press-photo-overlay"></div>
-        <div class="mapa-caption" style="position:absolute;bottom:0;left:0;right:0;font-size:0.62rem;letter-spacing:0.1em;padding:1.5rem 1rem 0.6rem;background:linear-gradient(transparent,rgba(0,0,0,0.9));color:var(--paper-dark);line-height:1.4;text-align:left;">
+        <div class="mapa-caption" style="position:absolute;bottom:0;left:0;right:0;font-size:0.68rem;letter-spacing:0.08em;padding:2.5rem 1rem 0.8rem;background:linear-gradient(transparent,rgba(0,0,0,0.96));color:rgba(230,210,172,0.95);line-height:1.5;text-align:left;z-index:2;">
           FRENTE OCCIDENTAL, 1916 — Soldados aliados en las trincheras de Champagne. El sistema de trincheras se extendió 750 km desde el Canal de la Mancha hasta Suiza.
         </div>
       </div>
@@ -1117,7 +1101,7 @@
       <div class="foto-testimonio-img">
         <!-- Foto ametralladora/gas -->
         <img
-          src="../img/gas1917.jpg"
+          src="../img/gas1917.png"
           alt="Soldados con máscaras de gas, frente occidental 1917"
           loading="lazy"
           style="min-height:300px;object-position:center center;"
@@ -1159,29 +1143,29 @@
             <div class="alianza-card entente reveal">
               <div class="alianza-card-title">La Entente</div>
               <div class="alianza-pais">
-                <span>🇫🇷 Francia</span>
-                <span>🇬🇧 Imperio Británico</span>
-                <span>🇷🇺 Imperio Ruso</span>
-                <span style="color:var(--ink-faded);font-size:0.65em;">+ Italia (1915)</span>
-                <span style="color:var(--ink-faded);font-size:0.65em;">+ EE.UU. (1917)</span>
+                <span>Francia</span>
+                <span>Imperio Británico</span>
+                <span>Imperio Ruso</span>
+                <span>Italia (1915)</span>
+                <span>EE.UU. (1917)</span>
               </div>
             </div>
             <div class="alianza-card centrales reveal" style="animation-delay:0.2s;">
               <div class="alianza-card-title">Potencias Centrales</div>
               <div class="alianza-pais">
-                <span>🇩🇪 Imperio Alemán</span>
-                <span>🇦🇹 Aus-Hungría</span>
-                <span>🇹🇷 Imp. Otomano</span>
-                <span>🇧🇬 Bulgaria</span>
+                <span>Imperio Alemán</span>
+                <span>Aus-Hungría</span>
+                <span>Imp. Otomano</span>
+                <span>Bulgaria</span>
               </div>
             </div>
             <div class="alianza-card neutral reveal" style="animation-delay:0.4s;">
               <div class="alianza-card-title" style="font-size:0.95rem;">Neutrales</div>
               <div class="alianza-pais">
-                <span>🇪🇸 España</span>
-                <span>🇨🇭 Suiza</span>
-                <span>🇸🇪 Suecia</span>
-                <span style="color:var(--ink-faded);font-size:0.65em;">Observadores</span>
+                <span>España</span>
+                <span>Suiza</span>
+                <span>Suecia</span>
+                <span>Observadores</span>
               </div>
             </div>
           </div>
@@ -1276,7 +1260,7 @@
         <div class="mapa-historico-container photo-corners">
           <!-- Mapa real de Europa de Wikimedia -->
           <img
-            src="../img/europa1914.jpg"
+            src="../img/europa1914.png"
             alt="Mapa de Europa en 1914 con las alianzas militares"
             loading="lazy"
             style="width:100%;min-height:400px;object-fit:cover;"
@@ -1711,7 +1695,7 @@
       <div class="oriental-grid reveal">
         <div class="oriental-foto">
           <img
-            src="../img/infanteria.jpg"
+            src="../img/infanteria.png"
             alt="Tropas en el frente oriental"
             loading="lazy"
             style="min-height:320px;object-fit:cover;"
@@ -1757,9 +1741,6 @@
         <a href="../index.html" class="btn btn-secondary" style="font-size:0.85rem;">
           ← Volver al Menú
         </a>
-      </div>
-      <div style="margin-top:2rem;font-family:var(--font-typewriter);font-size:0.6rem;letter-spacing:0.2em;color:rgba(200,176,122,0.3);text-transform:uppercase;">
-        Proyecto Escolar · Historia · Primera Guerra Mundial · Curso 2024/25
       </div>
     </div>
   </section>
