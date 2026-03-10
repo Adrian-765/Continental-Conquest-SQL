@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Caída del Zar — Continental Conquest SQL</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    .seccion { display: none; }
+    .seccion.activa { display: block; }
+
+    /* INTRO */
+    #pantalla-intro {
+      min-height: 100vh;
+      display: none; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; position: relative; overflow: hidden;
+      background: radial-gradient(ellipse 80% 60% at 50% 80%, rgba(139,26,26,0.12), transparent);
+    }
+    #pantalla-intro.activa { display: flex; }
+    .intro-sello {
+      width: 150px; height: 150px; border-radius: 50%;
+      border: 3px solid rgba(139,26,26,0.7);
+      background: radial-gradient(circle, rgba(60,10,10,0.9), rgba(5,3,1,0.98));
+      box-shadow: 0 0 0 5px rgba(5,3,1,.9), 0 0 0 7px rgba(139,26,26,.25), 0 0 60px rgba(139,26,26,.18);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 4rem; margin-bottom: 2rem;
+      animation: pulseRed 3s ease-in-out infinite, fadeInScale 1.2s .5s ease both;
+      position: relative;
+    }
+    .intro-sello::before {
+      content: ''; position: absolute; inset: -14px; border-radius: 50%;
+      border: 1px dashed rgba(139,26,26,.35);
+      animation: rotateSlow 20s linear infinite;
+    }
+    @keyframes pulseRed {
+      0%,100%{ box-shadow: 0 0 0 5px rgba(5,3,1,.9), 0 0 0 7px rgba(139,26,26,.25), 0 0 60px rgba(139,26,26,.18); }
+      50%    { box-shadow: 0 0 0 5px rgba(5,3,1,.9), 0 0 0 7px rgba(139,26,26,.45), 0 0 90px rgba(139,26,26,.35); }
+    }
+    @keyframes rotateSlow { to { transform: rotate(360deg); } }
+    @keyframes fadeInScale { from{opacity:0;transform:scale(.5)} to{opacity:1;transform:scale(1)} }
+    @keyframes fadeInUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+    .intro-ciudad { font-family:var(--font-typewriter); font-size:.68rem; letter-spacing:.35em; text-transform:uppercase; color:rgba(139,26,26,.75); margin-bottom:.6rem; animation:fadeInUp .8s 1.2s ease both; }
+    .intro-titulo { font-family:var(--font-display); font-size:clamp(2.4rem,6vw,4.2rem); font-weight:900; color:var(--paper-aged); line-height:1.1; margin:0 0 .5rem; animation:fadeInUp .8s 1.4s ease both; }
+    .intro-sub { font-family:var(--font-typewriter); font-size:.80rem; letter-spacing:.22em; text-transform:uppercase; color:rgba(184,146,42,.60); margin-bottom:3rem; animation:fadeInUp .8s 1.6s ease both; }
+    .intro-alerta {
+      background:rgba(139,26,26,.12); border:1px solid rgba(139,26,26,.35);
+      border-left:4px solid var(--red-stamp); padding:1.2rem 2rem;
+      max-width:640px; margin-bottom:2.5rem; animation:fadeInUp .8s 2s ease both; text-align:left;
+    }
+    .intro-alerta-label { font-family:var(--font-typewriter); font-size:.6rem; letter-spacing:.22em; text-transform:uppercase; color:var(--red-stamp); margin-bottom:.5rem; }
+    .intro-alerta p { font-family:var(--font-body); font-size:.92rem; color:rgba(200,175,130,.80); line-height:1.75; margin:0; }
+
+    /* HUD */
+    .hud-vidas { display:flex; align-items:center; gap:.6rem; font-family:var(--font-typewriter); font-size:.65rem; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); }
+    .vida-dot { width:14px; height:14px; border-radius:50%; background:var(--red-stamp); border:2px solid rgba(192,57,43,.5); transition:all .4s; box-shadow:0 0 8px rgba(192,57,43,.4); }
+    .vida-dot.perdida { background:rgba(192,57,43,.12); border-color:rgba(192,57,43,.18); box-shadow:none; }
+    .hud-niveles { display:flex; gap:.5rem; align-items:center; }
+    .hud-nivel-dot { width:28px; height:8px; background:rgba(184,146,42,.15); border:1px solid rgba(184,146,42,.25); transition:all .4s; }
+    .hud-nivel-dot.hecho  { background:var(--gold); border-color:var(--gold-bright); }
+    .hud-nivel-dot.activo { background:rgba(184,146,42,.50); border-color:var(--gold); animation:parpadeo .9s step-end infinite; }
+    @keyframes parpadeo { 0%,100%{opacity:1} 50%{opacity:.45} }
+
+    /* NIVEL */
+    #pantalla-nivel { display:none; }
+    #pantalla-nivel.activa { display:block; }
+    .nivel-header-final { background:linear-gradient(135deg,rgba(26,20,9,.98),rgba(60,10,10,.85)); border-bottom:3px solid var(--red-stamp); padding:1rem 2rem; display:flex; justify-content:space-between; align-items:center; }
+    .nivel-badge-final { display:inline-block; background:var(--red-stamp); color:var(--paper-warm); font-family:var(--font-typewriter); font-size:.58rem; letter-spacing:.20em; padding:.2rem .7rem; text-transform:uppercase; margin-bottom:.2rem; }
+    .nivel-layout-final { display:grid; grid-template-columns:1.1fr .9fr; gap:2rem; margin:1.5rem 0; }
+    @media(max-width:880px){ .nivel-layout-final{ grid-template-columns:1fr; } }
+    .dialogo-final { background:linear-gradient(160deg,#13110d,#0d0a06); background-image:var(--grain-overlay); border:1px solid rgba(139,26,26,.25); border-left:4px solid var(--red-stamp); padding:1.5rem 1.8rem; font-family:var(--font-body); font-size:.94rem; color:rgba(200,175,130,.82); line-height:1.82; position:relative; }
+    .dialogo-narrador { font-family:var(--font-typewriter); font-size:.60rem; letter-spacing:.20em; text-transform:uppercase; color:var(--red-stamp); margin-bottom:.6rem; }
+    .sql-panel-final { background:#050804; border:1px solid rgba(184,146,42,.22); border-top:3px solid var(--gold); }
+    .sql-panel-header { background:rgba(184,146,42,.07); border-bottom:1px solid rgba(184,146,42,.15); padding:.6rem 1rem; display:flex; align-items:center; gap:.6rem; font-family:var(--font-typewriter); font-size:.62rem; letter-spacing:.15em; text-transform:uppercase; color:var(--gold); }
+    .sql-dots { display:flex; gap:4px; }
+    .sql-dot  { width:8px; height:8px; border-radius:50%; }
+    .opciones-container { padding:.8rem; display:flex; flex-direction:column; gap:.5rem; }
+    .opcion-sql { background:rgba(0,0,0,.4); border:1px solid rgba(184,146,42,.20); padding:.75rem 1rem; cursor:pointer; transition:all .2s; font-family:'Special Elite','Courier New',monospace; font-size:.78rem; color:rgba(160,200,150,.85); line-height:1.55; white-space:pre; position:relative; overflow:hidden; }
+    .opcion-sql:hover { border-color:rgba(184,146,42,.50); color:rgba(180,220,165,.95); }
+    .opcion-sql.correcta  { border-color:rgba(61,160,61,.6); background:rgba(30,80,30,.35); color:#88ee88; animation:flashVerde .5s ease; }
+    .opcion-sql.incorrecta { border-color:rgba(192,57,43,.7); background:rgba(80,20,20,.4); color:rgba(220,100,80,.9); animation:shake .45s ease; }
+    @keyframes flashVerde { 0%,100%{background:rgba(30,80,30,.35)} 50%{background:rgba(30,120,30,.55)} }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 60%{transform:translateX(8px)} }
+    .feedback-box { margin:.6rem .8rem .8rem; padding:.8rem 1rem; font-family:var(--font-typewriter); font-size:.72rem; letter-spacing:.06em; line-height:1.6; border:1px solid; display:none; }
+    .feedback-box.visible { display:block; }
+    .feedback-box.ok  { border-color:rgba(61,160,61,.4); background:rgba(20,60,20,.3); color:#8ee88e; }
+    .feedback-box.mal { border-color:rgba(192,57,43,.4); background:rgba(60,15,15,.3); color:rgba(220,100,80,.9); }
+
+    /* FALLO */
+    #pantalla-fallo { display:none; min-height:45vh; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:3rem 2rem; }
+    #pantalla-fallo.activa { display:flex; }
+
+    /* VICTORIA */
+    #pantalla-victoria { display:none; }
+    #pantalla-victoria.activa { display:block; }
+    .victoria-hero { min-height:60vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:3rem 2rem; position:relative; overflow:hidden; }
+    .victoria-hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 70% 60% at 50% 70%,rgba(184,146,42,.08),transparent); pointer-events:none; }
+    .victoria-emblema {
+      width:200px; height:200px; border-radius:50%;
+      border:3px solid rgba(184,146,42,.65);
+      background:radial-gradient(circle,rgba(42,48,32,.9),rgba(5,4,1,.97));
+      box-shadow:0 0 0 6px rgba(5,4,1,.9),0 0 0 8px rgba(184,146,42,.22),0 0 70px rgba(184,146,42,.28);
+      display:flex; align-items:center; justify-content:center; font-size:5rem;
+      margin-bottom:2rem; position:relative;
+      animation:pulseGold 3s ease-in-out infinite;
+    }
+    .victoria-emblema::before { content:''; position:absolute; inset:-16px; border-radius:50%; border:1px dashed rgba(184,146,42,.28); }
+    @keyframes pulseGold {
+      0%,100%{ box-shadow:0 0 0 6px rgba(5,4,1,.9),0 0 0 8px rgba(184,146,42,.22),0 0 70px rgba(184,146,42,.28); }
+      50%    { box-shadow:0 0 0 6px rgba(5,4,1,.9),0 0 0 8px rgba(184,146,42,.40),0 0 110px rgba(184,146,42,.45); }
+    }
+    .victoria-titulo { font-family:var(--font-display); font-size:clamp(2.5rem,7vw,4.5rem); font-weight:900; color:var(--gold-bright); text-shadow:0 2px 40px rgba(184,146,42,.4); margin:0 0 .5rem; }
+    .victoria-sub { font-family:var(--font-typewriter); font-size:.82rem; letter-spacing:.30em; color:rgba(184,146,42,.65); text-transform:uppercase; margin-bottom:3rem; }
+    .medallas-row { display:flex; gap:2rem; flex-wrap:wrap; justify-content:center; margin-bottom:1rem; }
+    .medalla-item { display:flex; flex-direction:column; align-items:center; gap:.5rem; opacity:0; animation:stampIn .55s ease both; }
+    .medalla-item:nth-child(1){ animation-delay:.3s; }
+    .medalla-item:nth-child(2){ animation-delay:.6s; }
+    .medalla-item:nth-child(3){ animation-delay:.9s; }
+    .medalla-item:nth-child(4){ animation-delay:1.2s; }
+    .medalla-item:nth-child(5){ animation-delay:1.5s; }
+    @keyframes stampIn { from{opacity:0;transform:scale(.3) rotate(-20deg)} to{opacity:1;transform:scale(1) rotate(0)} }
+    .medalla-circulo { width:78px; height:78px; border-radius:50%; border:2px solid rgba(184,146,42,.5); background:linear-gradient(135deg,rgba(42,48,32,.85),rgba(8,6,2,.95)); box-shadow:0 0 0 4px rgba(5,4,1,.85),0 0 0 5px rgba(184,146,42,.18),0 4px 20px rgba(0,0,0,.5); display:flex; align-items:center; justify-content:center; }
+    .medalla-label { font-family:var(--font-typewriter); font-size:.52rem; letter-spacing:.10em; text-transform:uppercase; color:rgba(184,146,42,.50); text-align:center; line-height:1.5; }
+
+    /* EPÍLOGO */
+    .epilogo-section { padding:3rem 0 2rem; }
+    .epilogo-titular { font-family:var(--font-display); font-size:clamp(1.6rem,3.5vw,2.5rem); font-weight:900; color:var(--paper-aged); margin:0 0 .4rem; }
+    .epilogo-fecha { font-family:var(--font-typewriter); font-size:.65rem; letter-spacing:.22em; text-transform:uppercase; color:rgba(184,146,42,.55); margin-bottom:1.5rem; }
+    .epilogo-texto { font-family:var(--font-body); font-size:.97rem; line-height:1.90; color:rgba(200,175,130,.78); }
+    .epilogo-texto p { margin:0 0 1.2rem; }
+    .epilogo-divider { display:flex; align-items:center; gap:1rem; margin:2.5rem 0; }
+    .epilogo-divider::before,.epilogo-divider::after { content:''; flex:1; height:1px; background:linear-gradient(to right,transparent,rgba(184,146,42,.30)); }
+    .epilogo-divider::after { background:linear-gradient(to left,transparent,rgba(184,146,42,.30)); }
+    .epilogo-divider-txt { font-family:var(--font-typewriter); font-size:.62rem; letter-spacing:.30em; text-transform:uppercase; color:rgba(184,146,42,.45); white-space:nowrap; }
+
+    /* Telegramas epílogo */
+    .telegrama-epilogo { background:#ede8d4; background-image:var(--grain-overlay); border:2px solid #8b7a40; border-top:5px solid var(--ink); font-family:var(--font-typewriter); color:var(--ink); padding:1.6rem 1.8rem; position:relative; box-shadow:4px 4px 0 rgba(0,0,0,.3),0 4px 20px rgba(0,0,0,.2); margin-bottom:1.5rem; }
+    .telegrama-epilogo-banner { background:var(--ink); color:var(--paper-warm); text-align:center; font-size:.62rem; letter-spacing:.30em; text-transform:uppercase; padding:.28rem; margin:-1.6rem -1.8rem 1.2rem; border-bottom:2px solid var(--gold); }
+    .telegrama-epilogo-body { font-size:.80rem; line-height:1.85; color:var(--ink-mid); }
+    .telegrama-epilogo-sello { position:absolute; top:1rem; right:1.2rem; width:62px; height:62px; border:2px solid; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:.40rem; letter-spacing:.06em; text-transform:uppercase; text-align:center; line-height:1.3; transform:rotate(-14deg); }
+    .telegrama-epilogo-sello::before { content:''; position:absolute; inset:4px; border-radius:50%; border:1px solid currentColor; opacity:.4; }
+
+    /* Tripulación */
+    .tripulacion-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:1.2rem; margin:1.5rem 0; }
+    .tripulacion-card { background:linear-gradient(160deg,#13110d,#0d0a06); background-image:var(--grain-overlay); border:1px solid rgba(184,146,42,.18); border-top:3px solid var(--gold); padding:1.3rem 1.4rem; position:relative; }
+    .tripulacion-emoji { font-size:2.2rem; margin-bottom:.5rem; display:block; }
+    .tripulacion-nombre { font-family:var(--font-display); font-size:1.05rem; font-weight:900; color:var(--paper-aged); margin-bottom:.15rem; }
+    .tripulacion-rol { font-family:var(--font-typewriter); font-size:.58rem; letter-spacing:.14em; text-transform:uppercase; color:var(--gold); margin-bottom:.7rem; }
+    .tripulacion-pais { font-family:var(--font-typewriter); font-size:.62rem; letter-spacing:.08em; color:rgba(184,146,42,.55); margin-bottom:.6rem; }
+    .tripulacion-destino { font-family:var(--font-body); font-size:.82rem; color:rgba(200,175,130,.70); line-height:1.65; }
+    .medalla-otorgada { display:inline-block; font-family:var(--font-typewriter); font-size:.54rem; letter-spacing:.12em; text-transform:uppercase; padding:.15rem .55rem; border:1px solid rgba(184,146,42,.35); color:var(--gold); background:rgba(184,146,42,.06); margin-top:.6rem; }
+
+    /* Cita */
+    .cita-historica { background:rgba(184,146,42,.04); border:1px solid rgba(184,146,42,.18); border-left:4px solid rgba(184,146,42,.45); padding:1.8rem 2rem; margin:2rem 0; }
+    .cita-hist-texto { font-family:Georgia,serif; font-size:1.05rem; font-style:italic; color:rgba(200,175,130,.82); line-height:1.80; }
+    .cita-hist-autor { font-family:var(--font-typewriter); font-size:.68rem; letter-spacing:.12em; color:rgba(184,146,42,.55); margin-top:.9rem; text-align:right; }
+
+    /* Resumen */
+    .resumen-partida { background:var(--paper-aged); background-image:var(--grain-overlay); color:var(--ink); border:2px solid var(--paper-stain); border-top:5px solid var(--ink); padding:1.8rem 2rem; margin:2rem 0; box-shadow:4px 4px 0 rgba(0,0,0,.28); }
+    .resumen-titulo { font-family:var(--font-typewriter); font-size:.70rem; letter-spacing:.22em; text-transform:uppercase; color:var(--ink-faded); border-bottom:2px solid var(--paper-stain); padding-bottom:.6rem; margin-bottom:1.1rem; text-align:center; }
+    .resumen-fila { display:flex; justify-content:space-between; padding:.42rem 0; border-bottom:1px solid rgba(0,0,0,.07); font-family:var(--font-typewriter); font-size:.80rem; }
+    .resumen-fila:last-child { border-bottom:none; }
+    .resumen-clave { color:var(--ink-faded); }
+    .resumen-valor { color:var(--ink); font-weight:bold; }
+
+    /* Recursos */
+    .bloque-recursos { background:linear-gradient(160deg,#0f0c08,#0a0804); background-image:var(--grain-overlay); border:1px solid rgba(184,146,42,.16); border-left:4px solid var(--khaki-mid); padding:1.6rem 1.8rem; margin:2rem 0; }
+    .recursos-titulo { font-family:var(--font-display); font-size:1.1rem; font-weight:900; color:var(--khaki-faded); margin-bottom:.9rem; }
+    .recursos-lista { list-style:none; padding:0; margin:0; font-family:var(--font-body); font-size:.90rem; line-height:1; }
+    .recursos-lista li { padding:.5rem 0; border-bottom:1px solid rgba(184,146,42,.07); color:rgba(200,175,130,.68); }
+    .recursos-lista li:last-child { border-bottom:none; }
+    .recursos-lista strong { color:var(--paper-aged); }
+
+    /* Util */
+    .section-label { font-family:var(--font-typewriter); font-size:.65rem; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); margin-bottom:.6rem; }
+    .tabla-datos { width:100%; border-collapse:collapse; font-family:var(--font-typewriter); font-size:.76rem; margin:.5rem 0; }
+    .tabla-datos th { background:var(--ink); color:var(--gold); padding:.40rem .7rem; text-align:left; letter-spacing:.07em; font-weight:normal; }
+    .tabla-datos td { padding:.36rem .7rem; border-bottom:1px solid rgba(184,146,42,.10); color:var(--paper-aged); }
+    .tabla-datos tr:last-child td { border-bottom:none; }
+    .tabla-datos tr:hover td { background:rgba(184,146,42,.05); }
+    .acciones-finales { text-align:center; margin:3rem 0; display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; }
+  </style>
+</head>
+<body class="page-bg">
+
+<nav class="nav-principal">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo-area">
+      <div class="nav-logo-text">SQL: La Gran Guerra</div>
+      <div class="nav-logo-sub">Conquista y Diplomacia · 1914–1918</div>
+    </a>
+    <div class="nav-center" id="nav-subtitulo">Moscú · Fase Final · 1917</div>
+    <div class="nav-actions" id="nav-hud" style="display:flex;gap:1.2rem;align-items:center;">
+      <div class="hud-vidas" id="hud-vidas">
+        <span>Intentos:</span>
+        <div class="vida-dot" id="v0"></div>
+        <div class="vida-dot" id="v1"></div>
+        <div class="vida-dot" id="v2"></div>
+      </div>
+      <div class="hud-niveles" id="hud-niveles">
+        <div class="hud-nivel-dot activo" id="hd0"></div>
+        <div class="hud-nivel-dot" id="hd1"></div>
+        <div class="hud-nivel-dot" id="hd2"></div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="ticker-wrap">
+  <span class="ticker-content" id="ticker-txt">
+    <span class="ticker-sep">⬥</span> SQL: CONQUISTA Y DIPLOMACIA EN LA GRAN GUERRA
+    <span class="ticker-sep">⬥</span> MOSCÚ · FASE FINAL — DESESTABILIZACIÓN DEL IMPERIO RUSO · 1917
+    <span class="ticker-sep">⬥</span> OBJETIVO: FRENAR AL ZAR — EL EQUILIBRIO DE EUROPA PENDE DE UN HILO
+    <span class="ticker-sep">⬥</span>
+  </span>
+</div>
+
+<!-- INTRO -->
+<div id="pantalla-intro" class="activa">
+  <div class="intro-sello">🏰</div>
+  <div class="intro-ciudad">Moscú · Imperio Ruso · Invierno de 1917</div>
+  <h1 class="intro-titulo">La Caída<br>del Zar</h1>
+  <p class="intro-sub">Fase Final de la Operación — Continental Conquest SQL</p>
+  <div class="intro-alerta">
+    <div class="intro-alerta-label">⚠ Despacho urgente — Red de Inteligencia Española</div>
+    <p>Ha llegado el momento decisivo. La milicia y usted han alcanzado los círculos internos del Imperio Ruso. Los bolcheviques están a punto de actuar. Tres misiones críticas separan a Europa del caos o del equilibrio. Cada consulta SQL que ejecute determinará si el plan de Madrid culmina con éxito. <strong style="color:var(--paper-aged);">Si agota los tres intentos en un nivel, lo repetirá desde el principio.</strong> No hay marcha atrás.</p>
+  </div>
+  <button class="btn btn-gold" onclick="iniciarFase()" style="font-size:.88rem;letter-spacing:.20em;padding:1rem 3rem;animation:fadeInUp .8s 2.5s ease both;opacity:0;">
+    ⚔&ensp;Comenzar la Fase Final
+  </button>
+</div>
+
+<!-- PANTALLA NIVEL -->
+<div id="pantalla-nivel">
+  <div class="nivel-header-final">
+    <div>
+      <div class="nivel-badge-final" id="badge-nivel">Nivel Final 1</div>
+      <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:900;color:var(--paper-aged);" id="titulo-nivel">—</div>
+      <div style="font-family:var(--font-typewriter);font-size:.62rem;letter-spacing:.08em;color:var(--paper-dark);" id="subtitulo-nivel">—</div>
+    </div>
+    <div style="font-family:var(--font-display);font-size:3rem;font-weight:900;color:rgba(192,57,43,.15);" id="num-nivel">F·1</div>
+  </div>
+
+  <div class="container">
+    <div class="nivel-layout-final">
+      <div style="display:flex;flex-direction:column;gap:1.4rem;">
+        <div>
+          <div class="section-label" id="narr-label">📔 Situación de Campo</div>
+          <div class="dialogo-final">
+            <div class="dialogo-narrador" id="narr-quien">— Diario del Comandante</div>
+            <div id="narr-texto" style="min-height:110px;"></div>
+          </div>
+        </div>
+        <div>
+          <div class="section-label">📨 Instrucciones Cifradas</div>
+          <div class="telegrama" style="transform:rotate(-.4deg);">
+            <div class="telegrama-sello" id="tg-sello" style="color:var(--red-stamp);border-color:var(--red-stamp);">OP<br>FIN</div>
+            <div class="telegrama-header" id="tg-header">RED DE INTELIGENCIA ESPAÑOLA</div>
+            <div class="telegrama-body" id="tg-body">—</div>
+          </div>
+        </div>
+        <div id="tabla-wrap" style="display:none;">
+          <div class="section-label" id="tabla-label">📋 Base de Datos</div>
+          <div id="tabla-html"></div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:1.2rem;">
+        <div class="sql-panel-final">
+          <div class="sql-panel-header">
+            <div class="sql-dots">
+              <div class="sql-dot" style="background:#c0392b;"></div>
+              <div class="sql-dot" style="background:#f39c12;"></div>
+              <div class="sql-dot" style="background:#27ae60;"></div>
+            </div>
+            mysql — gran_guerra_final.sql
+          </div>
+          <div style="padding:.5rem .8rem .3rem;">
+            <div style="font-family:var(--font-typewriter);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(184,146,42,.5);padding:.3rem .2rem .1rem;">📋 Estructura de tablas</div>
+            <pre id="sql-schema" style="font-family:'Special Elite','Courier New',monospace;font-size:.76rem;line-height:1.70;color:#a8d4a0;padding:.3rem .4rem .7rem;overflow-x:auto;background:transparent;white-space:pre;margin:0;"></pre>
+          </div>
+          <div style="background:rgba(0,0,0,.4);border-top:1px solid rgba(184,146,42,.12);padding:.9rem 1rem;">
+            <div style="font-family:var(--font-typewriter);font-size:.60rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(192,57,43,.8);margin-bottom:.55rem;">🎯 Consulta requerida:</div>
+            <div id="pregunta-texto" style="font-family:var(--font-body);font-size:.90rem;line-height:1.72;color:rgba(200,175,130,.85);"></div>
+          </div>
+          <div class="opciones-container" id="opciones-wrap"></div>
+          <div class="feedback-box" id="feedback-box"></div>
+          <div style="padding:.5rem .8rem 1rem;">
+            <button class="btn btn-gold" id="btn-siguiente-nivel"
+              style="width:100%;text-align:center;justify-content:center;display:none;font-size:.80rem;letter-spacing:.18em;padding:.8rem;"
+              onclick="siguienteNivel()">
+              Continuar con la siguiente misión ▶
+            </button>
+          </div>
+        </div>
+        <div style="text-align:center;padding:.5rem 0;">
+          <div class="hud-vidas" style="justify-content:center;" id="hud-vidas2">
+            <span>Intentos restantes:</span>
+            <div class="vida-dot" id="v0b"></div>
+            <div class="vida-dot" id="v1b"></div>
+            <div class="vida-dot" id="v2b"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FALLO -->
+<div id="pantalla-fallo">
+  <div style="font-size:4rem;margin-bottom:1.5rem;">💥</div>
+  <div style="font-family:var(--font-display);font-size:2.2rem;font-weight:900;color:var(--red-stamp);margin-bottom:.6rem;">Misión comprometida</div>
+  <div style="font-family:var(--font-typewriter);font-size:.75rem;letter-spacing:.20em;text-transform:uppercase;color:rgba(192,57,43,.65);margin-bottom:2rem;">La operación ha fallado — Reiniciando nivel</div>
+  <div id="fallo-mensaje" style="font-family:var(--font-body);font-size:.95rem;color:rgba(200,175,130,.75);max-width:540px;line-height:1.80;margin-bottom:2.5rem;text-align:center;"></div>
+  <button class="btn btn-gold" onclick="repetirNivel()" style="font-size:.85rem;letter-spacing:.18em;padding:.9rem 2.5rem;">🔄 Repetir nivel</button>
+</div>
+
+<!-- VICTORIA -->
+<div id="pantalla-victoria">
+  <div class="victoria-hero">
+    <div class="victoria-emblema">🏅</div>
+    <h1 class="victoria-titulo">¡Misión Cumplida!</h1>
+    <p class="victoria-sub">Petrogrado · 25 de octubre de 1917 · La Historia ha cambiado</p>
+    <div class="medallas-row">
+      <div class="medalla-item"><div class="medalla-circulo"><span style="font-family:var(--font-typewriter);font-size:.5rem;letter-spacing:.04em;color:var(--gold);text-align:center;line-height:1.4;">MANDO<br>EST.</span></div><div class="medalla-label">Mando<br>Estratégico</div></div>
+      <div class="medalla-item"><div class="medalla-circulo"><span style="font-family:var(--font-typewriter);font-size:.5rem;letter-spacing:.04em;color:var(--gold);text-align:center;line-height:1.4;">MAEST.<br>SQL</span></div><div class="medalla-label">Maestro<br>SQL</div></div>
+      <div class="medalla-item"><div class="medalla-circulo"><span style="font-family:var(--font-typewriter);font-size:.5rem;letter-spacing:.04em;color:var(--gold);text-align:center;line-height:1.4;">DIPL.<br>SERV.</span></div><div class="medalla-label">Servicio<br>Diplomático</div></div>
+      <div class="medalla-item"><div class="medalla-circulo"><span style="font-family:var(--font-typewriter);font-size:.5rem;letter-spacing:.04em;color:var(--gold);text-align:center;line-height:1.4;">CRUZ<br>ESPAÑA</span></div><div class="medalla-label">Cruz de<br>España</div></div>
+      <div class="medalla-item"><div class="medalla-circulo"><span style="font-family:var(--font-typewriter);font-size:.5rem;letter-spacing:.04em;color:var(--gold);text-align:center;line-height:1.4;">PAX<br>EUR.</span></div><div class="medalla-label">Equilibrio<br>de Europa</div></div>
+    </div>
+  </div>
+
+  <div class="ornamento">✦ ✦ ✦</div>
+
+  <main class="container">
+    <!-- EPÍLOGO I -->
+    <div class="epilogo-section fade-in-2">
+      <div class="epilogo-divider"><span class="epilogo-divider-txt">I · El colapso del Imperio</span></div>
+      <div class="epilogo-titular">El Invierno que Cambió el Mundo</div>
+      <div class="epilogo-fecha">Petrogrado · Octubre – Noviembre 1917</div>
+      <div class="epilogo-texto">
+        <p>Las semillas sembradas durante meses de operaciones encubiertas a lo largo de Europa dieron su fruto en el otoño más frío que Petrogrado hubiera conocido en décadas. Las consultas SQL ejecutadas por el Comandante en los sistemas de inteligencia rusa habían debilitado sistemáticamente la cadena de mando zarista: rutas de suministro mal asignadas, registros de tropas manipulados, comunicaciones interceptadas. El zar Nicolás II se encontró gobernando sobre datos corruptos.</p>
+        <p>La verdad histórica —que los bolcheviques habían actuado por sus propias razones y convicciones— se entrelazó con la operación española de una manera que ningún historiador llegaría a documentar jamás. En la noche del 25 de octubre de 1917, mientras el crucero Aurora apuntaba sus cañones al Palacio de Invierno, el Comandante y su milicia evacuaban discretamente Petrogrado en un tren con destino al Mar Báltico.</p>
+        <p>La operación había concluido. No con fanfarria ni con banderas al viento, sino con el silencio profesional de quien sabe que su trabajo nunca podrá reconocerse públicamente. España había protegido el equilibrio de Europa. Y nadie lo sabría jamás.</p>
+      </div>
+    </div>
+
+    <div class="telegrama-epilogo fade-in-2">
+      <div class="telegrama-epilogo-banner">Despacho Cifrado nº 099 · Máximo Secreto · Madrid, noviembre 1917</div>
+      <div class="telegrama-epilogo-sello" style="color:var(--red-ink);border-color:var(--red-ink);">Estado<br>Mayor<br>Madrid</div>
+      <div class="telegrama-epilogo-body">
+        DE: S.M. Alfonso XIII · Palacio Real, Madrid<br>
+        PARA: Comandante en Campo · Red Operativa Rusa<br><br>
+        OPERACIÓN CONCLUIDA.<br>
+        Los informes confirman que los objetivos han sido alcanzados.<br>
+        La revolución ha ocurrido. El Imperio del Zar se fragmenta.<br>
+        El peligro ruso sobre el equilibrio continental queda contenido.<br><br>
+        España no puede reconocer públicamente su papel.<br>
+        Pero Su Majestad desea expresar su gratitud personal.<br><br>
+        REGRESE A CASA. Será recibido con todos los honores<br>
+        que la discreción de esta misión permite otorgar.<br><br>
+        — R. Alfonso XIII · Noviembre 1917
+      </div>
+    </div>
+
+    <!-- EPÍLOGO II -->
+    <div class="epilogo-section fade-in-3">
+      <div class="epilogo-divider"><span class="epilogo-divider-txt">II · El regreso a casa</span></div>
+      <div class="epilogo-titular">El Largo Camino de Vuelta</div>
+      <div class="epilogo-fecha">Estocolmo → París → Madrid · Noviembre 1917 – Enero 1918</div>
+      <div class="epilogo-texto">
+        <p>La travesía de regreso fue casi tan peligrosa como la propia misión. La revolución rusa había convulsionado las redes de transporte del continente. El grupo cruzó la frontera finlandesa en trineos, alcanzó Estocolmo a bordo de un carguero neutral, y desde allí tomó tren hasta París, donde los esperaban agentes del consulado español.</p>
+        <p>En la capital francesa, el grupo se separó por primera vez desde Irlanda. Los hombres de Seamus O'Callaghan, los Irish Volunteers que habían acompañado al Comandante desde Dublín hasta las estepas rusas, estrecharon manos y se miraron a los ojos con esa camaradería silenciosa que solo nace en los momentos de máximo peligro. Luego, giraron hacia el norte, hacia el Canal y sus islas.</p>
+        <p>Madrid los recibió en un amanecer gris de enero. No hubo parada militar ni titulares de periódico. Solo un automóvil negro esperando en el andén, con dos hombres del Estado Mayor que los condujeron directamente al Palacio Real.</p>
+      </div>
+    </div>
+
+    <!-- EPÍLOGO III -->
+    <div class="epilogo-section fade-in-3">
+      <div class="epilogo-divider"><span class="epilogo-divider-txt">III · La ceremonia secreta</span></div>
+      <div class="epilogo-titular">La Gran Cruz de la Orden de Isabel la Católica</div>
+      <div class="epilogo-fecha">Palacio Real de Madrid · 14 de enero de 1918</div>
+      <div class="epilogo-texto">
+        <p>La sala era pequeña para la magnitud de lo que allí ocurrió. No más de veinte personas presentes: S.M. Alfonso XIII, Eduardo Dato, el Jefe del Estado Mayor, y los miembros de la expedición. Nada de uniformes de gala ni banda de música. Solo trajes de civil y la luz fría de las lámparas del gabinete privado del rey.</p>
+        <p>Alfonso XIII habló brevemente, con la voz grave de quien carga el peso de un secreto de Estado. Luego, personalmente, impuso las condecoraciones: para los españoles, la Gran Cruz de la Orden de Isabel la Católica; para los aliados extranjeros, la Medalla de la Paz y el Orden Europeo, una distinción creada expresamente para esta ocasión y que jamás volvería a otorgarse.</p>
+        <p>Seamus O'Callaghan, al recibir la suya, respondió en un español aprendido durante la campaña: "Por Irlanda y por Europa, Majestad." Alfonso XIII sonrió por primera vez en muchos meses.</p>
+        <p>Aquella tarde, cada miembro de la expedición partió en su dirección. Sus caminos nunca volverían a cruzarse de forma oficial. El acuerdo era de silencio absoluto. Y así fue, durante décadas.</p>
+      </div>
+    </div>
+
+    <!-- TRIPULACIÓN -->
+    <div class="epilogo-section fade-in-4">
+      <div class="epilogo-divider"><span class="epilogo-divider-txt">IV · La tripulación</span></div>
+      <h2 style="font-family:var(--font-display);font-size:1.8rem;font-weight:900;color:var(--paper-aged);margin:0 0 .3rem;">Los Hombres de la Expedición</h2>
+      <div style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(184,146,42,.55);margin-bottom:1.5rem;">Sus destinos tras la Operación</div>
+      <div class="tripulacion-grid">
+        <div class="tripulacion-card">
+          <span class="tripulacion-emoji">🇪🇸</span>
+          <div class="tripulacion-nombre">El Comandante</div>
+          <div class="tripulacion-rol">Jefe de Operaciones</div>
+          <div class="tripulacion-pais">🇪🇸 España</div>
+          <div class="tripulacion-destino">Regresó a Madrid, destinado al Estado Mayor como asesor de inteligencia. Sus memorias cifradas bajo el título "Notas de Campaña, 1914–1918" permanecen clasificadas en el Archivo Histórico Nacional.</div>
+          <div class="medalla-otorgada">🦅 Gran Cruz de Isabel la Católica</div>
+        </div>
+        <div class="tripulacion-card">
+          <span class="tripulacion-emoji">☘️</span>
+          <div class="tripulacion-nombre">Seamus O'Callaghan</div>
+          <div class="tripulacion-rol">Comandante Irish Volunteers</div>
+          <div class="tripulacion-pais">🇮🇪 Irlanda</div>
+          <div class="tripulacion-destino">Regresó a Dublín en febrero de 1918. Participó en el Alzamiento de Pascua y en la posterior Guerra de Independencia Irlandesa. Murió en 1952 con sus secretos intactos.</div>
+          <div class="medalla-otorgada">🕊️ Medalla de la Paz — Orden Europea</div>
+        </div>
+        <div class="tripulacion-card">
+          <span class="tripulacion-emoji">🇫🇷</span>
+          <div class="tripulacion-nombre">Capitaine Henri Leblanc</div>
+          <div class="tripulacion-rol">Escolta Francesa · Servicio Secreto</div>
+          <div class="tripulacion-pais">🇫🇷 Francia</div>
+          <div class="tripulacion-destino">Regresó a Lyon y retomó su puesto en la Deuxième Bureau. Condecorado con la Légion d'honneur en 1919, oficialmente por servicios en el frente. Sus informes sobre la operación española permanecen sellados hasta 2040.</div>
+          <div class="medalla-otorgada">🕊️ Medalla de la Paz — Orden Europea</div>
+        </div>
+        <div class="tripulacion-card">
+          <span class="tripulacion-emoji">🇩🇪</span>
+          <div class="tripulacion-nombre">Hauptmann Ernst Vogel</div>
+          <div class="tripulacion-rol">Enlace Alemán — Operaciones Encubiertas</div>
+          <div class="tripulacion-pais">🇩🇪 Alemania</div>
+          <div class="tripulacion-destino">Cruzó la frontera suiza en diciembre de 1917 y regresó a Berlín por canales diplomáticos. La derrota alemana de 1918 lo encontró en retiro forzado. Sus memorias mencionan "una operación en el Este" sin más detalles.</div>
+          <div class="medalla-otorgada">🕊️ Medalla de la Paz — Orden Europea</div>
+        </div>
+        <div class="tripulacion-card">
+          <span class="tripulacion-emoji">🇬🇷</span>
+          <div class="tripulacion-nombre">Konstantinos Papadakis</div>
+          <div class="tripulacion-rol">Contacto en Atenas · Red Mediterránea</div>
+          <div class="tripulacion-pais">🇬🇷 Grecia</div>
+          <div class="tripulacion-destino">Permaneció en Atenas como agente durmiente hasta 1922. En sus últimos años gestionó un café en el Pireo donde se decía recibía "viejos amigos de la guerra" sin nombre.</div>
+          <div class="medalla-otorgada">🕊️ Medalla de la Paz — Orden Europea</div>
+        </div>
+        <div class="tripulacion-card">
+          <span class="tripulacion-emoji">🇷🇺</span>
+          <div class="tripulacion-nombre">Alexei Volkonsky</div>
+          <div class="tripulacion-rol">Contacto Bolchevique · Interior Ruso</div>
+          <div class="tripulacion-pais">🇷🇺 Rusia</div>
+          <div class="tripulacion-destino">Desapareció en el caos de la Revolución. Un informe de 1919 lo sitúa en Odessa como funcionario soviético. Nunca reveló la operación española — por convicción o por instinto de supervivencia.</div>
+          <div class="medalla-otorgada">🕊️ Medalla de la Paz — Orden Europea</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EPÍLOGO HISTÓRICO -->
+    <div class="epilogo-section fade-in-4">
+      <div class="epilogo-divider"><span class="epilogo-divider-txt">V · La Historia real</span></div>
+      <div class="epilogo-titular">Lo que Ocurrió de Verdad</div>
+      <div class="epilogo-fecha">1917–1919 · El fin de una era</div>
+      <div class="epilogo-texto">
+        <p>La Revolución Rusa de octubre de 1917 fue, en la realidad histórica, el resultado de décadas de tensión social, la catástrofe militar de la Gran Guerra, y la determinación de Lenin y los bolcheviques. El zar Nicolás II había abdicado en febrero de ese mismo año, incapaz de sostener el esfuerzo bélico frente a una sociedad al borde del colapso.</p>
+        <p>La toma del Palacio de Invierno la noche del 25 al 26 de octubre marcó el inicio del Estado soviético. Rusia firmó el Armisticio de Brest-Litovsk con las Potencias Centrales en marzo de 1918, retirándose de la Gran Guerra y cediendo enormes territorios. Esto liberó a Alemania de la guerra en dos frentes —exactamente el escenario que España temía que se invirtiera a favor de Rusia.</p>
+        <p>El 11 de noviembre de 1918, Alemania firmó el armisticio en el vagón de tren de Compiègne. La Gran Guerra terminó. Cuatro imperios habían desaparecido del mapa. El mundo emergió transformado de manera irreversible. España, que había permanecido neutral durante todo el conflicto, salió de la guerra con su territorio intacto. Nunca se supo —oficialmente— qué papel jugaron sus agentes en los meses previos a la Revolución rusa.</p>
+      </div>
+
+      <div class="cita-historica">
+        <div class="cita-hist-texto">"A las once de la mañana del undécimo día del undécimo mes del año dieciocho, los cañones callaron en el frente occidental. Cuatro años, tres meses y catorce días después de que el primer disparo atravesara el aire europeo, la Gran Guerra terminó."</div>
+        <div class="cita-hist-autor">— Crónicas del Frente Occidental, 11 de noviembre de 1918</div>
+      </div>
+
+      <div class="epilogo-texto">
+        <p>El Tratado de Versalles de 1919 intentó reordenar el mundo, pero sus condiciones humillantes para Alemania sembrarían las semillas de un nuevo conflicto que estallaría veinte años después. La "guerra para acabar con todas las guerras" no había terminado con la guerra.</p>
+        <p>El nuevo equilibrio de Europa —aquel por el que el Comandante y su milicia arriesgaron sus vidas— duraría apenas dos décadas. Pero eso es otra historia.</p>
+      </div>
+    </div>
+
+    <!-- ESTADÍSTICAS -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:1.2rem;margin:2.5rem 0;">
+      <div style="background:rgba(0,0,0,.25);border:1px solid rgba(184,146,42,.16);padding:1.4rem;text-align:center;">
+        <div style="font-family:var(--font-display);font-size:2.8rem;font-weight:900;color:var(--red-stamp);line-height:1;">17M</div>
+        <div style="font-family:var(--font-typewriter);font-size:.60rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(184,146,42,.55);margin-top:.4rem;line-height:1.5;">Vidas perdidas<br>en la Gran Guerra</div>
+      </div>
+      <div style="background:rgba(0,0,0,.25);border:1px solid rgba(184,146,42,.16);padding:1.4rem;text-align:center;">
+        <div style="font-family:var(--font-display);font-size:2.8rem;font-weight:900;color:var(--gold-bright);line-height:1;">4</div>
+        <div style="font-family:var(--font-typewriter);font-size:.60rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(184,146,42,.55);margin-top:.4rem;line-height:1.5;">Imperios<br>desaparecidos</div>
+      </div>
+      <div style="background:rgba(0,0,0,.25);border:1px solid rgba(184,146,42,.16);padding:1.4rem;text-align:center;">
+        <div style="font-family:var(--font-display);font-size:2.8rem;font-weight:900;color:var(--khaki-faded);line-height:1;">1918</div>
+        <div style="font-family:var(--font-typewriter);font-size:.60rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(184,146,42,.55);margin-top:.4rem;line-height:1.5;">Armisticio<br>11·11·11:00</div>
+      </div>
+      <div style="background:rgba(0,0,0,.25);border:1px solid rgba(184,146,42,.16);padding:1.4rem;text-align:center;">
+        <div style="font-family:var(--font-display);font-size:2.8rem;font-weight:900;color:rgba(74,122,154,.9);line-height:1;">1917</div>
+        <div style="font-family:var(--font-typewriter);font-size:.60rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(184,146,42,.55);margin-top:.4rem;line-height:1.5;">Revolución<br>Rusa</div>
+      </div>
+    </div>
+
+    <div class="bloque-recursos fade-in-4">
+      <div class="recursos-titulo">📚 Recursos para el Estudiante</div>
+      <ul class="recursos-lista">
+        <li><strong>Hew Strachan</strong> — "La Primera Guerra Mundial" (Historia académica completa)</li>
+        <li><strong>Barbara Tuchman</strong> — "Los cañones de agosto" (El inicio del conflicto)</li>
+        <li><strong>Orlando Figes</strong> — "La Revolución Rusa 1891–1924: La tragedia de un pueblo"</li>
+        <li><strong>John Reed</strong> — "Diez días que estremecieron al mundo" (Testimonio de 1917)</li>
+        <li><strong>John Keegan</strong> — "La Primera Guerra Mundial" (Análisis militar exhaustivo)</li>
+        <li><strong>Imperial War Museum</strong> — iwm.org.uk (Recursos digitales gratuitos)</li>
+      </ul>
+    </div>
+
+    <div class="acciones-finales">
+      <a href="../index.html" class="btn btn-gold" style="text-decoration:none;padding:.85rem 2rem;font-size:.80rem;letter-spacing:.16em;">🏠 Volver al Menú Principal</a>
+      <a href="diario.html" class="btn btn-secondary" style="text-decoration:none;padding:.85rem 2rem;font-size:.80rem;letter-spacing:.16em;">📔 Ver Diario de Campaña</a>
+      <button class="btn btn-secondary" onclick="window.print()" style="padding:.85rem 2rem;font-size:.80rem;letter-spacing:.16em;">🖨️ Imprimir Hoja de Servicio</button>
+    </div>
+  </main>
+</div>
+
+<script src="../js/main.js"></script>
+<script>
+var NIVELES_FINALES = [
+  {
+    badge:'Nivel Final 1 · Moscú · Infiltración', titulo:'Infiltración en el Consejo',
+    subtitulo:'Moscú, Imperio Ruso · Enero 1917', num:'F·1',
+    narr_label:'📔 Situación de Campo — Entrada 22',
+    narr_quien:'— Diario del Comandante · Moscú, enero 1917',
+    narr_texto:'Llevamos tres semanas infiltrados en los círculos del Consejo de Ministros ruso. El sistema de inteligencia zarista maneja sus tropas y recursos en bases de datos que hemos logrado interceptar. Antes de actuar, necesitamos identificar qué unidades suponen la mayor amenaza para nuestra operación: aquellas con más de 500 soldados y con nivel de amenaza alto. Solo así sabremos qué registros manipular para debilitar la cadena de mando sin levantar sospechas.',
+    tg_sello:'OP\nRUS\n1917', tg_header:'NODO MOSCÚ — RED DE INTELIGENCIA ESPAÑOLA · ENERO 1917',
+    tg_body:'FECHA: ENERO 1917 · OPERACIÓN FINAL — NODO 1<br>DE: COORDINADOR MADRID<br>PARA: COMANDANTE EN CAMPO<br><br>Los registros del Consejo contienen las unidades zaristas.<br>Identifique las de mayor amenaza antes de actuar.<br>Criterio: soldados &gt; 500 Y amenaza = "Alta".<br><br>TABLA: unidades_zaristas',
+    tabla_show:true, tabla_label:'📋 Base de Datos Interceptada — Unidades Zaristas',
+    tabla_html:`<table class="tabla-datos"><thead><tr><th>id</th><th>nombre_unidad</th><th>soldados</th><th>ubicacion</th><th>amenaza</th></tr></thead><tbody><tr><td>1</td><td>Guardia Imperial</td><td>800</td><td>Petrogrado</td><td>Alta</td></tr><tr><td>2</td><td>Regimiento del Don</td><td>450</td><td>Rostov</td><td>Media</td></tr><tr><td>3</td><td>Cuerpo Cosaco</td><td>620</td><td>Moscú</td><td>Alta</td></tr><tr><td>4</td><td>Batallón de Reserva</td><td>300</td><td>Moscú</td><td>Baja</td></tr><tr><td>5</td><td>División Siberiana</td><td>950</td><td>Siberia</td><td>Alta</td></tr></tbody></table>`,
+    schema:`CREATE TABLE unidades_zaristas (\n    id           INT PRIMARY KEY,\n    nombre_unidad VARCHAR(60),\n    soldados     INT,\n    ubicacion    VARCHAR(40),\n    amenaza      VARCHAR(10)\n);`,
+    pregunta:'Identifique todas las unidades zaristas con más de 500 soldados Y con nivel de amenaza "Alta". Ordénelas por número de soldados de mayor a menor.',
+    opciones:[
+      {sql:`SELECT nombre_unidad, soldados, ubicacion\nFROM unidades_zaristas\nWHERE soldados > 500\n  AND amenaza = 'Alta'\nORDER BY soldados DESC;`,correcta:true,
+       feedback_ok:'✓ Correcto. WHERE con dos condiciones AND y ORDER BY DESC. Unidades detectadas: División Siberiana (950), Guardia Imperial (800) y Cuerpo Cosaco (620). El plan puede continuar.'},
+      {sql:`SELECT * FROM unidades_zaristas\nWHERE soldados > 500\nORDER BY soldados DESC;`,correcta:false,
+       feedback_mal:'✗ Incorrecto. Olvida filtrar por amenaza = "Alta". Incluirá el Regimiento del Don (Media), comprometiendo el análisis operativo.'},
+      {sql:`SELECT nombre_unidad, soldados\nFROM unidades_zaristas\nWHERE amenaza = 'Alta';`,correcta:false,
+       feedback_mal:'✗ Incorrecto. Filtra por amenaza pero no aplica la condición de soldados > 500. Falta el segundo filtro AND.'},
+      {sql:`SELECT nombre_unidad, soldados\nFROM unidades_zaristas\nWHERE soldados > 500 OR amenaza = 'Alta'\nORDER BY soldados DESC;`,correcta:false,
+       feedback_mal:'✗ Incorrecto. Usa OR en lugar de AND. Incluirá unidades que no cumplen ambos criterios simultáneamente.'}
+    ]
+  },
+  {
+    badge:'Nivel Final 2 · Petrogrado · Suministros', titulo:'El Control de los Suministros',
+    subtitulo:'Petrogrado, Imperio Ruso · Agosto 1917', num:'F·2',
+    narr_label:'📔 Situación de Campo — Entrada 23',
+    narr_quien:'— Diario del Comandante · Petrogrado, agosto 1917',
+    narr_texto:'El gobierno provisional de Kerensky tambalea. Los bolcheviques ganan influencia por días. Para asegurar que la transición de poder no derive en una expansión militar rusa hacia occidente, necesitamos calcular el total de tropas y munición por tipo de unidad. Este análisis permitirá a los contactos bolcheviques redistribuir recursos estratégicamente y evitar que las unidades zaristas leales al Zar puedan reorganizarse.',
+    tg_sello:'PETRO\nGRAD\n1917', tg_header:'NODO PETROGRADO — FASE CRÍTICA · AGOSTO 1917',
+    tg_body:'FECHA: AGOSTO 1917 · OPERACIÓN FINAL — NODO 2<br>DE: COORDINADOR RED BÁLTICA<br>PARA: COMANDANTE<br><br>Total de soldados y munición agrupado por tipo.<br>Use JOIN para combinar unidades y suministros.<br><br>TABLAS: unidades, suministros<br>La redistribución depende de esta consulta.',
+    tabla_show:true, tabla_label:'📋 Tablas del Sistema de Recursos Imperiales',
+    tabla_html:`<table class="tabla-datos"><thead><tr><th colspan="4" style="text-align:center;color:var(--gold-pale);">unidades</th></tr><tr><th>id_unidad</th><th>nombre</th><th>tipo</th><th>soldados</th></tr></thead><tbody><tr><td>1</td><td>Guardia Imperial</td><td>elite</td><td>800</td></tr><tr><td>2</td><td>Infantería de Línea</td><td>regular</td><td>600</td></tr><tr><td>3</td><td>Cosacos</td><td>elite</td><td>620</td></tr><tr><td>4</td><td>Reserva</td><td>regular</td><td>300</td></tr></tbody></table><table class="tabla-datos" style="margin-top:.6rem;"><thead><tr><th colspan="3" style="text-align:center;color:var(--gold-pale);">suministros</th></tr><tr><th>id_unidad</th><th>municion</th><th>raciones</th></tr></thead><tbody><tr><td>1</td><td>1200</td><td>400</td></tr><tr><td>2</td><td>800</td><td>300</td></tr><tr><td>3</td><td>950</td><td>310</td></tr><tr><td>4</td><td>400</td><td>150</td></tr></tbody></table>`,
+    schema:`CREATE TABLE unidades (\n    id_unidad INT PRIMARY KEY,\n    nombre    VARCHAR(50),\n    tipo      VARCHAR(20),\n    soldados  INT\n);\n\nCREATE TABLE suministros (\n    id_unidad INT,\n    municion  INT,\n    raciones  INT\n);`,
+    pregunta:'Calcule el total de soldados y munición agrupado por tipo de unidad. Necesita unir las dos tablas con JOIN.',
+    opciones:[
+      {sql:`SELECT u.tipo,\n       SUM(u.soldados)  AS total_soldados,\n       SUM(s.municion)  AS total_municion\nFROM unidades u\nJOIN suministros s USING(id_unidad)\nGROUP BY u.tipo;`,correcta:true,
+       feedback_ok:'✓ Correcto. JOIN con USING, SUM y GROUP BY. Resultado: elite → 1420 soldados / 2150 munición. Regular → 900 soldados / 1200 munición. La redistribución puede ejecutarse.'},
+      {sql:`SELECT tipo, SUM(soldados)\nFROM unidades\nGROUP BY tipo;`,correcta:false,
+       feedback_mal:'✗ Incorrecto. Calcula soldados por tipo pero ignora la tabla suministros. Falta el JOIN con munición. Consulta incompleta.'},
+      {sql:`SELECT u.tipo, u.soldados, s.municion\nFROM unidades u\nJOIN suministros s USING(id_unidad);`,correcta:false,
+       feedback_mal:'✗ Incorrecto. Hace el JOIN correcto pero no agrupa ni suma. Muestra filas individuales en lugar del total por tipo.'},
+      {sql:`SELECT u.tipo,\n       COUNT(u.id_unidad) AS unidades,\n       SUM(s.municion)   AS total_municion\nFROM unidades u\nLEFT JOIN suministros s USING(id_unidad)\nGROUP BY u.tipo;`,correcta:false,
+       feedback_mal:'✗ Incorrecto. Usa COUNT de unidades en lugar de SUM de soldados. La métrica requerida es el total de soldados, no el número de unidades.'}
+    ]
+  },
+  {
+    badge:'Nivel Final 3 · Palacio de Invierno · Noche Decisiva', titulo:'La Noche del Palacio de Invierno',
+    subtitulo:'Petrogrado · 25 de octubre de 1917 · 23:00 h', num:'F·3',
+    narr_label:'📔 Situación de Campo — Entrada Final',
+    narr_quien:'— Diario del Comandante · Petrogrado, 25 oct 1917',
+    narr_texto:'Los cañones del Aurora apuntan al Palacio de Invierno. La Guardia Roja avanza. En pocas horas el gobierno provisional caerá y el poder pasará a los Soviets. Nuestra última misión: verificar que ninguna ruta de escape del ejército zarista hacia Europa occidental está operativa. Necesitamos detectar qué rutas tienen nivel de riesgo bajo y están activas, para bloquearlas antes del amanecer. Esta es la consulta definitiva. No habrá segunda oportunidad.',
+    tg_sello:'PALAZ\nZO IN\nV1917', tg_header:'NODO FINAL — PETROGRADO · NOCHE DEL 25 OCTUBRE 1917',
+    tg_body:'FECHA: 25 OCTUBRE 1917 · 23:00h — HORA CERO<br>DE: COORDINADOR EN CAMPO<br>PARA: COMANDANTE<br><br>ÚLTIMA CONSULTA OPERATIVA.<br>Detectar rutas activas con riesgo bajo.<br>Criterio: activa = TRUE Y nivel_riesgo &lt; 3<br>Ordenar por distancia ASC.<br><br>TABLA: rutas_escape',
+    tabla_show:true, tabla_label:'📋 Sistema de Rutas de Escape Zaristas',
+    tabla_html:`<table class="tabla-datos"><thead><tr><th>id_ruta</th><th>destino</th><th>distancia_km</th><th>nivel_riesgo</th><th>activa</th></tr></thead><tbody><tr><td>1</td><td>Helsinki</td><td>380</td><td>2</td><td>TRUE</td></tr><tr><td>2</td><td>Riga</td><td>560</td><td>4</td><td>TRUE</td></tr><tr><td>3</td><td>Estocolmo</td><td>800</td><td>1</td><td>TRUE</td></tr><tr><td>4</td><td>Berlín</td><td>1200</td><td>5</td><td>FALSE</td></tr><tr><td>5</td><td>Varsovia</td><td>950</td><td>2</td><td>FALSE</td></tr><tr><td>6</td><td>Danzig</td><td>700</td><td>3</td><td>TRUE</td></tr></tbody></table>`,
+    schema:`CREATE TABLE rutas_escape (\n    id_ruta      INT PRIMARY KEY,\n    destino      VARCHAR(40),\n    distancia_km INT,\n    nivel_riesgo INT,\n    activa       BOOLEAN\n);`,
+    pregunta:'Identifique todas las rutas de escape activas (activa = TRUE) con nivel de riesgo menor que 3. Ordénelas por distancia de menor a mayor.',
+    opciones:[
+      {sql:`SELECT destino, distancia_km, nivel_riesgo\nFROM rutas_escape\nWHERE activa = TRUE\n  AND nivel_riesgo < 3\nORDER BY distancia_km ASC;`,correcta:true,
+       feedback_ok:'✓ Correcto. WHERE activa = TRUE AND nivel_riesgo < 3, ORDER BY distancia_km ASC. Rutas detectadas y bloqueadas: Helsinki (380km) y Estocolmo (800km). ¡La operación está completa!'},
+      {sql:`SELECT * FROM rutas_escape\nWHERE nivel_riesgo < 3\nORDER BY distancia_km;`,correcta:false,
+       feedback_mal:'✗ Incorrecto. Olvida filtrar por activa = TRUE. Incluirá Varsovia que no está activa, generando bloqueos innecesarios que alertarían a las patrullas.'},
+      {sql:`SELECT destino, distancia_km\nFROM rutas_escape\nWHERE activa = TRUE\n  AND nivel_riesgo < 3\nORDER BY nivel_riesgo ASC;`,correcta:false,
+       feedback_mal:'✗ Incorrecto. La condición WHERE es correcta, pero ordena por nivel_riesgo en lugar de distancia_km. Las instrucciones exigen priorizar por cercanía.'},
+      {sql:`SELECT destino, distancia_km\nFROM rutas_escape\nWHERE activa = TRUE\n  OR nivel_riesgo < 3;`,correcta:false,
+       feedback_mal:'✗ Incorrecto. Usa OR en lugar de AND. Devuelve casi todas las rutas incluyendo Riga (riesgo 4) y Berlín (inactiva). El operador correcto es AND.'}
+    ]
+  }
+];
+
+var estado = { nivelActual:0, vidas:3, respondiendo:false };
+
+function actualizarHUD(){
+  for(var i=0;i<3;i++){
+    var c=i<estado.vidas?'':'perdida';
+    ['v'+i,'v'+i+'b'].forEach(function(id){var el=document.getElementById(id);if(el)el.className='vida-dot'+(c?' '+c:'');});
+  }
+  for(var j=0;j<3;j++){
+    var dot=document.getElementById('hd'+j);
+    if(!dot)return;
+    if(j<estado.nivelActual)dot.className='hud-nivel-dot hecho';
+    else if(j===estado.nivelActual)dot.className='hud-nivel-dot activo';
+    else dot.className='hud-nivel-dot';
+  }
+}
+
+function cargarNivel(idx){
+  var n=NIVELES_FINALES[idx];
+  estado.respondiendo=false;
+  document.getElementById('badge-nivel').textContent=n.badge;
+  document.getElementById('titulo-nivel').textContent=n.titulo;
+  document.getElementById('subtitulo-nivel').textContent=n.subtitulo;
+  document.getElementById('num-nivel').textContent=n.num;
+  document.getElementById('narr-label').textContent=n.narr_label;
+  document.getElementById('narr-quien').textContent=n.narr_quien;
+  document.getElementById('narr-texto').textContent=n.narr_texto;
+  document.getElementById('tg-sello').innerHTML=n.tg_sello.replace(/\n/g,'<br>');
+  document.getElementById('tg-header').textContent=n.tg_header;
+  document.getElementById('tg-body').innerHTML=n.tg_body;
+  var tw=document.getElementById('tabla-wrap');
+  if(n.tabla_show){tw.style.display='block';document.getElementById('tabla-label').textContent=n.tabla_label;document.getElementById('tabla-html').innerHTML=n.tabla_html;}
+  else{tw.style.display='none';}
+  document.getElementById('sql-schema').textContent=n.schema;
+  document.getElementById('pregunta-texto').textContent=n.pregunta;
+  var wrap=document.getElementById('opciones-wrap');
+  wrap.innerHTML='';
+  n.opciones.forEach(function(op,i){
+    var btn=document.createElement('div');
+    btn.className='opcion-sql';
+    btn.textContent=op.sql;
+    btn.dataset.idx=i;
+    btn.addEventListener('click',function(){seleccionarOpcion(parseInt(this.dataset.idx));});
+    wrap.appendChild(btn);
+  });
+  var fb=document.getElementById('feedback-box');
+  fb.className='feedback-box';fb.textContent='';
+  document.getElementById('btn-siguiente-nivel').style.display='none';
+  actualizarHUD();
+}
+
+function seleccionarOpcion(idx){
+  if(estado.respondiendo)return;
+  var n=NIVELES_FINALES[estado.nivelActual],op=n.opciones[idx],fb=document.getElementById('feedback-box');
+  var btns=document.querySelectorAll('.opcion-sql');
+  var btnSig=document.getElementById('btn-siguiente-nivel');
+  estado.respondiendo=true;
+  if(op.correcta){
+    btns[idx].classList.add('correcta');
+    fb.className='feedback-box ok visible';fb.textContent=op.feedback_ok;
+    document.getElementById('hd'+estado.nivelActual).className='hud-nivel-dot hecho';
+    btnSig.textContent=estado.nivelActual<NIVELES_FINALES.length-1?'Continuar con la siguiente misión ▶':'🏅 Ver el final de la historia →';
+    btnSig.style.display='block';
+  } else {
+    btns[idx].classList.add('incorrecta');
+    estado.vidas--;actualizarHUD();
+    fb.className='feedback-box mal visible';fb.textContent=op.feedback_mal;
+    if(estado.vidas<=0){setTimeout(function(){mostrarFallo();},1600);}
+    else{setTimeout(function(){btns[idx].classList.remove('incorrecta');fb.className='feedback-box';estado.respondiendo=false;},1800);}
+  }
+}
+
+function siguienteNivel(){
+  if(estado.nivelActual<NIVELES_FINALES.length-1){
+    estado.nivelActual++;estado.vidas=3;estado.respondiendo=false;
+    cargarNivel(estado.nivelActual);window.scrollTo({top:0,behavior:'smooth'});
+  } else {mostrarVictoria();}
+}
+
+function mostrarFallo(){
+  document.getElementById('pantalla-nivel').classList.remove('activa');
+  document.getElementById('pantalla-nivel').style.display='none';
+  var f=document.getElementById('pantalla-fallo');
+  f.classList.add('activa');f.style.display='flex';
+  var msgs=['Los registros han sido detectados por el contraespionaje zarista. La operación queda en suspenso. Reintente el análisis con más precisión.','La consulta errónea ha alertado al sistema de seguridad del Consejo. Cubra las huellas y vuelva a ejecutar la consulta correctamente.','El error lógico en la consulta ha generado datos inconsistentes. Reinicie el procedimiento.'];
+  document.getElementById('fallo-mensaje').textContent=msgs[estado.nivelActual%3];
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function repetirNivel(){
+  estado.vidas=3;estado.respondiendo=false;
+  var f=document.getElementById('pantalla-fallo');f.classList.remove('activa');f.style.display='none';
+  var n=document.getElementById('pantalla-nivel');n.classList.add('activa');n.style.display='block';
+  cargarNivel(estado.nivelActual);window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function mostrarVictoria(){
+  document.getElementById('pantalla-nivel').classList.remove('activa');
+  document.getElementById('pantalla-nivel').style.display='none';
+  document.getElementById('nav-hud').style.display='none';
+  document.getElementById('nav-subtitulo').textContent='Misión Completada · 11 Nov 1918';
+  document.getElementById('ticker-txt').innerHTML='<span class="ticker-sep">⬥</span> ¡MISIÓN COMPLETADA! — MOSCÚ · OPERACIÓN CONCLUIDA · NOVIEMBRE 1917<span class="ticker-sep">⬥</span> LA REVOLUCIÓN HA OCURRIDO — EL EQUILIBRIO DE EUROPA SE MANTIENE<span class="ticker-sep">⬥</span> ARMISTICIO · 11 DE NOVIEMBRE DE 1918 · 11:00 HORAS<span class="ticker-sep">⬥</span>';
+  var v=document.getElementById('pantalla-victoria');v.classList.add('activa');v.style.display='block';
+  var p=typeof Partidas!=='undefined'?Partidas.getCurrent():null;
+  if(p){
+    var elC=document.getElementById('res-comandante'); if(elC) elC.textContent=p.nombre||'—';
+    var elF=document.getElementById('res-fecha'); if(elF) elF.textContent=p.fechaInicio||'—';
+    var elN=document.getElementById('res-niveles'); if(elN) elN.textContent=((p.nivelesCompletados||[]).length)+' misiones';
+    var elR=document.getElementById('res-ruta'); if(elR) elR.textContent=p.ruta==='sur'?'🏜️  Ruta Sur — Mediterráneo · Mar Negro':p.ruta==='norte'?'🌊 Ruta Norte — Báltico · Frente Oriental':'—';
+    var per=typeof PERSONAJES!=='undefined'?PERSONAJES.find(function(x){return x.id===p.personaje;}):null;
+    var elP=document.getElementById('res-personaje'); if(elP) elP.textContent=per?per.nombre+' · '+per.rango:'—';
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function iniciarFase(){
+  document.getElementById('pantalla-intro').classList.remove('activa');
+  document.getElementById('pantalla-intro').style.display='none';
+  var n=document.getElementById('pantalla-nivel');n.classList.add('activa');n.style.display='block';
+  cargarNivel(0);window.scrollTo({top:0,behavior:'smooth'});
+}
+
+document.getElementById('pantalla-intro').style.display='flex';
+actualizarHUD();
+</script>
+</body>
+</html>

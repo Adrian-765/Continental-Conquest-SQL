@@ -58,7 +58,7 @@
       color: var(--paper-warm);
     }
     .hero-story .article-kicker { border-bottom-color: #d4a83a; color: #d4a83a; }
-    .hero-story .article-headline { color: var(--paper-warm); font-size: clamp(2.2rem, 5vw, 4rem); }
+    .hero-story .article-headline { color: var(--paper-warm); font-size: clamp(2.2rem, 5vw, 4rem); text-shadow: 0 2px 12px rgba(0,0,0,0.85), 0 1px 3px rgba(0,0,0,0.95), 2px 2px 0 rgba(0,0,0,0.6); }
     .hero-story .article-byline { color: rgba(200,176,122,0.7); border-color: rgba(200,176,122,0.4); }
     .hero-story .article-body { color: rgba(230,210,172,0.88); }
     .hero-story .article-body p:first-child::first-letter { color: var(--gold-bright); }
@@ -950,7 +950,7 @@
         <div class="contenido-wrapper">
           <div style="max-width: 800px;">
             <span class="article-kicker fade-in-1">⚠ Edición de Guerra — Noticias Urgentes</span>
-            <h1 class="article-headline fade-in-2" style="font-size:clamp(2.5rem,6vw,5rem);line-height:1.05;margin-bottom:0.5rem;">
+            <h1 class="article-headline fade-in-2" style="font-size:clamp(2.5rem,6vw,5rem);line-height:1.05;margin-bottom:0.5rem;color:var(--paper-warm);text-shadow:0 2px 16px rgba(0,0,0,0.92),0 1px 4px rgba(0,0,0,1),3px 3px 0 rgba(0,0,0,0.7);">
               EUROPA EN LLAMAS:<br>LA GRAN GUERRA
             </h1>
             <div class="article-byline fade-in-3">
@@ -1006,7 +1006,7 @@
               src="../img/sarajevo1914.jpg"
               alt="Asesinato del Archiduque Francisco Fernando, Sarajevo 1914"
               loading="lazy"
-              onerror="this.parentElement.style.minHeight='160px';this.parentElement.style.background='var(--ink)';this.style.display='none';"
+              style="width:100%;object-fit:cover;min-height:160px;display:block;"
             >
             <div class="press-photo-overlay"></div>
             <div class="press-photo-caption">
@@ -1079,7 +1079,7 @@
           alt="Soldados en trincheras del frente occidental, 1916"
           loading="lazy"
           style="min-height:380px;"
-          onerror="this.style.display='none';"
+          
         >
         <div class="press-photo-overlay"></div>
         <div class="mapa-caption" style="position:absolute;bottom:0;left:0;right:0;font-size:0.62rem;letter-spacing:0.1em;padding:1.5rem 1rem 0.6rem;background:linear-gradient(transparent,rgba(0,0,0,0.9));color:var(--paper-dark);line-height:1.4;text-align:left;">
@@ -1094,10 +1094,11 @@
           <p>La batalla de Verdún duró 10 meses y costó 300,000 vidas. La del Somme comenzó con 60,000 bajas británicas en su primer día. El 1 de julio de 1916 es el día más sangriento de toda la historia militar británica.</p>
           <p>Los hombres sobrevivían en condiciones infrahumanas: barro, ratas, piojos, gases venenosos, artillería constante. La psicología humana alcanzó sus límites. Lo llamaron "shell shock" —lo que hoy llamamos trauma de guerra.</p>
         </div>
-        <div style="margin-top:1.2rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.1);">
-          <div class="article-kicker">Dato estratégico</div>
-          <div style="font-family:var(--font-display);font-size:1.8rem;font-weight:900;color:var(--gold);line-height:1;">750 km</div>
-          <div style="font-family:var(--font-typewriter);font-size:0.62rem;letter-spacing:0.12em;color:var(--paper-dark);text-transform:uppercase;">Extensión del Frente Occidental</div>
+        <div style="margin-top:1rem;padding-top:0.8rem;border-top:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;gap:1rem;">
+          <div style="font-family:var(--font-display);font-size:2.2rem;font-weight:900;color:var(--gold);line-height:1;flex-shrink:0;">750 km</div>
+          <div>
+            <div style="font-family:var(--font-typewriter);font-size:0.58rem;letter-spacing:0.10em;color:var(--paper-dark);text-transform:uppercase;line-height:1.5;">Extensión del<br>Frente Occidental</div>
+          </div>
         </div>
       </div>
     </div>
@@ -1120,7 +1121,7 @@
           alt="Soldados con máscaras de gas, frente occidental 1917"
           loading="lazy"
           style="min-height:300px;object-position:center center;"
-          onerror="this.style.display='none';"
+          
         >
         <div class="press-photo-overlay"></div>
         <div class="mapa-caption" style="position:absolute;bottom:0;left:0;right:0;font-size:0.62rem;padding:1.5rem 1rem 0.6rem;background:linear-gradient(transparent,rgba(0,0,0,0.9));color:var(--paper-dark);line-height:1.4;text-align:left;">

@@ -6,36 +6,40 @@
   <title>La Prueba de Redmond — SQL: La Gran Guerra</title>
   <link rel="stylesheet" href="../css/styles.css">
   <style>
-    .nivel-layout{display:grid;grid-template-columns:1.15fr 0.85fr;gap:2rem;margin:1.5rem 0;}
+    /* Igual que nivel-alemania original */
+    .nivel-layout{display:grid;grid-template-columns:1.15fr 0.85fr;gap:2rem;margin:1.5rem 0 1.2rem;}
     @media(max-width:880px){.nivel-layout{grid-template-columns:1fr;}}
     .header-nivel{background:linear-gradient(135deg,rgba(26,20,9,.98),rgba(42,48,32,.95));border-bottom:3px solid var(--gold);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;}
     .nivel-badge{display:inline-block;background:var(--red-ink);color:var(--paper-warm);font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.2em;padding:.2rem .7rem;text-transform:uppercase;margin-bottom:.3rem;}
     .nivel-num{font-family:var(--font-display);font-size:3.5rem;font-weight:900;color:rgba(184,146,42,.15);line-height:1;}
+    .progreso-bar{background:rgba(0,0,0,.3);padding:.5rem 2rem;border-bottom:1px solid rgba(184,146,42,.1);display:flex;align-items:center;gap:1rem;}
     .col-p{display:flex;flex-direction:column;gap:1.5rem;}
     .col-l{display:flex;flex-direction:column;gap:1.4rem;}
-    .sql-panel{background:#0a0d06;border:1px solid rgba(184,146,42,.2);border-top:3px solid var(--gold);overflow:hidden;}
-    .sql-header{background:rgba(184,146,42,.08);border-bottom:1px solid rgba(184,146,42,.15);padding:.6rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;}
-    .sql-dots{display:flex;gap:4px;}
-    .sql-dot{width:8px;height:8px;border-radius:50%;}
-    .schema-box{background:rgba(0,0,0,.3);border:1px dashed rgba(184,146,42,.2);margin:.5rem 1rem 1rem;}
-    .schema-lbl{font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(184,146,42,.5);padding:.4rem .8rem .2rem;}
-    .sql-pre{font-family:'Special Elite','Courier New',monospace;font-size:.78rem;line-height:1.75;color:#a8d4a0;padding:.4rem 1rem .9rem;overflow-x:auto;background:transparent;white-space:pre;margin:0;}
-    .mapa-mini{background:linear-gradient(135deg,#c4b07a,#a8905a);border:2px solid var(--paper-stain);padding:1rem;min-height:120px;position:relative;overflow:hidden;box-shadow:3px 3px 0 rgba(0,0,0,.25);}
+    .section-label{font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem;}
+    .mapa-mini{background:linear-gradient(135deg,#c4b07a,#a8905a);border:2px solid var(--paper-stain);padding:1rem;min-height:100px;position:relative;overflow:hidden;box-shadow:3px 3px 0 rgba(0,0,0,.25);}
     .mapa-mini::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(100,75,30,.05) 10px,rgba(100,75,30,.05) 11px);}
     .mapa-ruta{font-family:var(--font-handwritten);font-size:1rem;color:var(--ink);font-weight:700;position:relative;line-height:1.6;}
-    .progreso-bar{background:rgba(0,0,0,.3);padding:.5rem 2rem;border-bottom:1px solid rgba(184,146,42,.1);display:flex;align-items:center;gap:1rem;}
-    .section-label{font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem;}
-    .tabla-datos{width:100%;border-collapse:collapse;font-family:var(--font-typewriter);font-size:.78rem;margin-top:.5rem;}
-    .tabla-datos th{background:var(--ink);color:var(--gold);padding:.42rem .75rem;text-align:left;letter-spacing:.08em;font-weight:normal;}
-    .tabla-datos td{padding:.38rem .75rem;border-bottom:1px solid rgba(184,146,42,.1);color:var(--paper-aged);}
-    .tabla-datos tr:last-child td{border-bottom:none;}
-    .tabla-datos tr:hover td{background:rgba(184,146,42,.05);}
+    .sql-panel{background:#0a0d06;border:1px solid rgba(184,146,42,.2);border-top:3px solid var(--gold);overflow:hidden;}
+    .sql-header{background:rgba(184,146,42,.08);border-bottom:1px solid rgba(184,146,42,.15);padding:.6rem 1rem;display:flex;align-items:center;gap:.6rem;font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;}
+    .sql-dots{display:flex;gap:4px;}.sql-dot{width:8px;height:8px;border-radius:50%;}
+    .schema-box{background:rgba(0,0,0,.3);border:1px dashed rgba(184,146,42,.2);margin:.5rem 0 0;}
+    .schema-lbl{font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(184,146,42,.5);padding:.4rem .8rem .2rem;}
+    .sql-pre{font-family:'Special Elite','Courier New',monospace;font-size:.78rem;line-height:1.75;color:#a8d4a0;padding:.4rem 1rem .9rem;overflow-x:auto;background:transparent;white-space:pre;margin:0;}
     .btn-retroceder{display:block;text-align:center;font-family:var(--font-typewriter);font-size:.70rem;letter-spacing:.14em;text-transform:uppercase;padding:.6rem 1rem;background:rgba(26,20,9,.6);border:1px solid rgba(184,146,42,.25);color:var(--paper-dark);text-decoration:none;transition:all .2s;}
     .btn-retroceder:hover{background:rgba(184,146,42,.12);color:var(--gold);border-color:rgba(184,146,42,.5);}
+    /* Tablas horizontales — fila inferior */
+    .datos-panel{margin-bottom:1.5rem;}
+    .datos-scroll{display:flex;flex-direction:row;gap:0;overflow-x:auto;background:#0a0d06;border:1px solid rgba(184,146,42,.2);border-top:3px solid var(--gold);}
+    .db-col{flex:0 0 auto;border-right:1px solid rgba(184,146,42,.15);padding-bottom:.5rem;}
+    .db-col:last-child{border-right:none;}
+    .db-col-lbl{font-family:var(--font-typewriter);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(184,146,42,.6);padding:.4rem .8rem .2rem;white-space:nowrap;border-bottom:1px solid rgba(184,146,42,.1);background:rgba(184,146,42,.04);}
+    .tabla-datos{border-collapse:collapse;font-family:var(--font-typewriter);font-size:.76rem;white-space:nowrap;width:100%;}
+    .tabla-datos th{background:var(--ink);color:var(--gold);padding:.35rem .75rem;text-align:left;letter-spacing:.07em;font-weight:normal;white-space:nowrap;}
+    .tabla-datos td{padding:.3rem .75rem;border-bottom:1px solid rgba(184,146,42,.08);color:var(--paper-aged);white-space:nowrap;}
+    .tabla-datos tr:last-child td{border-bottom:none;}.tabla-datos tr:hover td{background:rgba(184,146,42,.05);}
   </style>
 </head>
 <body class="page-bg">
-
 <nav class="nav-principal">
   <div class="nav-inner">
     <a href="../index.html" class="nav-logo-area">
@@ -44,44 +48,26 @@
     </a>
     <div class="nav-center">Misión 1 de 7 · <span class='nombre-comandante'>Comandante</span> · España → Irlanda</div>
     <div class="nav-actions">
-      <button id="btn-guardar" class="btn btn-primary" style="font-size:.72rem;padding:.5rem 1.2rem;">💾 Guardar partida</button>
+      <button id="btn-guardar" class="btn btn-primary" style="font-size:.72rem;padding:.5rem 1.2rem;">&#128190; Guardar partida</button>
     </div>
   </div>
 </nav>
-
-<div class="ticker-wrap">
-  <span class="ticker-content">
-    <span class="ticker-sep">⬥</span> SQL: CONQUISTA Y DIPLOMACIA EN LA GRAN GUERRA
-    <span class="ticker-sep">⬥</span> NIVEL 2 — NEGOCIACIÓN CON JOHN REDMOND Y LOS IRISH VOLUNTEERS · DUBLÍN, 1915
-    <span class="ticker-sep">⬥</span> OBJETIVO: DETENER AL TZAR RUSO — PROTEGER EL EQUILIBRIO DE EUROPA
-    <span class="ticker-sep">⬥</span>
-  </span>
-</div>
-
+<div class="ticker-wrap"><span class="ticker-content"><span class="ticker-sep">⬥</span></div>
 <div class="header-nivel">
-  <div>
+  <div><div>
     <div class="nivel-badge">Nivel 2 · Dublín, Irlanda</div>
     <div style="font-family:var(--font-typewriter);font-size:.78rem;letter-spacing:.1em;color:var(--gold-bright);font-weight:bold;">La Prueba de Redmond</div>
     <div style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.08em;color:var(--paper-dark);">3 de abril de 1915 — A bordo rumbo a Irlanda</div>
-  </div>
+  </div></div>
   <div class="nivel-num">N·2</div>
 </div>
-
 <div class="progreso-bar">
   <span style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.12em;color:var(--paper-dark);text-transform:uppercase;white-space:nowrap;">Progreso de la misión:</span>
-  <div class="barra-nivel">
-  <div class="punto-nivel actual"></div>
-  <div class="punto-nivel"></div>
-  <div class="punto-nivel"></div>
-  <div class="punto-nivel"></div>
-  <div class="punto-nivel"></div>
-  <div class="punto-nivel"></div>
-  <div class="punto-nivel"></div>
-  </div>
+  <div class="barra-nivel"><div class="punto-nivel actual"></div> <div class="punto-nivel"></div> <div class="punto-nivel"></div> <div class="punto-nivel"></div> <div class="punto-nivel"></div> <div class="punto-nivel"></div> <div class="punto-nivel"></div>
 </div>
-
+</div>
 <div id="libreta-flotante">
-  <button id="libreta-toggle">📓 Notas de Campaña <span class="libreta-arrow">▼</span></button>
+  <button id="libreta-toggle">&#128211; Notas de Campaña <span class="libreta-arrow">&#9660;</span></button>
   <div id="libreta-body">
     <textarea id="libreta-notas" placeholder="Anote sus observaciones..."></textarea>
     <div id="libreta-footer">
@@ -92,12 +78,12 @@
 </div>
 
 <main class="container">
+
+  <!-- LAYOUT ORIGINAL DE ALEMANIA: col-p (izq) · col-l (der) -->
   <div class="nivel-layout">
 
-    <!-- ══ COLUMNA PRINCIPAL ══════════════════════════ -->
+    <!-- COLUMNA PRINCIPAL: Diario + Informe -->
     <div class="col-p">
-
-      <!-- DIARIO -->
       <div class="fade-in-1">
         <div class="section-label">📔 Diario del Comandante — Entrada 14</div>
         <div class="diario-entrada">
@@ -108,8 +94,6 @@
 <p>El peso de la responsabilidad es insoportable a veces. Pero siento una llama dentro de mí: determinación pura.</p>
         </div>
       </div>
-
-      <!-- TELEGRAMA / DOCUMENTO -->
       <div class="fade-in-2">
         <div class="section-label">📨 Informe de Inteligencia</div>
         <div class="telegrama" style="transform:rotate(-.5deg);">
@@ -124,39 +108,25 @@ Propuesta a negociar:<br>
 — A cambio: cooperación táctica en campaña europea<br><br>
 ADVERTENCIA: Redmond exigirá análisis de datos reales.<br>
 No aceptará promesas sin cifras. Prepárese.<br><br>
-— DIRECCIÓN DE INTELIGENCIA · MADRID</div>
-        </div>
+— DIRECCIÓN DE INTELIGENCIA · MADRID</div></div>
       </div>
-
-      <!-- CTA DECK.TOYS -->
-      <div style="text-align:center;" class="fade-in-3">
-        <button class="btn btn-gold" onclick="abrirEscenario('https://deck.toys')">
-          🗺 Abrir escenario interactivo en deck.toys
-        </button>
-        <div style="font-family:var(--font-typewriter);font-size:.62rem;letter-spacing:.1em;color:var(--paper-dark);margin-top:.4rem;text-transform:uppercase;">Se abrirá en nueva pestaña</div>
-      </div>
-
     </div>
 
-    <!-- ══ COLUMNA LATERAL ════════════════════════════ -->
+    <!-- COLUMNA LATERAL: Mapa + SQL CREATE + Botones -->
     <div class="col-l">
-
-      <!-- MAPA MINI -->
       <div class="fade-in-1">
-        <div class="section-label">🗺 Ruta de la Misión</div>
+        <div class="section-label">&#128506; Ruta de la Misión</div>
         <div class="mapa-mini">
           <div style="font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faded);margin-bottom:.4rem;position:relative;">Trayecto actual</div>
           <div class="mapa-ruta">España → Atlántico → Dublín</div>
           <div style="margin-top:.8rem;position:relative;">
             <div style="font-family:var(--font-typewriter);font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-faded);margin-bottom:.3rem;">Progreso total:</div>
-            <div class="marcador-progreso"><div class="paso-mapa activo"></div><div class="paso-mapa"></div><div class="paso-mapa"></div><div class="paso-mapa"></div><div class="paso-mapa"></div><div class="paso-mapa"></div><div class="paso-mapa"></div></div>
+            <div class="marcador-progreso"><div class="paso-mapa activo"></div>
           </div>
         </div>
       </div>
-
-      <!-- PANEL SQL — solo CREATE TABLE -->
       <div class="fade-in-2">
-        <div class="section-label">💾 Enunciado SQL — Estructura de Tablas</div>
+        <div class="section-label">&#128190; Enunciado SQL — Estructura de Tablas</div>
         <div class="sql-panel">
           <div class="sql-header" style="color:var(--gold);">
             <div class="sql-dots">
@@ -167,7 +137,7 @@ No aceptará promesas sin cifras. Prepárese.<br><br>
             mysql — gran_guerra.sql
           </div>
           <div class="schema-box" style="border-color:rgba(184,146,42,.2);margin:.5rem 0 0;">
-            <div class="schema-lbl">📋 Estructura de tablas — Enunciado</div>
+            <div class="schema-lbl">&#128203; Estructura de tablas — Enunciado</div>
             <pre class="sql-pre" style="color:#a8d4a0;">CREATE TABLE aliados (
     id_aliado    INT PRIMARY KEY,
     pais         VARCHAR(50),
@@ -189,24 +159,35 @@ CREATE TABLE frentes_europeos (
           </div>
         </div>
       </div>
-
-      <!-- NAVEGACIÓN -->
       <div class="fade-in-3" style="display:flex;flex-direction:column;gap:.7rem;">
-        <a href="nivel-02.html" class="btn" style="text-align:center;justify-content:center;background:rgba(184,146,42,.85);color:var(--ink);border:1px solid rgba(184,146,42,.5);font-family:var(--font-typewriter);font-size:.75rem;letter-spacing:.12em;padding:.8rem 1rem;display:block;text-decoration:none;text-transform:uppercase;">
-          Siguiente misión →
-        </a>
-        <button id="btn-guardar2" class="btn btn-primary" style="text-align:center;justify-content:center;" onclick="document.getElementById('btn-guardar').click()">
-          💾 Guardar progreso
-        </button>
-        <a href="../index.html" class="btn-retroceder">
-          ← Menú principal
-        </a>
+        <a href="nivel-02.html" class="btn" style="text-align:center;justify-content:center;background:rgba(184,146,42,.85);color:var(--ink);border:1px solid rgba(184,146,42,.5);font-family:var(--font-typewriter);font-size:.75rem;letter-spacing:.12em;padding:.8rem 1rem;display:block;text-decoration:none;text-transform:uppercase;">Siguiente misión →</a>
+        <button id="btn-guardar2" class="btn btn-primary" style="text-align:center;justify-content:center;" onclick="document.getElementById('btn-guardar').click()">&#128190; Guardar progreso</button>
+        <a href="../index.html" class="btn-retroceder">← Menú principal</a>
       </div>
+    </div>
 
+  </div>
+
+  </div>
+
+  <!-- TABLAS DE DATOS — fila horizontal completa -->
+  <div class="datos-panel fade-in-3">
+    <div class="section-label">&#128451; Base de Datos Oficial — Datos de la Misión</div>
+    <div class="datos-scroll">
+      <div class="db-col">
+              <div class="db-col-lbl">&#128451; aliados</div>
+              <table class="tabla-datos"><thead><tr><th>id_aliado</th><th>pais</th><th>tropas</th><th>suministros</th></tr></thead><tbody><tr><td>1</td><td>España</td><td>500</td><td>800</td></tr><tr><td>2</td><td>Francia</td><td>1200</td><td>1500</td></tr><tr><td>3</td><td>Bélgica</td><td>300</td><td>400</td></tr><tr><td>4</td><td>Gran Bretaña</td><td>2000</td><td>2500</td></tr></tbody></table>
+            </div><div class="db-col">
+              <div class="db-col-lbl">&#128451; voluntarios_irlandeses</div>
+              <table class="tabla-datos"><thead><tr><th>id_voluntario</th><th>region</th><th>efectivos</th></tr></thead><tbody><tr><td>1</td><td>Munster</td><td>250</td></tr><tr><td>2</td><td>Leinster</td><td>180</td></tr><tr><td>3</td><td>Ulster</td><td>320</td></tr><tr><td>4</td><td>Connacht</td><td>150</td></tr></tbody></table>
+            </div><div class="db-col">
+              <div class="db-col-lbl">&#128451; frentes_europeos</div>
+              <table class="tabla-datos"><thead><tr><th>id_frente</th><th>nombre</th><th>presion_militar</th></tr></thead><tbody><tr><td>1</td><td>Frente Occidental</td><td>9</td></tr><tr><td>2</td><td>Frente Oriental</td><td>7</td></tr><tr><td>3</td><td>Frente Italiano</td><td>5</td></tr><tr><td>4</td><td>Frente Balcánico</td><td>6</td></tr></tbody></table>
+            </div>
     </div>
   </div>
-</main>
 
+</main>
 <script src="../js/main.js"></script>
 <script>initPuntosNivel(7, 1);</script>
 </body>

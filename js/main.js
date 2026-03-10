@@ -66,11 +66,17 @@ const NIVELES = {
   'nivel-alemania': { nombre: 'Decisión en Berlín', orden: 5, total: 5 },
   'ruta-sur-01': { nombre: 'Hacia el Sur', orden: 1, total: 7 },
   'ruta-sur-02': { nombre: 'Los Balcanes', orden: 2, total: 7 },
-  'ruta-sur-03': { nombre: 'El Imperio Otomano', orden: 3, total: 7 },
-  'ruta-sur-04': { nombre: 'Mesopotamia', orden: 4, total: 7 },
-  'ruta-sur-05': { nombre: 'La Campaña Árabe', orden: 5, total: 7 },
-  'ruta-sur-06': { nombre: 'Palestina', orden: 6, total: 7 },
-  'ruta-sur-07': { nombre: 'El Armisticio', orden: 7, total: 7 }
+  'ruta-sur-03': { nombre: 'Sombras sobre el Egeo', orden: 3, total: 7 },
+  'ruta-sur-04': { nombre: 'Los Contactos de Atenas', orden: 4, total: 7 },
+  'ruta-sur-05': { nombre: 'Entrada al Imperio Ruso', orden: 5, total: 7 },
+  'ruta-sur-06': { nombre: 'El Colapso del Imperio', orden: 6, total: 7 },
+  'ruta-sur-07': { nombre: 'La Caída del Zar', orden: 7, total: 7 },
+  'norte-05': { nombre: 'Dinamarca', orden: 1, total: 6 },
+  'norte-06': { nombre: 'La Niebla del Mar del Norte', orden: 2, total: 6 },
+  'norte-07': { nombre: 'Tormenta en el Mar del Norte', orden: 3, total: 6 },
+  'norte-08': { nombre: 'El Corredor Escandinavo', orden: 4, total: 6 },
+  'norte-09': { nombre: 'Travesía Final hacia el Norte', orden: 5, total: 6 },
+  'norte-10': { nombre: 'La Puerta del Norte', orden: 6, total: 6 }
 };
 
 /* ═══════════════════════════════════════════════════
@@ -413,39 +419,7 @@ function initPuntosNivel(totalNiveles, nivelActual) {
 
 const ModalPartida = {
   mostrarNueva() {
-    const overlay = document.createElement('div');
-    overlay.className = 'modal-overlay';
-    overlay.innerHTML = `
-      <div class="modal-box">
-        <h2 class="modal-titulo">Nueva Partida</h2>
-        <p class="text-typewriter" style="color:var(--sepia-light);font-size:0.85rem;margin-bottom:1.2rem;letter-spacing:0.05em;">
-          Introduzca el nombre del comandante:
-        </p>
-        <input type="text" id="input-nombre" class="input-campo"
-               placeholder="Nombre del Comandante..." maxlength="40">
-        <div style="display:flex;gap:1rem;margin-top:1rem;">
-          <button class="btn btn-primary" onclick="ModalPartida.confirmarNueva()">
-            ⚔ Comenzar Misión
-          </button>
-          <button class="btn btn-secondary" onclick="ModalPartida.cerrar()">
-            Cancelar
-          </button>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(overlay);
-    setTimeout(() => document.getElementById('input-nombre')?.focus(), 100);
-    document.getElementById('input-nombre')?.addEventListener('keyup', e => {
-      if (e.key === 'Enter') this.confirmarNueva();
-    });
-    this._overlay = overlay;
-  },
-
-  confirmarNueva() {
-    const nombre = document.getElementById('input-nombre')?.value?.trim();
-    if (!nombre) return;
-    Partidas.crear(nombre);
-    this.cerrar();
+    Partidas.crear('Comandante');
     this.mostrarEleccionContexto();
   },
 
