@@ -3,11 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Los Contactos de Atenas — SQL: La Gran Guerra</title>
+  <title>Entrada al Imperio Ruso — SQL: La Gran Guerra</title>
   <link rel="stylesheet" href="../css/styles.css">
-  <style>
-    /* Igual que nivel-alemania original */
-    .nivel-layout{display:grid;grid-template-columns:1.15fr 0.85fr;gap:2rem;margin:1.5rem 0 1.2rem;}
+  <style>    .nivel-layout{display:grid;grid-template-columns:1.15fr 0.85fr;gap:2rem;margin:1.5rem 0 1.2rem;}
     @media(max-width:880px){.nivel-layout{grid-template-columns:1fr;}}
     .header-nivel{background:linear-gradient(135deg,rgba(26,20,9,.98),rgba(42,48,32,.95));border-bottom:3px solid var(--gold);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;}
     .nivel-badge{display:inline-block;background:var(--red-ink);color:var(--paper-warm);font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.2em;padding:.2rem .7rem;text-transform:uppercase;margin-bottom:.3rem;}
@@ -27,13 +25,12 @@
     .sql-pre{font-family:'Special Elite','Courier New',monospace;font-size:.78rem;line-height:1.75;color:#a8d4a0;padding:.4rem 1rem .9rem;overflow-x:auto;background:transparent;white-space:pre;margin:0;}
     .btn-retroceder{display:block;text-align:center;font-family:var(--font-typewriter);font-size:.70rem;letter-spacing:.14em;text-transform:uppercase;padding:.6rem 1rem;background:rgba(26,20,9,.6);border:1px solid rgba(184,146,42,.25);color:var(--paper-dark);text-decoration:none;transition:all .2s;}
     .btn-retroceder:hover{background:rgba(184,146,42,.12);color:var(--gold);border-color:rgba(184,146,42,.5);}
-    /* Tablas horizontales — fila inferior */
     .datos-panel{margin-bottom:1.5rem;}
-    .datos-scroll{display:flex;flex-direction:row;gap:0;overflow-x:auto;background:#0a0d06;border:1px solid rgba(184,146,42,.2);border-top:3px solid var(--gold);}
-    .db-col{flex:0 0 auto;border-right:1px solid rgba(184,146,42,.15);padding-bottom:.5rem;}
+    .datos-scroll{display:inline-block;background:#0a0d06;border:1px solid rgba(184,146,42,.2);border-top:3px solid var(--gold);overflow-x:auto;max-width:100%;}
+    .db-col{display:inline-block;vertical-align:top;border-right:1px solid rgba(184,146,42,.15);padding-bottom:.5rem;}
     .db-col:last-child{border-right:none;}
     .db-col-lbl{font-family:var(--font-typewriter);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(184,146,42,.6);padding:.4rem .8rem .2rem;white-space:nowrap;border-bottom:1px solid rgba(184,146,42,.1);background:rgba(184,146,42,.04);}
-    .tabla-datos{border-collapse:collapse;font-family:var(--font-typewriter);font-size:.76rem;white-space:nowrap;width:100%;}
+    .tabla-datos{border-collapse:collapse;font-family:var(--font-typewriter);font-size:.76rem;white-space:nowrap;width:auto;}
     .tabla-datos th{background:var(--ink);color:var(--gold);padding:.35rem .75rem;text-align:left;letter-spacing:.07em;font-weight:normal;white-space:nowrap;}
     .tabla-datos td{padding:.3rem .75rem;border-bottom:1px solid rgba(184,146,42,.08);color:var(--paper-aged);white-space:nowrap;}
     .tabla-datos tr:last-child td{border-bottom:none;}.tabla-datos tr:hover td{background:rgba(184,146,42,.05);}
@@ -46,86 +43,81 @@
       <div class="nav-logo-text">SQL: La Gran Guerra</div>
       <div class="nav-logo-sub">Conquista y Diplomacia · 1914–1918</div>
     </a>
-    <div class="nav-center">Ruta Sur · <span class='nombre-comandante'>Comandante</span> · Atenas → Mar Negro</div>
+    <div class="nav-center">Ruta Sur · Misión 4 de 4 · <span class='nombre-comandante'>Comandante</span> · Imperio Ruso</div>
     <div class="nav-actions">
-      <button id="btn-guardar" class="btn btn-primary" style="font-size:.72rem;padding:.5rem 1.2rem;">&#128190; Guardar partida</button>
+      <button id="btn-guardar" class="btn btn-primary" style="font-size:.72rem;padding:.5rem 1.2rem;">Guardar partida</button>
     </div>
   </div>
 </nav>
 <div class="ticker-wrap"><span class="ticker-content"><span class="ticker-sep">⬥</span></div>
 <div class="header-nivel">
   <div><div>
-    <div class="nivel-badge">Nivel 7 · Ruta Sur · Atenas — Mar Negro</div>
-    <div style="font-family:var(--font-typewriter);font-size:.78rem;letter-spacing:.1em;color:var(--gold-bright);font-weight:bold;">Los Contactos de Atenas</div>
-    <div style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.08em;color:var(--paper-dark);">Verano 1915 — Atenas · Mar Negro</div>
+    <div class="nivel-badge">Nivel 8 · Ruta Sur · Novorossiysk — Interior Ruso</div>
+    <div style="font-family:var(--font-typewriter);font-size:.78rem;letter-spacing:.1em;color:var(--gold-bright);font-weight:bold;">Entrada al Imperio Ruso</div>
+    <div style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.08em;color:var(--paper-dark);">Otoño 1915 — Novorossiysk, Imperio Ruso</div>
   </div></div>
-  <div class="nivel-num">N·7</div>
+  <div class="nivel-num">N·8</div>
 </div>
 <div class="progreso-bar">
   <span style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.12em;color:var(--paper-dark);text-transform:uppercase;white-space:nowrap;">Progreso de la misión:</span>
-  <div class="barra-nivel"><div class="punto-nivel hecho"></div> <div class="punto-nivel hecho"></div> <div class="punto-nivel hecho"></div> <div class="punto-nivel hecho"></div> <div class="punto-nivel hecho"></div> <div class="punto-nivel hecho"></div> <div class="punto-nivel actual"></div>
-</div>
+  <div class="barra-nivel"><div class="punto-nivel hecho"></div> <div class="punto-nivel hecho"></div> <div class="punto-nivel hecho"></div> <div class="punto-nivel actual"></div></div>
 </div>
 <div id="libreta-flotante">
-  <button id="libreta-toggle">&#128211; Notas de Campaña <span class="libreta-arrow">&#9660;</span></button>
+  <button id="libreta-toggle">Notas de Campaña <span class="libreta-arrow">&#9660;</span></button>
   <div id="libreta-body">
     <textarea id="libreta-notas" placeholder="Anote sus observaciones..."></textarea>
     <div id="libreta-footer">
-      <span>Libreta del Comandante</span>
+      <span>Libreta de Campaña</span>
       <span id="libreta-guardado" style="color:var(--khaki-faded);"></span>
     </div>
   </div>
 </div>
 
 <main class="container">
-
-  <!-- LAYOUT ORIGINAL DE ALEMANIA: col-p (izq) · col-l (der) -->
   <div class="nivel-layout">
 
-    <!-- COLUMNA PRINCIPAL: Diario + Informe -->
     <div class="col-p">
       <div class="fade-in-1">
-        <div class="section-label">📔 Diario del Comandante</div>
+        <div class="section-label">Diario de Campaña — Entrada 22</div>
         <div class="diario-entrada">
-          <div class="diario-fecha">Verano 1915 — Atenas · Bósforo</div>
-          <p>El SS Eleftheria surca el Adriático rumbo al mar Jónico, bordeando la costa griega. La noche es clara y silenciosa; Atenas queda atrás y la inmensidad azul del mar se extiende ante nosotros. La tripulación mantiene un respeto tenso, consciente de la misión, pero ignorante de su verdadero alcance.</p>
-<p>Tras días de navegación, atravesando el Egeo y doblando los Dardanelos, entramos en el Mar Negro. Cada puerto que dejamos atrás parece una fachada: mercantes, inspectores y banderas neutras esconden ojos vigilantes. La tensión aumenta, pero la disciplina y la coordinación mantienen al grupo en silencio y alerta.</p>
-<p>Finalmente, Novorossiysk se perfila en el horizonte. Su puerto, lo suficientemente activo para camuflar nuestra llegada, permite un desembarco discreto. Nos esperan los bolcheviques locales. Nuestra alianza es puramente instrumental.</p>
+          <div class="diario-fecha">Otoño 1915 — Novorossiysk, Imperio Ruso</div>
+          <p>El puerto de Novorossiysk queda atrás. Las primeras carreteras y ferrocarriles revelan un paisaje vasto y ajeno: llanuras interminables, bosques que bordean el Don, y pequeños pueblos donde la vida continúa bajo la atenta mirada del Zar. Cada kilómetro hacia el este se siente como adentrarse en un territorio extraño y vigilado.</p>
+          <p>Al llegar a Novotroitskaya, establecemos un campamento temporal. Los contactos bolcheviques, armados y alertas, nos observan con cautela. La tensión es palpable: cualquier error podría alertar a las autoridades zaristas y comprometer meses de preparación.</p>
+          <p>Antes de continuar hacia el interior, debo evaluar la capacidad de las unidades y los recursos disponibles. Cada ruta requiere tropas y suministros suficientes para asegurar el éxito. La misión avanza entre cooperación estratégica y desconfianza mutua.</p>
         </div>
       </div>
       <div class="fade-in-2">
-        <div class="section-label">📨 Informe de Inteligencia</div>
+        <div class="section-label">Informe de Inteligencia</div>
         <div class="telegrama" style="transform:rotate(-.5deg);">
-          <div class="telegrama-sello">S.S.<br>ELEF<br>THERIA</div>
-          <div class="telegrama-header">RED DE CONTACTOS — ATENAS · OPERACIÓN MAR NEGRO</div>
-          <div class="telegrama-body">FECHA: VERANO 1915 · OPERACIÓN BÓSFORO<br>
-DE: COORDINADOR RED MEDITERRÁNEA<br>
-PARA: COMANDANTE EN CAMPO<br><br>
-Los puertos del Mar Negro están vigilados.<br>
-Para acceder a recursos debe demostrar<br>
-conocimiento preciso de la base de datos.<br><br>
-TABLA: puertos_atenas<br>
-Contactos registrados con capacidad logística.<br><br>
-Quien no conoce los datos, no pasa.<br>
-— RED MEDITERRÁNEA</div></div>
+          <div class="telegrama-sello">NOVO<br>ROSS<br>1915</div>
+          <div class="telegrama-header">CONTACTO BOLCHEVIQUE — NOVOTROITSKAYA · OPERACIÓN INTERIOR</div>
+          <div class="telegrama-body">FECHA: OTOÑO 1915 · INFILTRACIÓN INTERIOR<br>
+DE: CONTACTO LOCAL — NOVOTROITSKAYA<br>
+PARA: COMANDANTE OPERATIVO<br><br>
+Unidades confirmadas en campamento.<br>
+Rutas disponibles hacia Rostov, Volga<br>
+y Novocherkassk requieren asignación exacta.<br><br>
+TABLAS: unidades · rutas<br>
+Organizar el caos antes de que despierte el Zar.<br><br>
+— CONTACTO BOLCHEVIQUE</div>
+        </div>
       </div>
     </div>
 
-    <!-- COLUMNA LATERAL: Mapa + SQL CREATE + Botones -->
     <div class="col-l">
       <div class="fade-in-1">
-        <div class="section-label">&#128506; Ruta de la Misión</div>
+        <div class="section-label">Ruta de la Misión</div>
         <div class="mapa-mini">
           <div style="font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faded);margin-bottom:.4rem;position:relative;">Trayecto actual</div>
-          <div class="mapa-ruta">Venecia → Atenas → Dardanelos → Bósforo → Mar Negro</div>
+          <div class="mapa-ruta">Novorossiysk → Novotroitskaya → Rostov → Interior Ruso</div>
           <div style="margin-top:.8rem;position:relative;">
             <div style="font-family:var(--font-typewriter);font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-faded);margin-bottom:.3rem;">Progreso total:</div>
-            <div class="marcador-progreso"><div class="paso-mapa completado"></div>
+            <div class="marcador-progreso"><div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa activo"></div></div>
           </div>
         </div>
       </div>
       <div class="fade-in-2">
-        <div class="section-label">&#128190; Enunciado SQL — Estructura de Tablas</div>
+        <div class="section-label">Enunciado SQL — Estructura de Tablas</div>
         <div class="sql-panel">
           <div class="sql-header" style="color:var(--gold);">
             <div class="sql-dots">
@@ -136,41 +128,48 @@ Quien no conoce los datos, no pasa.<br>
             mysql — gran_guerra.sql
           </div>
           <div class="schema-box" style="border-color:rgba(184,146,42,.2);margin:.5rem 0 0;">
-            <div class="schema-lbl">&#128203; Estructura de tablas — Enunciado</div>
-            <pre class="sql-pre" style="color:#a8d4a0;">CREATE TABLE puertos_atenas (
-    id_contacto           INT PRIMARY KEY,
-    nombre_contacto       VARCHAR(50),
-    capacidad_soldados    INT,
-    capacidad_suministros INT,
-    barcos_disponibles    INT
+            <div class="schema-lbl">Estructura de tablas — Enunciado</div>
+            <pre class="sql-pre" style="color:#a8d4a0;">CREATE TABLE unidades (
+    id_unidad  INT PRIMARY KEY,
+    nombre     VARCHAR(50),
+    tipo       VARCHAR(30),
+    soldados   INT,
+    municion   INT
+);
+
+CREATE TABLE rutas (
+    id_ruta        INT PRIMARY KEY,
+    destino        VARCHAR(50),
+    distancia_km   INT,
+    prioridad      VARCHAR(20)
 );</pre>
           </div>
         </div>
       </div>
       <div class="fade-in-3" style="display:flex;flex-direction:column;gap:.7rem;">
-        <a href="ruta-sur-05.html" class="btn" style="text-align:center;justify-content:center;background:rgba(184,146,42,.85);color:var(--ink);border:1px solid rgba(184,146,42,.5);font-family:var(--font-typewriter);font-size:.75rem;letter-spacing:.12em;padding:.8rem 1rem;display:block;text-decoration:none;text-transform:uppercase;">Siguiente misión →</a>
-        <button id="btn-guardar2" class="btn btn-primary" style="text-align:center;justify-content:center;" onclick="document.getElementById('btn-guardar').click()">&#128190; Guardar progreso</button>
+        <a href="final.html" class="btn" style="text-align:center;justify-content:center;background:rgba(184,146,42,.85);color:var(--ink);border:1px solid rgba(184,146,42,.5);font-family:var(--font-typewriter);font-size:.75rem;letter-spacing:.12em;padding:.8rem 1rem;display:block;text-decoration:none;text-transform:uppercase;">Completar misión →</a>
+        <button id="btn-guardar2" class="btn btn-primary" style="text-align:center;justify-content:center;" onclick="document.getElementById('btn-guardar').click()">Guardar progreso</button>
         <a href="ruta-sur-03.html" class="btn-retroceder">← Misión anterior</a>
       </div>
     </div>
 
   </div>
 
-  </div>
-
-  <!-- TABLAS DE DATOS — fila horizontal completa -->
   <div class="datos-panel fade-in-3">
-    <div class="section-label">&#128451; Base de Datos Oficial — Datos de la Misión</div>
+    <div class="section-label">Base de Datos Oficial — Datos de la Misión</div>
     <div class="datos-scroll">
       <div class="db-col">
-              <div class="db-col-lbl">&#128451; puertos_atenas</div>
-              <table class="tabla-datos"><thead><tr><th>id</th><th>contacto</th><th>cap_soldados</th><th>cap_suministros</th><th>barcos</th></tr></thead><tbody><tr><td>1</td><td>Theo Marinakis</td><td>150</td><td>200</td><td>2</td></tr><tr><td>2</td><td>Eleni Kostas</td><td>100</td><td>120</td><td>1</td></tr><tr><td>3</td><td>Dimitrios Pappas</td><td>200</td><td>150</td><td>3</td></tr><tr><td>4</td><td>Andreas Laskaris</td><td>80</td><td>100</td><td>1</td></tr></tbody></table>
+              <div class="db-col-lbl">unidades</div>
+              <table class="tabla-datos"><thead><tr><th>id</th><th>nombre</th><th>tipo</th><th>soldados</th><th>municion</th></tr></thead><tbody><tr><td>1</td><td>Milicia Irlandesa</td><td>extranjera</td><td>80</td><td>120</td></tr><tr><td>2</td><td>Escolta Francesa</td><td>extranjera</td><td>40</td><td>90</td></tr><tr><td>3</td><td>Grupo Logístico Español</td><td>logística</td><td>25</td><td>40</td></tr><tr><td>4</td><td>Unidad Bolchevique 1</td><td>local</td><td>100</td><td>80</td></tr><tr><td>5</td><td>Unidad Bolchevique 2</td><td>local</td><td>60</td><td>50</td></tr><tr><td>6</td><td>Unidad Bolchevique 3</td><td>local</td><td>80</td><td>60</td></tr></tbody></table>
+            </div><div class="db-col">
+              <div class="db-col-lbl">rutas</div>
+              <table class="tabla-datos"><thead><tr><th>id</th><th>destino</th><th>distancia_km</th><th>prioridad</th></tr></thead><tbody><tr><td>1</td><td>Rostov</td><td>400</td><td>Alta</td></tr><tr><td>2</td><td>Volga</td><td>600</td><td>Media</td></tr><tr><td>3</td><td>Novocherkassk</td><td>500</td><td>Baja</td></tr></tbody></table>
             </div>
     </div>
   </div>
 
 </main>
 <script src="../js/main.js"></script>
-<script>initPuntosNivel(7, 7);</script>
+<script>initPuntosNivel(4,4);</script>
 </body>
 </html>

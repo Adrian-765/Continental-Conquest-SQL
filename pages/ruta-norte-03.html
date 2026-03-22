@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sombras sobre el Mediterráneo — SQL: La Gran Guerra</title>
+  <title>Tormenta — Equilibrio o Hundimiento</title>
   <link rel="stylesheet" href="../css/styles.css">
   <style>
     /* Igual que nivel-alemania original */
-    .nivel-layout{display:grid;grid-template-columns:1.15fr 0.85fr;gap:2rem;margin:1.5rem 0 1.2rem;}
+    .nivel-layout{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin:1.5rem 0 1.2rem;}
     @media(max-width:880px){.nivel-layout{grid-template-columns:1fr;}}
     .header-nivel{background:linear-gradient(135deg,rgba(26,20,9,.98),rgba(42,48,32,.95));border-bottom:3px solid var(--gold);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;}
     .nivel-badge{display:inline-block;background:var(--red-ink);color:var(--paper-warm);font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.2em;padding:.2rem .7rem;text-transform:uppercase;margin-bottom:.3rem;}
@@ -29,11 +29,11 @@
     .btn-retroceder:hover{background:rgba(184,146,42,.12);color:var(--gold);border-color:rgba(184,146,42,.5);}
     /* Tablas horizontales — fila inferior */
     .datos-panel{margin-bottom:1.5rem;}
-    .datos-scroll{display:flex;flex-direction:row;gap:0;overflow-x:auto;background:#0a0d06;border:1px solid rgba(184,146,42,.2);border-top:3px solid var(--gold);}
-    .db-col{flex:0 0 auto;border-right:1px solid rgba(184,146,42,.15);padding-bottom:.5rem;}
+    .datos-scroll{display:flex;flex-direction:column;gap:1.2rem;}
+    .db-col{background:#0a0d06;border:1px solid rgba(184,146,42,.2);border-top:3px solid var(--gold);overflow-x:auto;width:fit-content;}
     .db-col:last-child{border-right:none;}
     .db-col-lbl{font-family:var(--font-typewriter);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(184,146,42,.6);padding:.4rem .8rem .2rem;white-space:nowrap;border-bottom:1px solid rgba(184,146,42,.1);background:rgba(184,146,42,.04);}
-    .tabla-datos{border-collapse:collapse;font-family:var(--font-typewriter);font-size:.76rem;white-space:nowrap;width:100%;}
+    .tabla-datos{border-collapse:collapse;font-family:var(--font-typewriter);font-size:.76rem;white-space:nowrap;width:auto;}
     .tabla-datos th{background:var(--ink);color:var(--gold);padding:.35rem .75rem;text-align:left;letter-spacing:.07em;font-weight:normal;white-space:nowrap;}
     .tabla-datos td{padding:.3rem .75rem;border-bottom:1px solid rgba(184,146,42,.08);color:var(--paper-aged);white-space:nowrap;}
     .tabla-datos tr:last-child td{border-bottom:none;}.tabla-datos tr:hover td{background:rgba(184,146,42,.05);}
@@ -46,32 +46,31 @@
       <div class="nav-logo-text">SQL: La Gran Guerra</div>
       <div class="nav-logo-sub">Conquista y Diplomacia · 1914–1918</div>
     </a>
-    <div class="nav-center">Misión 4 de 7 · <span class='nombre-comandante'>Comandante</span> · Ruta Sur — Mediterráneo</div>
+    <div class="nav-center">Ruta Norte · Misión 3 de 6 · <span class='nombre-comandante'>Comandante</span></div>
     <div class="nav-actions">
-      <button id="btn-guardar" class="btn btn-primary" style="font-size:.72rem;padding:.5rem 1.2rem;">&#128190; Guardar partida</button>
+      <button id="btn-guardar" class="btn btn-primary" style="font-size:.72rem;padding:.5rem 1.2rem;">Guardar partida</button>
     </div>
   </div>
 </nav>
 <div class="ticker-wrap"><span class="ticker-content"><span class="ticker-sep">⬥</span></div>
 <div class="header-nivel">
   <div><div>
-    <div class="nivel-badge">Nivel 5 · Ruta Sur · Port-Henri d'Oran</div>
-    <div style="font-family:var(--font-typewriter);font-size:.78rem;letter-spacing:.1em;color:var(--gold-bright);font-weight:bold;">Sombras sobre el Mediterráneo</div>
-    <div style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.08em;color:var(--paper-dark);">Verano 1915 — Port-Henri d'Oran, Argelia Francesa</div>
+    <div class="nivel-badge">Nivel 7 · Ruta Norte · Mar del Norte</div>
+    <div style="font-family:var(--font-typewriter);font-size:.78rem;letter-spacing:.1em;color:var(--gold-bright);font-weight:bold;">Tormenta — Equilibrio o Hundimiento</div>
+    <div style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.08em;color:var(--paper-dark);">En ruta hacia Bergen · Mar del Norte · 1915</div>
   </div></div>
-  <div class="nivel-num">N·5</div>
+  <div class="nivel-num">N·7</div>
 </div>
 <div class="progreso-bar">
   <span style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.12em;color:var(--paper-dark);text-transform:uppercase;white-space:nowrap;">Progreso de la misión:</span>
-  <div class="barra-nivel"><div class="punto-nivel hecho"></div> <div class="punto-nivel hecho"></div> <div class="punto-nivel hecho"></div> <div class="punto-nivel actual"></div> <div class="punto-nivel"></div> <div class="punto-nivel"></div> <div class="punto-nivel"></div>
-</div>
+  <div class="barra-nivel"><div class="punto-nivel hecho"></div> <div class="punto-nivel hecho"></div> <div class="punto-nivel actual"></div> <div class="punto-nivel "></div> <div class="punto-nivel "></div></div></div>
 </div>
 <div id="libreta-flotante">
-  <button id="libreta-toggle">&#128211; Notas de Campaña <span class="libreta-arrow">&#9660;</span></button>
+  <button id="libreta-toggle">Notas de Campaña <span class="libreta-arrow">&#9660;</span></button>
   <div id="libreta-body">
     <textarea id="libreta-notas" placeholder="Anote sus observaciones..."></textarea>
     <div id="libreta-footer">
-      <span>Libreta del Comandante</span>
+      <span>Libreta de Campaña</span>
       <span id="libreta-guardado" style="color:var(--khaki-faded);"></span>
     </div>
   </div>
@@ -85,50 +84,48 @@
     <!-- COLUMNA PRINCIPAL: Diario + Informe -->
     <div class="col-p">
       <div class="fade-in-1">
-        <div class="section-label">📔 Diario del Comandante — Entrada 16</div>
+        <div class="section-label">Diario de Campaña — Ruta Norte, Entrada 3</div>
         <div class="diario-entrada">
-          <div class="diario-fecha">Verano 1915 — Port-Henri d'Oran, Argelia Francesa</div>
-          <p>Hoy tomé la decisión que marcaría la ruta de nuestra misión: no cruzaremos los Alpes. Siguiendo la recomendación del Generaloberst von Adlerheim, nos replegamos hacia la costa francesa.</p>
-<p>Alcanzamos Port-Saint-Aubin-sur-Mer. Aquí nos esperaba Kapitän Otto Weissmann. Su embarcación, <em>Die Morgenstern</em>, está registrada para transportar suministros agrícolas hacia Argelia Francesa. El encuentro fue tenso; debimos pronunciar la contraseña: <em>"Rhein und Schatten"</em>.</p>
-<p>Finalmente desembarcamos en Port-Henri d'Oran. Allí sobornamos a Youssef Ben Amar, un pescador local, quien aceptó trasladarnos clandestinamente hacia la península itálica.</p>
-<p>Pero antes de continuar, un oficial francés exige revisar la base de datos logística. <strong>El juego de memoria comienza.</strong></p>
+          <div class="diario-fecha">En ruta hacia Bergen · Mar del Norte · 1915</div>
+          <p>La explosión fue inesperada. No un proyectil enemigo, sino un error en la estiba de munición que hizo detonar media caja. El barco escoró a babor de inmediato. Tres hombres al suelo. Los crujidos del casco llenaron el aire.</p>
+<p>El capitán Eriksen no perdió la calma. "Necesito cifras, no valentía", dijo mirándome. "Si el desequilibrio entre babor y estribor supera los diez toneladas, no podemos maniobrar. Seremos un blanco inmóvil."</p>
+<p>Me lancé sobre los registros de carga. Cada minuto contaba. En el horizonte, a través de los ojos de buey inundados de spray, podía distinguir la silueta de lo que parecía ser otro buque. No podíamos permitirnos estar detenidos.</p>
         </div>
       </div>
       <div class="fade-in-2">
-        <div class="section-label">📨 Informe de Inteligencia</div>
+        <div class="section-label">Informe de Inteligencia</div>
         <div class="telegrama" style="transform:rotate(-.5deg);">
-          <div class="telegrama-sello">WEISS<br>MANN<br>1915</div>
-          <div class="telegrama-header">KAPITÄN OTTO WEISSMANN — DIE MORGENSTERN · PORT-SAINT-AUBIN</div>
-          <div class="telegrama-body">FECHA: VERANO 1915 · OPERACIÓN MEDITERRÁNEO<br>
-DE: KAPITÄN WEISSMANN<br>
-PARA: COMANDANTE EMBARCADO<br><br>
-"Si quiere que lo lleve más allá de Argelia…<br>
-demuéstreme que sabe organizar una operación<br>
-sin que el sistema colapse."<br><br>
-Un oficial francés en Port-Henri exige revisar<br>
-la base de datos logística antes de autorizar el traslado.<br><br>
-TABLA: operacion_mediterraneo<br>
-Unidades a bordo: Milicia Irlandesa · Escolta Francesa<br>
-Grupo Logístico Español · Grupo Avanzado Alemán<br><br>
-— WEISSMANN</div></div>
+          <div class="telegrama-sello">CAPI<br>TÁN<br>ERIK</div>
+          <div class="telegrama-header">CAPITÁN ERIKSEN — PUENTE DE MANDO · EMERGENCIA</div>
+          <div class="telegrama-body">SITUACIÓN: EMERGENCIA · MAR DEL NORTE · 1915<br>
+DE: CAPITÁN ERIKSEN<br>
+PARA: OFICIAL DE CARGA<br><br>
+Explosión en sala de carga. Barco escorado a babor.<br>
+Si diferencia babor-estribor supera 10 toneladas:<br>
+— Pérdida de maniobrabilidad<br>
+— Objetivo estático para el enemigo<br><br>
+TABLA: cargas_mar_norte<br>
+Distribuidas por posición: Babor / Centro / Estribor<br><br>
+Calcule el desequilibrio. Actúe. Ahora.<br>
+— ERIKSEN</div></div>
       </div>
     </div>
 
     <!-- COLUMNA LATERAL: Mapa + SQL CREATE + Botones -->
     <div class="col-l">
       <div class="fade-in-1">
-        <div class="section-label">&#128506; Ruta de la Misión</div>
+        <div class="section-label">Ruta de la Misión</div>
         <div class="mapa-mini">
           <div style="font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faded);margin-bottom:.4rem;position:relative;">Trayecto actual</div>
-          <div class="mapa-ruta">Breisach → Barcelona → Port-Henri d'Oran → Chioggia → Venecia</div>
+          <div class="mapa-ruta">Newcastle → Mar del Norte → Bergen, Noruega</div>
           <div style="margin-top:.8rem;position:relative;">
             <div style="font-family:var(--font-typewriter);font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-faded);margin-bottom:.3rem;">Progreso total:</div>
-            <div class="marcador-progreso"><div class="paso-mapa completado"></div>
+            <div class="marcador-progreso"><div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa activo"></div><div class="paso-mapa "></div><div class="paso-mapa "></div></div>
           </div>
         </div>
       </div>
       <div class="fade-in-2">
-        <div class="section-label">&#128190; Enunciado SQL — Estructura de Tablas</div>
+        <div class="section-label">Enunciado SQL — Estructura de Tablas</div>
         <div class="sql-panel">
           <div class="sql-header" style="color:var(--gold);">
             <div class="sql-dots">
@@ -139,42 +136,33 @@ Grupo Logístico Español · Grupo Avanzado Alemán<br><br>
             mysql — gran_guerra.sql
           </div>
           <div class="schema-box" style="border-color:rgba(184,146,42,.2);margin:.5rem 0 0;">
-            <div class="schema-lbl">&#128203; Estructura de tablas — Enunciado</div>
-            <pre class="sql-pre" style="color:#a8d4a0;">CREATE TABLE operacion_mediterraneo (
-    id_grupo      INT PRIMARY KEY,
-    unidad        VARCHAR(50),
-    soldados      INT,
-    municion      INT,
-    puerto_salida VARCHAR(50),
-    coste         INT
+            <div class="schema-lbl">Estructura de tablas — Enunciado</div>
+            <pre class="sql-pre" style="color:#a8d4a0;">CREATE TABLE cargas_mar_norte (
+    id_carga INT PRIMARY KEY,
+    peso     INT,
+    posicion VARCHAR(10)   -- 'Babor', 'Centro', 'Estribor'
 );</pre>
           </div>
         </div>
       </div>
       <div class="fade-in-3" style="display:flex;flex-direction:column;gap:.7rem;">
-        <a href="ruta-sur-01.html" class="btn" style="text-align:center;justify-content:center;background:rgba(184,146,42,.85);color:var(--ink);border:1px solid rgba(184,146,42,.5);font-family:var(--font-typewriter);font-size:.75rem;letter-spacing:.12em;padding:.8rem 1rem;display:block;text-decoration:none;text-transform:uppercase;">Siguiente misión →</a>
-        <button id="btn-guardar2" class="btn btn-primary" style="text-align:center;justify-content:center;" onclick="document.getElementById('btn-guardar').click()">&#128190; Guardar progreso</button>
-        <a href="nivel-03.html" class="btn-retroceder">← Misión anterior</a>
+        <a href="ruta-norte-04.html" class="btn" style="text-align:center;justify-content:center;background:var(--khaki-mid);color:#c8e0a0;border:1px solid rgba(184,146,42,.5);font-family:var(--font-typewriter);font-size:.75rem;letter-spacing:.12em;padding:.8rem 1rem;display:block;text-decoration:none;text-transform:uppercase;">Siguiente misión →</a>
+        <button id="btn-guardar2" class="btn btn-primary" style="text-align:center;justify-content:center;" onclick="document.getElementById('btn-guardar').click()">Guardar progreso</button>
+        <a href="ruta-norte-02.html" class="btn-retroceder">← Misión anterior</a>
       </div>
     </div>
 
   </div>
 
-  </div>
-
   <!-- TABLAS DE DATOS — fila horizontal completa -->
   <div class="datos-panel fade-in-3">
-    <div class="section-label">&#128451; Base de Datos Oficial — Datos de la Misión</div>
-    <div class="datos-scroll">
-      <div class="db-col">
-              <div class="db-col-lbl">&#128451; operacion_mediterraneo</div>
-              <table class="tabla-datos"><thead><tr><th>id</th><th>unidad</th><th>soldados</th><th>municion</th><th>puerto</th><th>coste</th></tr></thead><tbody><tr><td>1</td><td>Milicia Irlandesa</td><td>80</td><td>120</td><td>Port-Henri</td><td>3.000</td></tr><tr><td>2</td><td>Escolta Francesa</td><td>40</td><td>90</td><td>Port-Henri</td><td>1.500</td></tr><tr><td>3</td><td>Grupo Logístico</td><td>25</td><td>40</td><td>Port-Henri</td><td>1.000</td></tr><tr><td>4</td><td>Grupo Alemán</td><td>30</td><td>50</td><td>Marsella</td><td>1.200</td></tr></tbody></table>
-            </div>
-    </div>
+    <div class="section-label">Base de Datos Oficial — Datos de la Misión</div>
+    <div class="datos-scroll"><div class="db-col"><div class="db-col-lbl">cargas_mar_norte</div><table class="tabla-datos"><thead><tr><th>id_carga</th><th>peso</th><th>posicion</th></tr></thead><tbody><tr><td>1</td><td>42</td><td>Babor</td></tr><tr><td>2</td><td>18</td><td>Babor</td></tr><tr><td>3</td><td>15</td><td>Babor</td></tr><tr><td>4</td><td>25</td><td>Centro</td></tr><tr><td>5</td><td>10</td><td>Centro</td></tr><tr><td>6</td><td>37</td><td>Estribor</td></tr><tr><td>7</td><td>12</td><td>Estribor</td></tr><tr><td>8</td><td>8</td><td>Estribor</td></tr></tbody></table></div></div>
   </div>
+</div>
 
 </main>
 <script src="../js/main.js"></script>
-<script>initPuntosNivel(7, 4);</script>
+<script>initPuntosNivel(6,3);</script>
 </body>
 </html>

@@ -29,11 +29,11 @@
     .btn-retroceder:hover{background:rgba(184,146,42,.12);color:var(--gold);border-color:rgba(184,146,42,.5);}
     /* Tablas horizontales — fila inferior */
     .datos-panel{margin-bottom:1.5rem;}
-    .datos-scroll{display:flex;flex-direction:row;gap:0;overflow-x:auto;background:#0a0d06;border:1px solid rgba(184,146,42,.2);border-top:3px solid var(--gold);}
+    .datos-scroll{display:flex;flex-wrap:nowrap;width:fit-content;max-width:100%;overflow-x:auto;background:#0a0d06;border:1px solid rgba(184,146,42,.2);border-top:3px solid var(--gold);}
     .db-col{flex:0 0 auto;border-right:1px solid rgba(184,146,42,.15);padding-bottom:.5rem;}
     .db-col:last-child{border-right:none;}
     .db-col-lbl{font-family:var(--font-typewriter);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(184,146,42,.6);padding:.4rem .8rem .2rem;white-space:nowrap;border-bottom:1px solid rgba(184,146,42,.1);background:rgba(184,146,42,.04);}
-    .tabla-datos{border-collapse:collapse;font-family:var(--font-typewriter);font-size:.76rem;white-space:nowrap;width:100%;}
+    .tabla-datos{border-collapse:collapse;font-family:var(--font-typewriter);font-size:.76rem;white-space:nowrap;width:auto;}
     .tabla-datos th{background:var(--ink);color:var(--gold);padding:.35rem .75rem;text-align:left;letter-spacing:.07em;font-weight:normal;white-space:nowrap;}
     .tabla-datos td{padding:.3rem .75rem;border-bottom:1px solid rgba(184,146,42,.08);color:var(--paper-aged);white-space:nowrap;}
     .tabla-datos tr:last-child td{border-bottom:none;}.tabla-datos tr:hover td{background:rgba(184,146,42,.05);}
@@ -48,7 +48,7 @@
     </a>
     <div class="nav-center">Misión 2 de 7 · <span class='nombre-comandante'>Comandante</span> · Irlanda → Francia</div>
     <div class="nav-actions">
-      <button id="btn-guardar" class="btn btn-primary" style="font-size:.72rem;padding:.5rem 1.2rem;">&#128190; Guardar partida</button>
+      <button id="btn-guardar" class="btn btn-primary" style="font-size:.72rem;padding:.5rem 1.2rem;">Guardar partida</button>
     </div>
   </div>
 </nav>
@@ -67,11 +67,11 @@
 </div>
 </div>
 <div id="libreta-flotante">
-  <button id="libreta-toggle">&#128211; Notas de Campaña <span class="libreta-arrow">&#9660;</span></button>
+  <button id="libreta-toggle">Notas de Campaña <span class="libreta-arrow">&#9660;</span></button>
   <div id="libreta-body">
     <textarea id="libreta-notas" placeholder="Anote sus observaciones..."></textarea>
     <div id="libreta-footer">
-      <span>Libreta del Comandante</span>
+      <span>Libreta de Campaña</span>
       <span id="libreta-guardado" style="color:var(--khaki-faded);"></span>
     </div>
   </div>
@@ -85,7 +85,7 @@
     <!-- COLUMNA PRINCIPAL: Diario + Informe -->
     <div class="col-p">
       <div class="fade-in-1">
-        <div class="section-label">📔 Diario del Comandante — Entrada 15</div>
+        <div class="section-label">Diario de Campaña — Entrada 15</div>
         <div class="diario-entrada">
           <div class="diario-fecha">Primavera de 1915 — Palacio de Versalles</div>
           <p>Francia nos recibe con un silencio inquietante. Las calles de la costa parecen vacías, como si la guerra misma contuviera la respiración ante nuestro paso. Tras semanas de viaje desde Irlanda, la milicia y yo nos adentramos en territorio enemigo, y cada paso se siente más peligroso que el anterior.</p>
@@ -95,7 +95,7 @@
         </div>
       </div>
       <div class="fade-in-2">
-        <div class="section-label">📨 Informe de Inteligencia</div>
+        <div class="section-label">Informe de Inteligencia</div>
         <div class="telegrama" style="transform:rotate(-.5deg);">
           <div class="telegrama-sello">CONTACTO<br>ALFA<br>1915</div>
           <div class="telegrama-header">CONTACTO SECRETO — PALACIO DE VERSALLES · IDENTIDAD RESERVADA</div>
@@ -115,7 +115,7 @@ Sin esta información, la travesía por Francia es un suicidio.<br>
     <!-- COLUMNA LATERAL: Mapa + SQL CREATE + Botones -->
     <div class="col-l">
       <div class="fade-in-1">
-        <div class="section-label">&#128506; Ruta de la Misión</div>
+        <div class="section-label">Ruta de la Misión</div>
         <div class="mapa-mini">
           <div style="font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faded);margin-bottom:.4rem;position:relative;">Trayecto actual</div>
           <div class="mapa-ruta">Dublín → Atlántico → Costa francesa → Versalles</div>
@@ -126,7 +126,7 @@ Sin esta información, la travesía por Francia es un suicidio.<br>
         </div>
       </div>
       <div class="fade-in-2">
-        <div class="section-label">&#128190; Enunciado SQL — Estructura de Tablas</div>
+        <div class="section-label">Enunciado SQL — Estructura de Tablas</div>
         <div class="sql-panel">
           <div class="sql-header" style="color:var(--gold);">
             <div class="sql-dots">
@@ -137,7 +137,7 @@ Sin esta información, la travesía por Francia es un suicidio.<br>
             mysql — gran_guerra.sql
           </div>
           <div class="schema-box" style="border-color:rgba(184,146,42,.2);margin:.5rem 0 0;">
-            <div class="schema-lbl">&#128203; Estructura de tablas — Enunciado</div>
+            <div class="schema-lbl">Estructura de tablas — Enunciado</div>
             <pre class="sql-pre" style="color:#a8d4a0;">CREATE TABLE unidades (
     id_unidad   INT PRIMARY KEY,
     nombre      VARCHAR(50),
@@ -164,8 +164,8 @@ CREATE TABLE rutas (
         </div>
       </div>
       <div class="fade-in-3" style="display:flex;flex-direction:column;gap:.7rem;">
-        <a href="nivel-03.html" class="btn" style="text-align:center;justify-content:center;background:rgba(184,146,42,.85);color:var(--ink);border:1px solid rgba(184,146,42,.5);font-family:var(--font-typewriter);font-size:.75rem;letter-spacing:.12em;padding:.8rem 1rem;display:block;text-decoration:none;text-transform:uppercase;">Siguiente misión →</a>
-        <button id="btn-guardar2" class="btn btn-primary" style="text-align:center;justify-content:center;" onclick="document.getElementById('btn-guardar').click()">&#128190; Guardar progreso</button>
+        <a href="nivel-alemania.html" class="btn" style="text-align:center;justify-content:center;background:rgba(184,146,42,.85);color:var(--ink);border:1px solid rgba(184,146,42,.5);font-family:var(--font-typewriter);font-size:.75rem;letter-spacing:.12em;padding:.8rem 1rem;display:block;text-decoration:none;text-transform:uppercase;">Siguiente misión →</a>
+        <button id="btn-guardar2" class="btn btn-primary" style="text-align:center;justify-content:center;" onclick="document.getElementById('btn-guardar').click()">Guardar progreso</button>
         <a href="nivel-01.html" class="btn-retroceder">← Misión anterior</a>
       </div>
     </div>
@@ -176,16 +176,16 @@ CREATE TABLE rutas (
 
   <!-- TABLAS DE DATOS — fila horizontal completa -->
   <div class="datos-panel fade-in-3">
-    <div class="section-label">&#128451; Base de Datos Oficial — Datos de la Misión</div>
+    <div class="section-label">Base de Datos Oficial — Datos de la Misión</div>
     <div class="datos-scroll">
       <div class="db-col">
-              <div class="db-col-lbl">&#128451; unidades</div>
+              <div class="db-col-lbl">unidades</div>
               <table class="tabla-datos"><thead><tr><th>id</th><th>nombre</th><th>pais</th><th>tipo</th><th>tropas</th></tr></thead><tbody><tr><td>1</td><td>Milicia Irlandesa</td><td>Irlanda</td><td>infantería</td><td>80</td></tr><tr><td>2</td><td>Escolta Francesa</td><td>Francia</td><td>caballería</td><td>40</td></tr><tr><td>3</td><td>Grupo Español</td><td>España</td><td>logística</td><td>25</td></tr><tr><td>4</td><td>Batallón Bretón</td><td>Francia</td><td>infantería</td><td>60</td></tr></tbody></table>
             </div><div class="db-col">
-              <div class="db-col-lbl">&#128451; suministros</div>
+              <div class="db-col-lbl">suministros</div>
               <table class="tabla-datos"><thead><tr><th>id</th><th>id_unidad</th><th>alimento</th><th>municion</th><th>descuento</th></tr></thead><tbody><tr><td>1</td><td>1</td><td>200</td><td>120</td><td>0.05</td></tr><tr><td>2</td><td>2</td><td>150</td><td>90</td><td>0.10</td></tr><tr><td>3</td><td>3</td><td>100</td><td>40</td><td>0.00</td></tr></tbody></table>
             </div><div class="db-col">
-              <div class="db-col-lbl">&#128451; rutas</div>
+              <div class="db-col-lbl">rutas</div>
               <table class="tabla-datos"><thead><tr><th>id</th><th>origen</th><th>destino</th><th>nivel_riesgo</th></tr></thead><tbody><tr><td>1</td><td>Dublin</td><td>Liverpool</td><td>2</td></tr><tr><td>2</td><td>Liverpool</td><td>Calais</td><td>3</td></tr><tr><td>3</td><td>Calais</td><td>París</td><td>1</td></tr><tr><td>4</td><td>París</td><td>Versalles</td><td>4</td></tr></tbody></table>
             </div>
     </div>

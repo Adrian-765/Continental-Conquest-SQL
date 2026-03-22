@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Entrada al Imperio Ruso — SQL: La Gran Guerra</title>
+  <title>Frontera Sueca — Asignación de Convoyes</title>
   <link rel="stylesheet" href="../css/styles.css">
   <style>
     /* Igual que nivel-alemania original */
-    .nivel-layout{display:grid;grid-template-columns:1.15fr 0.85fr;gap:2rem;margin:1.5rem 0 1.2rem;}
+    .nivel-layout{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin:1.5rem 0 1.2rem;}
     @media(max-width:880px){.nivel-layout{grid-template-columns:1fr;}}
     .header-nivel{background:linear-gradient(135deg,rgba(26,20,9,.98),rgba(42,48,32,.95));border-bottom:3px solid var(--gold);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;}
     .nivel-badge{display:inline-block;background:var(--red-ink);color:var(--paper-warm);font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.2em;padding:.2rem .7rem;text-transform:uppercase;margin-bottom:.3rem;}
@@ -29,11 +29,11 @@
     .btn-retroceder:hover{background:rgba(184,146,42,.12);color:var(--gold);border-color:rgba(184,146,42,.5);}
     /* Tablas horizontales — fila inferior */
     .datos-panel{margin-bottom:1.5rem;}
-    .datos-scroll{display:flex;flex-direction:row;gap:0;overflow-x:auto;background:#0a0d06;border:1px solid rgba(184,146,42,.2);border-top:3px solid var(--gold);}
-    .db-col{flex:0 0 auto;border-right:1px solid rgba(184,146,42,.15);padding-bottom:.5rem;}
+    .datos-scroll{display:flex;flex-direction:column;gap:1.2rem;}
+    .db-col{background:#0a0d06;border:1px solid rgba(184,146,42,.2);border-top:3px solid var(--gold);overflow-x:auto;width:fit-content;}
     .db-col:last-child{border-right:none;}
     .db-col-lbl{font-family:var(--font-typewriter);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(184,146,42,.6);padding:.4rem .8rem .2rem;white-space:nowrap;border-bottom:1px solid rgba(184,146,42,.1);background:rgba(184,146,42,.04);}
-    .tabla-datos{border-collapse:collapse;font-family:var(--font-typewriter);font-size:.76rem;white-space:nowrap;width:100%;}
+    .tabla-datos{border-collapse:collapse;font-family:var(--font-typewriter);font-size:.76rem;white-space:nowrap;width:auto;}
     .tabla-datos th{background:var(--ink);color:var(--gold);padding:.35rem .75rem;text-align:left;letter-spacing:.07em;font-weight:normal;white-space:nowrap;}
     .tabla-datos td{padding:.3rem .75rem;border-bottom:1px solid rgba(184,146,42,.08);color:var(--paper-aged);white-space:nowrap;}
     .tabla-datos tr:last-child td{border-bottom:none;}.tabla-datos tr:hover td{background:rgba(184,146,42,.05);}
@@ -46,32 +46,31 @@
       <div class="nav-logo-text">SQL: La Gran Guerra</div>
       <div class="nav-logo-sub">Conquista y Diplomacia · 1914–1918</div>
     </a>
-    <div class="nav-center">Ruta Sur · <span class='nombre-comandante'>Comandante</span> · Novorossiysk</div>
+    <div class="nav-center">Ruta Norte · Misión 5 de 6 · <span class='nombre-comandante'>Comandante</span></div>
     <div class="nav-actions">
-      <button id="btn-guardar" class="btn btn-primary" style="font-size:.72rem;padding:.5rem 1.2rem;">&#128190; Guardar partida</button>
+      <button id="btn-guardar" class="btn btn-primary" style="font-size:.72rem;padding:.5rem 1.2rem;">Guardar partida</button>
     </div>
   </div>
 </nav>
 <div class="ticker-wrap"><span class="ticker-content"><span class="ticker-sep">⬥</span></div>
 <div class="header-nivel">
   <div><div>
-    <div class="nivel-badge">Nivel 8 · Ruta Sur · Novorossiysk</div>
-    <div style="font-family:var(--font-typewriter);font-size:.78rem;letter-spacing:.1em;color:var(--gold-bright);font-weight:bold;">Entrada al Imperio Ruso</div>
-    <div style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.08em;color:var(--paper-dark);">Otoño 1915 — Novorossiysk, Mar Negro</div>
+    <div class="nivel-badge">Nivel 9 · Ruta Norte · Frontera Sueca</div>
+    <div style="font-family:var(--font-typewriter);font-size:.78rem;letter-spacing:.1em;color:var(--gold-bright);font-weight:bold;">Frontera Sueca — Asignación de Convoyes</div>
+    <div style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.08em;color:var(--paper-dark);">Frontera Sueca · 1916</div>
   </div></div>
-  <div class="nivel-num">N·8</div>
+  <div class="nivel-num">N·9</div>
 </div>
 <div class="progreso-bar">
   <span style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.12em;color:var(--paper-dark);text-transform:uppercase;white-space:nowrap;">Progreso de la misión:</span>
-  <div class="barra-nivel"><div class="punto-nivel hecho"></div> <div class="punto-nivel hecho"></div> <div class="punto-nivel hecho"></div> <div class="punto-nivel hecho"></div> <div class="punto-nivel hecho"></div> <div class="punto-nivel hecho"></div> <div class="punto-nivel actual"></div>
-</div>
+  <div class="barra-nivel"><div class="punto-nivel hecho"></div> <div class="punto-nivel hecho"></div> <div class="punto-nivel hecho"></div> <div class="punto-nivel hecho"></div> <div class="punto-nivel actual"></div></div></div>
 </div>
 <div id="libreta-flotante">
-  <button id="libreta-toggle">&#128211; Notas de Campaña <span class="libreta-arrow">&#9660;</span></button>
+  <button id="libreta-toggle">Notas de Campaña <span class="libreta-arrow">&#9660;</span></button>
   <div id="libreta-body">
     <textarea id="libreta-notas" placeholder="Anote sus observaciones..."></textarea>
     <div id="libreta-footer">
-      <span>Libreta del Comandante</span>
+      <span>Libreta de Campaña</span>
       <span id="libreta-guardado" style="color:var(--khaki-faded);"></span>
     </div>
   </div>
@@ -85,46 +84,46 @@
     <!-- COLUMNA PRINCIPAL: Diario + Informe -->
     <div class="col-p">
       <div class="fade-in-1">
-        <div class="section-label">📔 Diario del Comandante</div>
+        <div class="section-label">Diario de Campaña — Ruta Norte, Entrada 5</div>
         <div class="diario-entrada">
-          <div class="diario-fecha">Otoño 1915 — Novorossiysk, Mar Negro</div>
-          <p>El puerto de Novorossiysk queda atrás, y la milicia avanza con paso medido hacia el corazón del Imperio Ruso. Las primeras carreteras y ferrocarriles revelan un paisaje vasto y ajeno: llanuras interminables, bosques que bordean el Don, y pequeños pueblos donde la vida continúa bajo la atenta mirada del Zar.</p>
-<p>Debemos infiltrarnos, coordinar contactos locales y preparar la desestabilización desde dentro. La alianza con los bolcheviques es puramente funcional. Ellos creen que luchamos por derrocar al Zar; nosotros, en cambio, buscamos frenar la consolidación del poder ruso tras la derrota de las potencias centrales.</p>
-<p>Al llegar a Novotroitskaya, establecemos un campamento temporal. Carretas cargadas, almacenes de munición y caballos se disponen estratégicamente. Los contactos bolcheviques nos observan con cautela. Antes de continuar, debo evaluar la capacidad de organización de la milicia.</p>
+          <div class="diario-fecha">Frontera Sueca · 1916</div>
+          <p>La frontera sueca es una línea de pinos y silencio. Los suecos son neutrales, pero no ingenuos. El oficial de fronteras nos explicó el problema con una frialdad matemática que admiro: no podemos mover toda la carga en un solo convoy porque el ferrocarril no lo soporta.</p>
+<p>"No me pregunte si es posible políticamente", dijo. "Pregúnteme si es posible matemáticamente." Y esa, pensé, es exactamente la pregunta correcta en este momento.</p>
+<p>Tenemos tres convoyes con capacidades diferentes y cuatro tipos de carga. El margen de error es cero. Si una sola asignación supera la capacidad de un convoy, todo se detiene. Y detenerse aquí, a estas alturas, es el final de la misión.</p>
         </div>
       </div>
       <div class="fade-in-2">
-        <div class="section-label">📨 Informe de Inteligencia</div>
+        <div class="section-label">Informe de Inteligencia</div>
         <div class="telegrama" style="transform:rotate(-.5deg);">
-          <div class="telegrama-sello">NOVO<br>ROSS<br>1915</div>
-          <div class="telegrama-header">COORDINADOR BOLCHEVIQUE — NOVOTROITSKAYA · RED INTERIOR</div>
-          <div class="telegrama-body">FECHA: OTOÑO 1915 · FASE INFILTRACIÓN<br>
-DE: COORDINADOR LOCAL<br>
+          <div class="telegrama-sello">SUECIA<br>FRON<br>TERA</div>
+          <div class="telegrama-header">CONTROL FERROVIARIO — FRONTERA SUECO-NORUEGA</div>
+          <div class="telegrama-body">FECHA: 1916 · ASIGNACIÓN DE CONVOYES — FRONTERA SUECA<br>
+DE: OFICIAL DE FRONTERAS<br>
 PARA: COMANDANTE OPERATIVO<br><br>
-Cada unidad maneja información dispersa:<br>
-soldados, armas, suministros, posiciones.<br>
-Todo debe unificarse antes de avanzar.<br><br>
-TABLAS: unidades, rutas<br>
-Un error logístico expone la misión.<br><br>
-— RED INTERIOR</div></div>
+Las capacidades ferroviarias son fijas.<br>
+La carga total debe distribuirse entre los convoyes<br>
+disponibles sin superar ninguna capacidad máxima.<br><br>
+TABLAS: convoyes, cargas<br>
+Si la matemática falla, la operación se detiene.<br><br>
+— CONTROL FERROVIARIO SUECO</div></div>
       </div>
     </div>
 
     <!-- COLUMNA LATERAL: Mapa + SQL CREATE + Botones -->
     <div class="col-l">
       <div class="fade-in-1">
-        <div class="section-label">&#128506; Ruta de la Misión</div>
+        <div class="section-label">Ruta de la Misión</div>
         <div class="mapa-mini">
           <div style="font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faded);margin-bottom:.4rem;position:relative;">Trayecto actual</div>
-          <div class="mapa-ruta">Mar Negro → Novorossiysk → Imperio Ruso</div>
+          <div class="mapa-ruta">Bergen → Frontera Sueca → Finlandia → Arkhangelsk</div>
           <div style="margin-top:.8rem;position:relative;">
             <div style="font-family:var(--font-typewriter);font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-faded);margin-bottom:.3rem;">Progreso total:</div>
-            <div class="marcador-progreso"><div class="paso-mapa completado"></div>
+            <div class="marcador-progreso"><div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa completado"></div><div class="paso-mapa activo"></div></div>
           </div>
         </div>
       </div>
       <div class="fade-in-2">
-        <div class="section-label">&#128190; Enunciado SQL — Estructura de Tablas</div>
+        <div class="section-label">Enunciado SQL — Estructura de Tablas</div>
         <div class="sql-panel">
           <div class="sql-header" style="color:var(--gold);">
             <div class="sql-dots">
@@ -135,59 +134,46 @@ Un error logístico expone la misión.<br><br>
             mysql — gran_guerra.sql
           </div>
           <div class="schema-box" style="border-color:rgba(184,146,42,.2);margin:.5rem 0 0;">
-            <div class="schema-lbl">&#128203; Estructura de tablas — Enunciado</div>
-            <pre class="sql-pre" style="color:#a8d4a0;">CREATE TABLE unidades (
-    id_unidad    INT PRIMARY KEY,
-    nombre_unidad VARCHAR(50),
-    tipo         VARCHAR(20),
-    soldados     INT,
-    municion     INT
+            <div class="schema-lbl">Estructura de tablas — Enunciado</div>
+            <pre class="sql-pre" style="color:#a8d4a0;">CREATE TABLE aliados (
+    id_aliado   INT PRIMARY KEY,
+    nombre      VARCHAR(50),
+    tropas      INT,
+    suministros INT
 );
 
-CREATE TABLE rutas (
-    id_ruta    INT PRIMARY KEY,
-    destino    VARCHAR(50),
-    distancia_km INT,
-    prioridad  VARCHAR(10)
+CREATE TABLE voluntarios_irlandeses (
+    id_voluntario INT PRIMARY KEY,
+    region        VARCHAR(50),
+    efectivos     INT
 );
 
-CREATE TABLE asignaciones (
-    id_asignacion     INT PRIMARY KEY,
-    id_unidad         INT,
-    id_ruta           INT,
-    soldados_asignados INT,
-    municion_asignada  INT
+CREATE TABLE frentes_europeos (
+    id_frente       INT PRIMARY KEY,
+    nombre          VARCHAR(50),
+    presion_militar INT
 );</pre>
           </div>
         </div>
       </div>
       <div class="fade-in-3" style="display:flex;flex-direction:column;gap:.7rem;">
-        <a href="ruta-sur-06.html" class="btn" style="text-align:center;justify-content:center;background:rgba(184,146,42,.85);color:var(--ink);border:1px solid rgba(184,146,42,.5);font-family:var(--font-typewriter);font-size:.75rem;letter-spacing:.12em;padding:.8rem 1rem;display:block;text-decoration:none;text-transform:uppercase;">Siguiente misión →</a>
-        <button id="btn-guardar2" class="btn btn-primary" style="text-align:center;justify-content:center;" onclick="document.getElementById('btn-guardar').click()">&#128190; Guardar progreso</button>
-        <a href="ruta-sur-04.html" class="btn-retroceder">← Misión anterior</a>
+        <a href="final.html" class="btn" style="text-align:center;justify-content:center;background:var(--khaki-mid);color:#c8e0a0;border:1px solid rgba(184,146,42,.5);font-family:var(--font-typewriter);font-size:.75rem;letter-spacing:.12em;padding:.8rem 1rem;display:block;text-decoration:none;text-transform:uppercase;">Completar misión →</a>
+        <button id="btn-guardar2" class="btn btn-primary" style="text-align:center;justify-content:center;" onclick="document.getElementById('btn-guardar').click()">Guardar progreso</button>
+        <a href="ruta-norte-04.html" class="btn-retroceder">← Misión anterior</a>
       </div>
     </div>
 
   </div>
 
-  </div>
-
   <!-- TABLAS DE DATOS — fila horizontal completa -->
   <div class="datos-panel fade-in-3">
-    <div class="section-label">&#128451; Base de Datos Oficial — Datos de la Misión</div>
-    <div class="datos-scroll">
-      <div class="db-col">
-              <div class="db-col-lbl">&#128451; unidades</div>
-              <table class="tabla-datos"><thead><tr><th>id</th><th>nombre</th><th>tipo</th><th>soldados</th><th>municion</th></tr></thead><tbody><tr><td>1</td><td>Milicia Irlandesa</td><td>extranjera</td><td>80</td><td>120</td></tr><tr><td>2</td><td>Escolta Francesa</td><td>extranjera</td><td>40</td><td>90</td></tr><tr><td>3</td><td>Grupo Logístico</td><td>logística</td><td>25</td><td>40</td></tr><tr><td>4</td><td>Bolchevique 1</td><td>local</td><td>100</td><td>80</td></tr><tr><td>5</td><td>Bolchevique 2</td><td>local</td><td>60</td><td>50</td></tr><tr><td>6</td><td>Bolchevique 3</td><td>local</td><td>80</td><td>60</td></tr></tbody></table>
-            </div><div class="db-col">
-              <div class="db-col-lbl">&#128451; rutas</div>
-              <table class="tabla-datos"><thead><tr><th>id</th><th>destino</th><th>distancia_km</th><th>prioridad</th></tr></thead><tbody><tr><td>1</td><td>Rostov</td><td>400</td><td>Alta</td></tr><tr><td>2</td><td>Volga</td><td>600</td><td>Media</td></tr><tr><td>3</td><td>Novocherkassk</td><td>500</td><td>Baja</td></tr></tbody></table>
-            </div>
-    </div>
+    <div class="section-label">Base de Datos Oficial — Datos de la Misión</div>
+    <div class="datos-scroll"><div class="db-col"><div class="db-col-lbl">aliados</div><table class="tabla-datos"><thead><tr><th>id_aliado</th><th>nombre</th><th>tropas</th><th>suministros</th></tr></thead><tbody><tr><td>1</td><td>Reino Unido</td><td>12000</td><td>5000</td></tr><tr><td>2</td><td>Francia</td><td>10000</td><td>4000</td></tr><tr><td>3</td><td>Bélgica</td><td>3000</td><td>1200</td></tr></tbody></table></div><div class="db-col"><div class="db-col-lbl">voluntarios_irlandeses</div><table class="tabla-datos"><thead><tr><th>id_voluntario</th><th>region</th><th>efectivos</th></tr></thead><tbody><tr><td>1</td><td>Leinster</td><td>1500</td></tr><tr><td>2</td><td>Munster</td><td>1200</td></tr><tr><td>3</td><td>Ulster</td><td>800</td></tr></tbody></table></div><div class="db-col"><div class="db-col-lbl">frentes_europeos</div><table class="tabla-datos"><thead><tr><th>id_frente</th><th>nombre</th><th>presion_militar</th></tr></thead><tbody><tr><td>1</td><td>Frente Oeste</td><td>18000</td></tr><tr><td>2</td><td>Frente Este</td><td>12000</td></tr><tr><td>3</td><td>Frente Sur</td><td>9000</td></tr></tbody></table></div></div>
   </div>
+</div>
 
 </main>
 <script src="../js/main.js"></script>
-<script>initPuntosNivel(7,5);</script>
+<script>initPuntosNivel(6,5);</script>
 </body>
 </html>

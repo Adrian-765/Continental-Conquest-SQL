@@ -12,25 +12,25 @@
 
 const PERSONAJES = [
   {
-    id: 'primo',
-    nombre: 'General Primo de Rivera',
-    rango: 'General de División',
-    emoji: '⚔️',
+    id: 'picasso',
+    nombre: 'General Juan Picasso',
+    rango: 'General de Brigada',
+    emoji: '✦',
     estrellas: 4,
     habilidades: {
-      estrategia: 92,
-      diplomacia: 68,
-      inteligencia: 85,
-      mando: 95
+      estrategia: 80,
+      diplomacia: 85,
+      inteligencia: 96,
+      mando: 78
     },
-    informe: `El General Primo de Rivera es un militar de singular determinación y gran capacidad táctica. Su experiencia en las campañas africanas le ha forjado una mente estratégica capaz de anticipar los movimientos del enemigo con notable precisión. Su autoridad sobre las tropas es indiscutible, aunque su carácter firme puede dificultar las negociaciones diplomáticas. Ideal para ofensivas directas y maniobras de envolvimiento.`,
-    biografia: `Miguel Primo de Rivera y Orbaneja (1870-1930). Nacido en Jerez de la Frontera, ascendió rápidamente por méritos propios en Cuba, Filipinas y Marruecos. Conocido por su carácter enérgico y su visión estratégica. Su liderazgo sería determinante en los momentos más críticos del frente occidental.`
+    informe: `El General Juan Picasso González es el más reputado auditor e investigador militar de España. Su mente analítica y su capacidad para extraer la verdad de datos contradictorios lo convierten en el agente ideal para misiones de inteligencia encubierta. Meticuloso y discreto, sabe leer entre líneas los informes más oscuros. Su débil punto es la aversión al mando directo en campo abierto.`,
+    biografia: `Juan Picasso González (1857-1935). Nacido en Málaga, destacó como jurista militar y auditor del ejército español. Su nombre quedó ligado a la investigación del Desastre de Annual (1921), donde demostró una integridad y rigor excepcionales al enfrentarse a los estamentos más poderosos del ejército. En 1915, era ya uno de los oficiales más respetados del Estado Mayor.`
   },
   {
     id: 'weyler',
     nombre: 'Capitán Weyler',
     rango: 'Capitán de Estado Mayor',
-    emoji: '🗺️',
+    emoji: '✦',
     estrellas: 3,
     habilidades: {
       estrategia: 78,
@@ -45,7 +45,7 @@ const PERSONAJES = [
     id: 'martinez',
     nombre: 'Coronel Martínez Campos',
     rango: 'Coronel de Ingenieros',
-    emoji: '🔭',
+    emoji: '✦',
     estrellas: 3,
     habilidades: {
       estrategia: 85,
@@ -53,30 +53,24 @@ const PERSONAJES = [
       inteligencia: 80,
       mando: 82
     },
-    informe: `El Coronel Martínez Campos representa el perfil del oficial técnico y organizador. Su formación en ingeniería militar le otorga una comprensión profunda de las fortificaciones, la logística y el uso del terreno. Equilibrado en todas sus capacidades, es el comandante más versátil del grupo. Su habilidad para leer el terreno y anticipar necesidades logísticas lo convierte en el comandante ideal para misiones de largo aliento.`,
+    informe: `El Coronel Martínez Campos representa el perfil del oficial técnico y organizador. Su formación en ingeniería militar le otorga una comprensión profunda de las fortificaciones, la logística y el uso del terreno. Equilibrado en todas sus capacidades, es el oficial más versátil del grupo. Su habilidad para leer el terreno y anticipar necesidades logísticas lo convierte en el agente ideal para misiones de largo aliento.`,
     biografia: `Arsenio Martínez Campos y Antón (1831-1900). General español de gran reputación, conocido por su rectitud y habilidad organizativa. Su legado en la restructuración del Ejército español sirvió de modelo para las generaciones posteriores, que encontraron en sus escritos tácticos una guía invaluable para los conflictos modernos.`
   }
 ];
 
 const NIVELES = {
-  'nivel-01': { nombre: 'Preludio al Conflicto', orden: 1, total: 4 },
-  'nivel-02': { nombre: 'Movilización', orden: 2, total: 4 },
-  'nivel-03': { nombre: 'El Frente Occidental', orden: 3, total: 4 },
-  'nivel-04': { nombre: 'Crisis en el Marne', orden: 4, total: 4 },
+  'nivel-01': { nombre: 'Preludio al Conflicto', orden: 1, total: 2 },
+  'nivel-02': { nombre: 'Movilización', orden: 2, total: 2 },
   'nivel-alemania': { nombre: 'Decisión en Berlín', orden: 5, total: 5 },
-  'ruta-sur-01': { nombre: 'Hacia el Sur', orden: 1, total: 7 },
-  'ruta-sur-02': { nombre: 'Los Balcanes', orden: 2, total: 7 },
-  'ruta-sur-03': { nombre: 'Sombras sobre el Egeo', orden: 3, total: 7 },
-  'ruta-sur-04': { nombre: 'Los Contactos de Atenas', orden: 4, total: 7 },
-  'ruta-sur-05': { nombre: 'Entrada al Imperio Ruso', orden: 5, total: 7 },
-  'ruta-sur-06': { nombre: 'El Colapso del Imperio', orden: 6, total: 7 },
-  'ruta-sur-07': { nombre: 'La Caída del Zar', orden: 7, total: 7 },
-  'norte-05': { nombre: 'Dinamarca', orden: 1, total: 6 },
-  'norte-06': { nombre: 'La Niebla del Mar del Norte', orden: 2, total: 6 },
-  'norte-07': { nombre: 'Tormenta en el Mar del Norte', orden: 3, total: 6 },
-  'norte-08': { nombre: 'El Corredor Escandinavo', orden: 4, total: 6 },
-  'norte-09': { nombre: 'Travesía Final hacia el Norte', orden: 5, total: 6 },
-  'norte-10': { nombre: 'La Puerta del Norte', orden: 6, total: 6 }
+  'ruta-norte-01': { nombre: 'La Prueba del Comerciante Danés', orden: 1, total: 5 },
+  'ruta-norte-02': { nombre: 'Inspección del Almirantazgo', orden: 2, total: 5 },
+  'ruta-norte-03': { nombre: 'Tormenta en el Mar del Norte', orden: 3, total: 5 },
+  'ruta-norte-04': { nombre: 'El Corredor Escandinavo', orden: 4, total: 5 },
+  'ruta-norte-05': { nombre: 'Travesía Final hacia el Norte', orden: 5, total: 5 },
+  'ruta-sur-01': { nombre: 'Sombras sobre el Mediterráneo', orden: 1, total: 4 },
+  'ruta-sur-02': { nombre: 'Sombras sobre el Egeo', orden: 2, total: 4 },
+  'ruta-sur-03': { nombre: 'Sombras sobre el Mar Negro', orden: 3, total: 4 },
+  'ruta-sur-04': { nombre: 'Entrada al Imperio Ruso', orden: 4, total: 4 },
 };
 
 /* ═══════════════════════════════════════════════════
@@ -419,7 +413,40 @@ function initPuntosNivel(totalNiveles, nivelActual) {
 
 const ModalPartida = {
   mostrarNueva() {
-    Partidas.crear('Comandante');
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+      <div class="modal-box" style="max-width:480px;">
+        <h2 class="modal-titulo">Nueva Partida</h2>
+        <p style="font-family:var(--font-typewriter);font-size:0.78rem;color:var(--sepia-light);line-height:1.75;text-align:center;margin-bottom:1.2rem;letter-spacing:0.04em;">
+          Asigne un nombre a esta campaña para poder<br>identificarla entre sus partidas guardadas.
+        </p>
+        <div style="margin-bottom:1.4rem;">
+          <label style="display:block;font-family:var(--font-typewriter);font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem;">Nombre de la partida</label>
+          <input id="input-nombre-partida" type="text" maxlength="40" placeholder="Ej: Campaña del Mediterráneo"
+            style="width:100%;box-sizing:border-box;background:rgba(0,0,0,0.35);border:1px solid rgba(184,146,42,0.4);border-bottom:2px solid var(--gold);color:var(--paper-warm);font-family:var(--font-typewriter);font-size:0.82rem;padding:0.65rem 0.9rem;outline:none;letter-spacing:0.05em;"
+            onkeydown="if(event.key==='Enter')ModalPartida.confirmarNueva()" />
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0.75rem;">
+          <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="ModalPartida.confirmarNueva()">
+            Iniciar campaña →
+          </button>
+          <button class="btn btn-secondary" style="width:100%;justify-content:center;" onclick="ModalPartida.cerrar()">
+            Cancelar
+          </button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    this._overlay = overlay;
+    setTimeout(() => { const inp = document.getElementById('input-nombre-partida'); if (inp) inp.focus(); }, 80);
+  },
+
+  confirmarNueva() {
+    const inp = document.getElementById('input-nombre-partida');
+    const nombre = (inp && inp.value.trim()) ? inp.value.trim() : 'Campaña sin nombre';
+    this.cerrar();
+    Partidas.crear(nombre);
     this.mostrarEleccionContexto();
   },
 
@@ -448,7 +475,7 @@ const ModalPartida = {
             <span style="font-size:1.1rem;">⚔</span>
             <span style="display:flex;flex-direction:column;gap:0.15rem;">
               <span style="font-family:var(--font-typewriter);font-size:0.8rem;letter-spacing:0.12em;text-transform:uppercase;">Seleccionar personaje</span>
-              <span style="font-family:var(--font-body);font-size:0.75rem;color:rgba(200,180,140,0.7);font-style:italic;text-transform:none;letter-spacing:0;">Ir directamente a elegir su comandante</span>
+              <span style="font-family:var(--font-body);font-size:0.75rem;color:rgba(200,180,140,0.7);font-style:italic;text-transform:none;letter-spacing:0;">Ir directamente a elegir su personaje</span>
             </span>
           </button>
         </div>
@@ -534,7 +561,7 @@ function mostrarNombreComandante() {
   const els = document.querySelectorAll('.nombre-comandante');
   const personaje = p && p.personaje ? PERSONAJES.find(x => x.id === p.personaje) : null;
   els.forEach(el => {
-    el.textContent = p ? (personaje ? personaje.nombre : p.nombre) : 'Comandante';
+    el.textContent = p ? (personaje ? personaje.nombre : p.nombre) : 'Agente';
   });
 }
 
@@ -609,7 +636,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Detectar nivel actual
   const path = window.location.pathname;
-  const match = path.match(/(nivel-\d+|nivel-alemania|ruta-sur-\d+)/);
+  const match = path.match(/(nivel-\d+|nivel-alemania|ruta-sur-\d+|ruta-norte-\d+)/);
   if (match) {
     const nivelId = match[1];
     const info = NIVELES[nivelId];

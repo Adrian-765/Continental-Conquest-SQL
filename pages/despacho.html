@@ -300,14 +300,14 @@
       cargo:  "Rey de España · Palacio Real, Madrid · 1915",
       avatar: "👑",
       color:  "#c8a53a",
-      texto:  "Comandante, le agradezco que haya acudido con tanta discreción. Lo que voy a encomendarle esta tarde no puede salir de estas cuatro paredes. España se mantiene neutral ante Europa… pero la neutralidad tiene su precio, y ese precio lo pagará usted."
+      texto:  "<span class='nombre-comandante'>Comandante</span>, le agradezco que haya acudido con tanta discreción. Lo que voy a encomendarle esta tarde no puede salir de estas cuatro paredes. España se mantiene neutral ante Europa… pero la neutralidad tiene su precio, y ese precio lo pagará usted."
     },
     {
       quien:  "Eduardo Dato e Iradier",
       cargo:  "Presidente del Consejo de Ministros · Madrid, 1915",
       avatar: "🎖",
       color:  "#a89462",
-      texto:  "Permítame ser directo, comandante. Los servicios de inteligencia confirman que si las Potencias Centrales caen, el Imperio Ruso emergería como la primera potencia continental. Eso rompe el equilibrio que hemos mantenido durante siglos. No podemos permitirlo."
+      texto:  "Permítame ser directo, <span class='nombre-comandante'>Comandante</span>. Los servicios de inteligencia confirman que si las Potencias Centrales caen, el Imperio Ruso emergería como la primera potencia continental. Eso rompe el equilibrio que hemos mantenido durante siglos. No podemos permitirlo."
     },
     {
       quien:  "S.M. Alfonso XIII",
@@ -342,7 +342,7 @@
       cargo:  "Rey de España · Palacio Real, Madrid · 1915",
       avatar: "👑",
       color:  "#c8a53a",
-      texto:  "El continente entero aguarda su decisión, comandante. La Historia no da segundas oportunidades. ¿Está dispuesto a aceptar la misión en nombre de España y de la paz de Europa?"
+      texto:  "El continente entero aguarda su decisión, <span class='nombre-comandante'>Comandante</span>. La Historia no da segundas oportunidades. ¿Está dispuesto a aceptar la misión en nombre de España y de la paz de Europa?"
     }
   ];
 
@@ -503,6 +503,37 @@
   /* ═══════════════════════════════════════════════════
      INICIO
   ═══════════════════════════════════════════════════ */
+  /* ═══════════════════════════════════════════════════
+     NOMBRE DEL PERSONAJE — inyectar en diálogos
+  ═══════════════════════════════════════════════════ */
+  function getNombrePersonaje() {
+    try {
+      var partidas = JSON.parse(localStorage.getItem('wwi_partidas') || '[]');
+      var activaId = localStorage.getItem('wwi_partida_activa');
+      var partida  = partidas.find(function(p) { return p.id === activaId; });
+      if (!partida || !partida.personaje) return null;
+      var pjs = [
+        { id: 'primo',    nombre: 'General Primo de Rivera' },
+        { id: 'weyler',   nombre: 'Capitán Weyler' },
+        { id: 'martinez', nombre: 'Coronel Martínez Campos' }
+      ];
+      var pj = pjs.find(function(x) { return x.id === partida.personaje; });
+      return pj ? pj.nombre : null;
+    } catch(e) { return null; }
+  }
+
+  function inyectarNombre() {
+    var nombre = getNombrePersonaje() || 'Comandante';
+    DIALOGOS.forEach(function(d) {
+      // Strip the span tag and replace with plain name (compatible con textContent typewriter)
+      d.texto = d.texto.replace(
+        /<span class='nombre-comandante'>[^<]*<\/span>/g,
+        nombre
+      );
+    });
+  }
+
+  inyectarNombre();
   initDots();
   // Pequeño delay para que la imagen cargue antes de empezar
   setTimeout(function() {

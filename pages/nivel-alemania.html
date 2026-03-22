@@ -29,11 +29,11 @@
     .btn-retroceder:hover{background:rgba(184,146,42,.12);color:var(--gold);border-color:rgba(184,146,42,.5);}
     /* Tablas horizontales — fila inferior */
     .datos-panel{margin-bottom:1.5rem;}
-    .datos-scroll{display:flex;flex-direction:row;gap:0;overflow-x:auto;background:#0a0d06;border:1px solid rgba(184,146,42,.2);border-top:3px solid var(--gold);}
-    .db-col{flex:0 0 auto;border-right:1px solid rgba(184,146,42,.15);padding-bottom:.5rem;}
+    .datos-scroll{display:inline-block;background:#0a0d06;border:1px solid rgba(184,146,42,.2);border-top:3px solid var(--gold);overflow-x:auto;max-width:100%;}
+    .db-col{display:inline-block;vertical-align:top;border-right:1px solid rgba(184,146,42,.15);padding-bottom:.5rem;}
     .db-col:last-child{border-right:none;}
     .db-col-lbl{font-family:var(--font-typewriter);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(184,146,42,.6);padding:.4rem .8rem .2rem;white-space:nowrap;border-bottom:1px solid rgba(184,146,42,.1);background:rgba(184,146,42,.04);}
-    .tabla-datos{border-collapse:collapse;font-family:var(--font-typewriter);font-size:.76rem;white-space:nowrap;width:100%;}
+    .tabla-datos{border-collapse:collapse;font-family:var(--font-typewriter);font-size:.76rem;white-space:nowrap;width:auto;}
     .tabla-datos th{background:var(--ink);color:var(--gold);padding:.35rem .75rem;text-align:left;letter-spacing:.07em;font-weight:normal;white-space:nowrap;}
     .tabla-datos td{padding:.3rem .75rem;border-bottom:1px solid rgba(184,146,42,.08);color:var(--paper-aged);white-space:nowrap;}
     .tabla-datos tr:last-child td{border-bottom:none;}.tabla-datos tr:hover td{background:rgba(184,146,42,.05);}
@@ -46,17 +46,17 @@
       <div class="nav-logo-text">SQL: La Gran Guerra</div>
       <div class="nav-logo-sub">Conquista y Diplomacia · 1914–1918</div>
     </a>
-    <div class="nav-center">Ruta Norte · <span class='nombre-comandante'>Comandante</span> · Corredor Alemán</div>
+    <div class="nav-center">La Encrucijada · <span class='nombre-comandante'>Comandante</span> · Breisach am Rhein</div>
     <div class="nav-actions">
-      <button id="btn-guardar" class="btn btn-primary" style="font-size:.72rem;padding:.5rem 1.2rem;">&#128190; Guardar partida</button>
+      <button id="btn-guardar" class="btn btn-primary" style="font-size:.72rem;padding:.5rem 1.2rem;">Guardar partida</button>
     </div>
   </div>
 </nav>
 <div class="ticker-wrap"><span class="ticker-content"><span class="ticker-sep">⬥</span></div>
 <div class="header-nivel">
   <div><div>
-    <div class="nivel-badge">Corredor Norte · Breisach → Hamburgo</div>
-    <div style="font-family:var(--font-typewriter);font-size:.78rem;letter-spacing:.1em;color:var(--gold-bright);font-weight:bold;">El Corredor Alemán</div>
+    <div class="nivel-badge">Nivel 3b · Breisach am Rhein · Encrucijada</div>
+    <div style="font-family:var(--font-typewriter);font-size:.78rem;letter-spacing:.1em;color:var(--gold-bright);font-weight:bold;">La Encrucijada de Europa</div>
     <div style="font-family:var(--font-typewriter);font-size:.65rem;letter-spacing:.08em;color:var(--paper-dark);">Breisach am Rhein — Primavera 1915</div>
   </div></div>
   <div class="nivel-num">N·RN</div>
@@ -67,11 +67,11 @@
 </div>
 </div>
 <div id="libreta-flotante">
-  <button id="libreta-toggle">&#128211; Notas de Campaña <span class="libreta-arrow">&#9660;</span></button>
+  <button id="libreta-toggle">Notas de Campaña <span class="libreta-arrow">&#9660;</span></button>
   <div id="libreta-body">
     <textarea id="libreta-notas" placeholder="Anote sus observaciones..."></textarea>
     <div id="libreta-footer">
-      <span>Libreta del Comandante</span>
+      <span>Libreta de Campaña</span>
       <span id="libreta-guardado" style="color:var(--khaki-faded);"></span>
     </div>
   </div>
@@ -85,102 +85,66 @@
     <!-- COLUMNA PRINCIPAL: Diario + Informe -->
     <div class="col-p">
       <div class="fade-in-1">
-        <div class="section-label">📔 Diario del Comandante — Entrada 15b</div>
+        <div class="section-label">Diario de Campaña — Entrada 15</div>
         <div class="diario-entrada">
           <div class="diario-fecha">Breisach am Rhein — Primavera 1915</div>
-          <p>La decisión está tomada: tomaremos la ruta del norte. Seamus O'Callaghan me miró con algo parecido al alivio cuando se lo comuniqué. Sus contactos en Copenhague serán nuestra mejor baza en los próximos días.</p>
-<p>Pero primero debemos cruzar Alemania. Von Adlerheim nos ha preparado documentos de tránsito industrial: somos técnicos textiles de una empresa alsaciana que viaja a inspeccionar maquinaria en Hamburgo. Los papeles son perfectos. El riesgo es real.</p>
-<p>El corredor Breisach–Frankfurt–Hamburgo nos llevará tres días. En cada control, la base de datos logística deberá cuadrar. Von Adlerheim lo dejó muy claro: <em>"Si los datos no coinciden, no habrá segunda oportunidad."</em></p>
+          <p>La niebla envolvía la frontera alemana como un manto húmedo y opresivo. Allí nos esperaba Generaloberst Friedrich von Adlerheim, cuya experiencia en el frente occidental había marcado cada línea de su rostro. No hubo palabras de cortesía, solo el peso silencioso de lo que estaba por venir.</p>
+          <p>Los combates en torno al Paso de Valdieri Alto habían cerrado los Alpes. Von Adlerheim, en un español torpe y forzado, propuso su alternativa: <em>—No… cruzar Alpes. Muy peligroso. Barco… amigo mío… costa sur Francia. Ir Barcelona. Luego Argel… Argelia Francesa. Después Nápoles. Y finalmente Venecia.</em></p>
+          <p>Entonces Seamus O'Callaghan habló, con calma y decisión: <em>—We could take the northern route. Denmark. I have contacts there. From Copenhagen we could access the Baltic and reach Russia through the north. It's riskier… but faster.</em></p>
+          <p>Me detuve contemplando a los hombres. Cada ruta determinaría no solo nuestra seguridad inmediata, sino el delicado equilibrio de poder en Europa. <strong>La decisión es tuya.</strong></p>
         </div>
       </div>
       <div class="fade-in-2">
-        <div class="section-label">📨 Informe de Inteligencia</div>
+        <div class="section-label">Informe de Inteligencia</div>
         <div class="telegrama" style="transform:rotate(-.5deg);">
           <div class="telegrama-sello">VON<br>ADLER<br>HEIM</div>
           <div class="telegrama-header">GENERALOBERST FRIEDRICH VON ADLERHEIM — BREISACH AM RHEIN</div>
-          <div class="telegrama-body">FECHA: PRIMAVERA 1915 · OPERACIÓN: CORREDOR NORTE<br>
+          <div class="telegrama-body">FECHA: PRIMAVERA 1915 · EVALUACIÓN DE RUTAS<br>
 DE: GENERALOBERST VON ADLERHEIM<br>
-PARA: COMANDANTE OPERATIVO<br><br>
-Documentos preparados: identidad comercial.<br>
-Ruta aprobada: Breisach → Frankfurt → Hamburgo.<br><br>
-Desde Hamburgo, Seamus O'Callaghan os guiará<br>
-hacia Copenhague. Su conocimiento de Dinamarca<br>
-es imprescindible para los primeros controles.<br><br>
-AVISO: Los controles ferroviarios verificarán<br>
-la coherencia de vuestros registros logísticos.<br>
-Preparad las tablas de datos antes de partir.<br><br>
-— VON ADLERHEIM</div></div>
+PARA: COMANDANTE ESPAÑOL<br><br>
+Los Alpes: IMPOSIBLE. Combates en Valdieri Alto.<br><br>
+RUTA SUR — Menor dificultad:<br>
+Francia → Barcelona → Argelia Francesa → Nápoles → Venecia → Atenas<br>
+Más corta. Logística compleja pero controlable.<br><br>
+RUTA NORTE — Mayor dificultad:<br>
+Francia → Alemania → Dinamarca → Mar Báltico → Rusia<br>
+Más larga. Riesgo: vigilancia naval británica.<br><br>
+Ambas rutas llevan al mismo objetivo.<br>
+El camino determina la prueba.<br><br>
+— VON ADLERHEIM<br>
+<em>(Seamus O'Callaghan propone ruta norte. La decisión es suya.)</em></div></div>
       </div>
     </div>
 
     <!-- COLUMNA LATERAL: Mapa + SQL CREATE + Botones -->
     <div class="col-l">
       <div class="fade-in-1">
-        <div class="section-label">&#128506; Ruta de la Misión</div>
+        <div class="section-label">Ruta de la Misión</div>
         <div class="mapa-mini">
           <div style="font-family:var(--font-typewriter);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faded);margin-bottom:.4rem;position:relative;">Trayecto actual</div>
-          <div class="mapa-ruta">Breisach → Frankfurt → Hamburgo → Dinamarca</div>
+          <div class="mapa-ruta">Francia → Breisach<br><span style="color:#8b1a1a;">↑ Norte: Dinamarca → Báltico</span><br><span style="color:#8a6a1a;">↓ Sur: Argelia → Venecia</span></div>
           <div style="margin-top:.8rem;position:relative;">
             <div style="font-family:var(--font-typewriter);font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-faded);margin-bottom:.3rem;">Progreso total:</div>
             <div class="marcador-progreso"><div class="paso-mapa completado"></div>
           </div>
         </div>
       </div>
-      <div class="fade-in-2">
-        <div class="section-label">&#128190; Enunciado SQL — Estructura de Tablas</div>
-        <div class="sql-panel">
-          <div class="sql-header" style="color:var(--gold);">
-            <div class="sql-dots">
-              <div class="sql-dot" style="background:#c0392b;"></div>
-              <div class="sql-dot" style="background:#f39c12;"></div>
-              <div class="sql-dot" style="background:#27ae60;"></div>
-            </div>
-            mysql — gran_guerra.sql
-          </div>
-          <div class="schema-box" style="border-color:rgba(184,146,42,.2);margin:.5rem 0 0;">
-            <div class="schema-lbl">&#128203; Estructura de tablas — Enunciado</div>
-            <pre class="sql-pre" style="color:#a8d4a0;">CREATE TABLE unidades_transito (
-    id_unidad   INT PRIMARY KEY,
-    nombre      VARCHAR(50),
-    tipo        VARCHAR(30),
-    tropas      INT,
-    origen      VARCHAR(50),
-    destino     VARCHAR(50)
-);
-
-CREATE TABLE documentos_industriales (
-    id_doc    INT PRIMARY KEY,
-    id_unidad INT,
-    empresa   VARCHAR(50),
-    ruta      VARCHAR(100),
-    valido    BOOLEAN
-);</pre>
-          </div>
-        </div>
-      </div>
-      <div class="fade-in-3" style="display:flex;flex-direction:column;gap:.7rem;">
-        <a href="norte-05.html" class="btn" style="text-align:center;justify-content:center;background:var(--khaki-mid);color:#c8e0a0;border:1px solid rgba(184,146,42,.5);font-family:var(--font-typewriter);font-size:.75rem;letter-spacing:.12em;padding:.8rem 1rem;display:block;text-decoration:none;text-transform:uppercase;">Siguiente misión →</a>
-        <button id="btn-guardar2" class="btn btn-primary" style="text-align:center;justify-content:center;" onclick="document.getElementById('btn-guardar').click()">&#128190; Guardar progreso</button>
-        <a href="nivel-03.html" class="btn-retroceder">← Misión anterior</a>
+      <div class="fade-in-3" style="display:flex;flex-direction:column;gap:.7rem;margin-top:.7rem;">
+        <a href="ruta-norte-01.html" style="display:block;text-decoration:none;text-align:center;padding:1rem 1.2rem;background:linear-gradient(135deg,rgba(139,26,26,.85),rgba(100,15,15,.9));border:1px solid rgba(192,57,43,.5);border-left:4px solid var(--red-stamp);font-family:var(--font-typewriter);color:var(--paper-warm);letter-spacing:.1em;text-transform:uppercase;line-height:1.7;transition:all .2s;" onmouseover="this.style.borderLeftColor='#e74c3c';this.style.background='linear-gradient(135deg,rgba(192,57,43,.9),rgba(139,26,26,.95))'" onmouseout="this.style.borderLeftColor='var(--red-stamp)';this.style.background='linear-gradient(135deg,rgba(139,26,26,.85),rgba(100,15,15,.9))'">
+          <div style="font-size:.78rem;font-weight:bold;">Ruta Norte</div>
+          <div style="font-size:.62rem;opacity:.75;text-transform:none;letter-spacing:.06em;margin-top:.2rem;">Mayor dificultad · Más larga</div>
+        </a>
+        <a href="ruta-sur-01.html" style="display:block;text-decoration:none;text-align:center;padding:1rem 1.2rem;background:linear-gradient(135deg,rgba(42,48,32,.85),rgba(30,36,20,.9));border:1px solid rgba(184,146,42,.45);border-left:4px solid var(--gold);font-family:var(--font-typewriter);color:var(--paper-warm);letter-spacing:.1em;text-transform:uppercase;line-height:1.7;transition:all .2s;" onmouseover="this.style.borderLeftColor='var(--gold-bright)';this.style.background='linear-gradient(135deg,rgba(52,60,38,.9),rgba(42,48,32,.95))'" onmouseout="this.style.borderLeftColor='var(--gold)';this.style.background='linear-gradient(135deg,rgba(42,48,32,.85),rgba(30,36,20,.9))'">
+          <div style="font-size:.78rem;font-weight:bold;">Ruta Sur</div>
+          <div style="font-size:.62rem;opacity:.75;text-transform:none;letter-spacing:.06em;margin-top:.2rem;">Menor dificultad · Más corta</div>
+        </a>
+        <button id="btn-guardar2" class="btn btn-primary" style="text-align:center;justify-content:center;" onclick="document.getElementById('btn-guardar').click()">Guardar progreso</button>
+        <a href="nivel-02.html" class="btn-retroceder">← Misión anterior</a>
       </div>
     </div>
 
   </div>
 
-  </div>
-
-  <!-- TABLAS DE DATOS — fila horizontal completa -->
-  <div class="datos-panel fade-in-3">
-    <div class="section-label">&#128451; Base de Datos Oficial — Datos de la Misión</div>
-    <div class="datos-scroll">
-      <div class="db-col">
-              <div class="db-col-lbl">&#128451; barcos</div>
-              <table class="tabla-datos"><thead><tr><th>id_barco</th><th>nombre</th><th>bandera</th><th>capacidad</th></tr></thead><tbody><tr><td>1</td><td>Die Morgenstern</td><td>Alemana</td><td>400</td></tr><tr><td>2</td><td>Nordstern</td><td>Neutral</td><td>300</td></tr><tr><td>3</td><td>Baltic Eagle</td><td>Noruega</td><td>250</td></tr></tbody></table>
-            </div><div class="db-col">
-              <div class="db-col-lbl">&#128451; documentos</div>
-              <table class="tabla-datos"><thead><tr><th>id_doc</th><th>id_barco</th><th>tipo</th><th>estado</th></tr></thead><tbody><tr><td>1</td><td>1</td><td>Comercial</td><td>Aprobado</td></tr><tr><td>2</td><td>2</td><td>Industrial</td><td>Pendiente</td></tr><tr><td>3</td><td>3</td><td>Comercial</td><td>Aprobado</td></tr></tbody></table>
-            </div>
-    </div>
   </div>
 
 </main>
