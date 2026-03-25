@@ -21,7 +21,7 @@
     /* Imagen héroe de fondo */
     .hero-bg-photo {
       position: absolute; inset: 0;
-      background-image: url('../img/westfront.jpg');
+      background-image: url('../img/westfront.png');
       background-size: cover;
       background-position: center 40%;
       filter: grayscale(1) sepia(0.4) brightness(0.35) contrast(1.3);
@@ -98,390 +98,235 @@
       padding: 0 1.5rem;
     }
 
-    /* ══════════════════════════════════════════════════
-       CRONOLOGÍA VISUAL — REDISEÑADA, GRANDE Y RICA
-    ══════════════════════════════════════════════════ */
     /* ═══════════════════════════════════════════════════════
-       CRONOLOGÍA — DISEÑO ENRIQUECIDO
+       CRONOLOGÍA — DISEÑO ENRIQUECIDO CON FONDO OSCURO
     ═══════════════════════════════════════════════════════ */
-    /* ═══════════════════════════════════════════════════════
-       CRONOLOGÍA — OPCIÓN C: DOCUMENTO CLASIFICADO
-    ═══════════════════════════════════════════════════════ */
-
-    /* Morse decorativo: puntos y rayas como fondo de la sección */
-    .timeline-wrapper {
+    
+    .timeline-section {
+      background: var(--press-dark);
+      background-image: var(--grain-overlay);
       position: relative;
-      padding: 2.5rem 0 3rem;
+    }
+    
+    .timeline-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(13, 10, 6, 0.15); /* Overlay oscuro adicional */
+      pointer-events: none;
     }
 
-    .timeline {
-      position: relative;
-      padding: 3rem 0 2rem;
+    @keyframes tl-slide-left {
+      from { opacity:0; transform:translateX(-40px); }
+      to   { opacity:1; transform:translateX(0); }
+    }
+    @keyframes tl-slide-right {
+      from { opacity:0; transform:translateX(40px); }
+      to   { opacity:1; transform:translateX(0); }
+    }
+    @keyframes tl-pop {
+      from { opacity:0; transform:scale(0.4); }
+      to   { opacity:1; transform:scale(1); }
     }
 
-    /* Línea central: banda telegráfica con nodos de año */
-    .timeline::before {
+    .tl-wrap {
+      position: relative;
+      padding: 1rem 0 2.5rem;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    /* Línea central doble — efecto carril de telégrafo */
+    .tl-wrap::before {
       content: '';
       position: absolute;
       left: 50%; top: 0; bottom: 0;
-      width: 3px;
-      background: repeating-linear-gradient(
-        to bottom,
-        rgba(184,146,42,0.55) 0px,
-        rgba(184,146,42,0.55) 12px,
-        transparent 12px,
-        transparent 18px,
-        rgba(184,146,42,0.30) 18px,
-        rgba(184,146,42,0.30) 24px,
-        transparent 24px,
-        transparent 32px
-      );
+      width: 4px;
+      background: linear-gradient(to bottom,
+        transparent 0%,
+        var(--ink) 4%,
+        var(--ink) 96%,
+        transparent 100%);
+      transform: translateX(-50%);
+      opacity: 0.25;
+    }
+    .tl-wrap::after {
+      content: '';
+      position: absolute;
+      left: calc(50% + 8px); top: 0; bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom,
+        transparent 0%,
+        rgba(184,146,42,0.35) 4%,
+        rgba(184,146,42,0.35) 96%,
+        transparent 100%);
       transform: translateX(-50%);
     }
-    /* Segunda línea más fina, efecto doble carril telegráfico */
-    .timeline::after {
-      content: '';
-      position: absolute;
-      left: calc(50% + 6px); top: 0; bottom: 0;
-      width: 1px;
-      background: repeating-linear-gradient(
-        to bottom,
-        transparent 0px,
-        transparent 8px,
-        rgba(184,146,42,0.15) 8px,
-        rgba(184,146,42,0.15) 14px
-      );
-      pointer-events: none;
-    }
 
-    /* ── ITEM ── */
-    .tl-item {
+    /* — FILA — */
+    .tl-row {
       display: grid;
-      grid-template-columns: 1fr 120px 1fr;
-      gap: 0;
+      grid-template-columns: 1fr 100px 1fr;
+      align-items: start;
       margin-bottom: 0;
-      align-items: center;
-      position: relative;
     }
+    .tl-lado-izq { padding: 0 2.5rem 2.5rem 0; }
+    .tl-lado-der { padding: 0 0 2.5rem 2.5rem; }
+    .tl-vacio    { min-height: 1rem; }
 
-    .tl-content-left {
-      text-align: right;
-      padding: 2.8rem 3rem 2.8rem 0.5rem;
-    }
-    .tl-content-right {
-      text-align: left;
-      padding: 2.8rem 0.5rem 2.8rem 3rem;
-    }
-
-    /* ── NODO CENTRAL — matasellos circular ── */
-    .tl-center {
+    /* — NODO CENTRAL — */
+    .tl-nodo {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
       flex-direction: column;
-      gap: 0;
-      z-index: 3;
-    }
-
-    .tl-node {
-      width: 72px; height: 72px;
-      border-radius: 50%;
-      background: var(--press-dark);
-      border: 2px solid rgba(184,146,42,0.5);
-      display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 1.6rem;
-      z-index: 2;
+      padding-top: 1.2rem;
+      gap: 0.5rem;
+      z-index: 4;
+      position: relative;
+    }
+    .tl-nodo-anillo {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      border: 3px solid;
+      background: var(--paper-warm);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display);
+      font-size: 0.70rem;
+      font-weight: 900;
+      letter-spacing: 0.05em;
       flex-shrink: 0;
       position: relative;
-      transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
-      /* Anillo exterior de matasellos */
+      animation: tl-pop 0.5s ease both;
       box-shadow:
-        0 0 0 4px var(--press-dark),
-        0 0 0 7px rgba(184,146,42,0.25),
-        0 0 0 9px var(--press-dark),
-        0 0 0 10px rgba(184,146,42,0.12),
-        0 4px 20px rgba(0,0,0,0.6);
+        0 0 0 4px var(--paper-warm),
+        0 0 0 6px currentColor,
+        0 4px 16px rgba(0,0,0,0.18);
     }
-    /* Círculo dentado exterior — efecto matasellos */
-    .tl-node::before {
+    .tl-nodo-anillo::before {
       content: '';
       position: absolute;
-      inset: -14px;
+      inset: -10px;
       border-radius: 50%;
-      border: 1px dashed rgba(184,146,42,0.30);
-      pointer-events: none;
+      border: 1px dashed currentColor;
+      opacity: 0.3;
     }
-    .tl-node::after {
-      content: '';
-      position: absolute;
-      inset: -20px;
-      border-radius: 50%;
-      border: 1px dotted rgba(184,146,42,0.12);
-      pointer-events: none;
-    }
-    .tl-item:hover .tl-node {
-      transform: scale(1.12) rotate(5deg);
-      box-shadow:
-        0 0 0 4px var(--press-dark),
-        0 0 0 7px rgba(184,146,42,0.45),
-        0 0 0 9px var(--press-dark),
-        0 0 0 10px rgba(184,146,42,0.25),
-        0 6px 32px rgba(0,0,0,0.7);
-    }
-
-    /* Año — recuadro rectangular */
-    .tl-node-year {
-      display: inline-block;
-      background: var(--press-dark);
-      border: 1px solid rgba(184,146,42,0.45);
-      color: var(--gold);
+    .tl-nodo-año {
       font-family: var(--font-typewriter);
-      font-size: 0.65rem;
-      font-weight: bold;
-      letter-spacing: 0.08em;
+      font-size: 0.58rem;
+      letter-spacing: 0.12em;
       text-align: center;
       line-height: 1.3;
       white-space: nowrap;
-      padding: 0.28rem 0.65rem;
-      margin-top: 14px;
-      position: relative;
-      z-index: 2;
-      box-shadow: 0 0 0 2px var(--press-dark), 0 0 0 3px rgba(184,146,42,0.20);
+      opacity: 0.7;
     }
 
-    /* Cadena de puntos telegráfica como conector */
-    .tl-connector {
-      position: absolute;
-      top: 50%;
-      height: 2px;
-      transform: translateY(-50%);
-      pointer-events: none;
-      z-index: 1;
-    }
-    .tl-connector-left {
-      right: 0; left: calc(100% + 60px);
-      background: repeating-linear-gradient(
-        to right,
-        rgba(184,146,42,0.40) 0px, rgba(184,146,42,0.40) 4px,
-        transparent 4px, transparent 8px
-      );
-    }
-    .tl-connector-right {
-      left: 0; right: calc(100% + 60px);
-      background: repeating-linear-gradient(
-        to right,
-        rgba(184,146,42,0.40) 0px, rgba(184,146,42,0.40) 4px,
-        transparent 4px, transparent 8px
-      );
-    }
-
-    /* ── TARJETA — papel de despacho militar ── */
+    /* — TARJETA — */
     .tl-card {
-      background: #13110d;
-      background-image:
-        var(--grain-overlay),
-        repeating-linear-gradient(
-          0deg,
-          transparent,
-          transparent 28px,
-          rgba(184,146,42,0.025) 28px,
-          rgba(184,146,42,0.025) 29px
-        );
-      border: 1px solid rgba(184,146,42,0.18);
-      padding: 0;
+      background: var(--paper-warm);
+      background-image: var(--grain-overlay);
+      border: 1px solid rgba(26,20,9,0.12);
+      border-left: 4px solid;
       position: relative;
-      transition: transform 0.3s, box-shadow 0.3s;
-      box-shadow: 4px 4px 0 rgba(0,0,0,0.4), 0 2px 20px rgba(0,0,0,0.3);
       overflow: hidden;
+      cursor: default;
+      box-shadow:
+        4px 4px 0 rgba(26,20,9,0.10),
+        0 6px 24px rgba(26,20,9,0.12);
+      transition:
+        transform 0.28s cubic-bezier(0.34,1.4,0.64,1),
+        box-shadow 0.28s ease;
+      animation: tl-slide-left 0.55s ease both;
+    }
+    .tl-lado-der .tl-card {
+      border-left: 1px solid rgba(26,20,9,0.12);
+      border-right: 4px solid;
+      animation: tl-slide-right 0.55s ease both;
     }
     .tl-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 6px 10px 32px rgba(0,0,0,0.55);
+      transform: translateY(-6px) scale(1.015);
+      box-shadow:
+        6px 14px 0 rgba(26,20,9,0.10),
+        0 18px 40px rgba(26,20,9,0.20);
     }
-    /* Contenido interior con padding */
-    .tl-card-inner {
-      padding: 1.6rem 1.8rem 1.4rem;
-      position: relative;
+    /* Franja superior de color */
+    .tl-card-banda {
+      height: 5px;
+      width: 100%;
     }
-
-    /* Banda superior de clasificación — header de documento */
-    .tl-card-header {
+    /* Cabecera con año grande */
+    .tl-card-head {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
-      background: rgba(0,0,0,0.45);
-      border-bottom: 1px solid rgba(184,146,42,0.18);
-      padding: 0.38rem 1rem;
-      font-family: var(--font-typewriter);
-      font-size: 0.55rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: rgba(184,146,42,0.45);
+      padding: 1rem 1.4rem 0.6rem;
+      border-bottom: 1px solid rgba(26,20,9,0.07);
+      gap: 0.8rem;
     }
-    .tl-content-right .tl-card-header {
-      flex-direction: row-reverse;
-    }
-    .tl-card-clasif {
-      font-family: var(--font-typewriter);
-      font-size: 0.52rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      padding: 0.12rem 0.45rem;
-      border: 1px solid;
-      white-space: nowrap;
-    }
-
-    /* Sello circular en esquina — matasellos de tinta */
-    .tl-sello {
-      position: absolute;
-      width: 64px; height: 64px;
-      border-radius: 50%;
-      border: 2px solid;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--font-typewriter);
-      font-size: 0.38rem;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      text-align: center;
-      line-height: 1.25;
-      opacity: 0.55;
-      transform: rotate(-12deg);
-      pointer-events: none;
-    }
-    .tl-sello::before {
-      content: '';
-      position: absolute;
-      inset: 4px;
-      border-radius: 50%;
-      border: 1px solid currentColor;
-      opacity: 0.4;
-    }
-    .tl-content-left  .tl-sello { bottom: 1rem; left: 1rem; transform: rotate(-18deg); }
-    .tl-content-right .tl-sello { bottom: 1rem; right: 1rem; transform: rotate(14deg); }
-
-    /* Acento lateral — barra de color del evento */
-    .tl-card-accent {
-      position: absolute;
-      top: 0; bottom: 0;
-      width: 4px;
-      opacity: 0.8;
-    }
-    .tl-content-left  .tl-card .tl-card-accent { right: 0; left: auto; border-radius: 0 2px 2px 0; }
-    .tl-content-right .tl-card .tl-card-accent { left: 0; right: auto; border-radius: 2px 0 0 2px; }
-
-    /* ── TEXTOS ── */
-    .tl-cat {
-      font-family: var(--font-typewriter);
-      font-size: 0.68rem;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      margin-bottom: 0.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      opacity: 0.85;
-    }
-    .tl-content-right .tl-cat { justify-content: flex-start; }
-    .tl-content-left  .tl-cat { justify-content: flex-end; }
-
-    .tl-headline {
+    .tl-card-año-big {
       font-family: var(--font-display);
-      font-size: 1.5rem;
-      font-weight: 900;
-      line-height: 1.15;
-      margin-bottom: 0.75rem;
-      color: var(--paper-aged);
-    }
-
-    .tl-text {
-      font-family: var(--font-body);
-      font-size: 0.95rem;
-      color: rgba(200,175,125,0.75);
-      line-height: 1.78;
-    }
-
-    /* Cita: estilo despacho mecanografiado */
-    .tl-quote {
-      margin: 0.85rem 0 0;
-      padding: 0.65rem 1rem;
-      background: rgba(0,0,0,0.30);
-      border-left: 2px solid rgba(184,146,42,0.35);
-      font-family: var(--font-typewriter);
-      font-size: 0.78rem;
-      font-style: italic;
-      color: rgba(200,175,125,0.70);
-      line-height: 1.65;
-    }
-    .tl-content-right .tl-quote { border-left: 2px solid rgba(184,146,42,0.35); border-right: none; text-align: left; }
-    .tl-content-left  .tl-quote { border-left: none; border-right: 2px solid rgba(184,146,42,0.35); text-align: right; }
-
-    /* Estadística */
-    .tl-stat {
-      margin-top: 0.95rem;
-      padding-top: 0.85rem;
-      border-top: 1px solid rgba(184,146,42,0.14);
-      display: flex;
-      align-items: baseline;
-      gap: 0.6rem;
-    }
-    .tl-content-right .tl-stat { justify-content: flex-start; }
-    .tl-content-left  .tl-stat { justify-content: flex-end; flex-direction: row-reverse; }
-
-    .tl-stat-num {
-      font-family: var(--font-display);
-      font-size: 2.6rem;
+      font-size: 2.8rem;
       font-weight: 900;
       line-height: 1;
-      color: var(--gold-bright);
-      text-shadow: 0 0 20px rgba(184,146,42,0.3);
+      opacity: 0.12;
+      flex-shrink: 0;
     }
-    .tl-stat-lbl {
+    .tl-card-meta {
+      flex: 1;
+      text-align: right;
+    }
+    .tl-lado-der .tl-card-meta { text-align: left; }
+    .tl-card-categoria {
       font-family: var(--font-typewriter);
-      font-size: 0.68rem;
-      letter-spacing: 0.10em;
+      font-size: 0.55rem;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
-      color: rgba(180,150,90,0.60);
-      line-height: 1.45;
+      margin-bottom: 0.2rem;
     }
-
-    /* Fecha secundaria */
-    .tl-fecha-sec {
+    .tl-card-fecha-txt {
       font-family: var(--font-typewriter);
-      font-size: 0.64rem;
-      letter-spacing: 0.12em;
-      color: rgba(180,150,90,0.50);
-      margin-bottom: 0.55rem;
-      text-transform: uppercase;
-    }
-
-    /* Chips de países */
-    .tl-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.3rem;
-      margin-top: 0.75rem;
-    }
-    .tl-content-right .tl-chips { justify-content: flex-start; }
-    .tl-content-left  .tl-chips { justify-content: flex-end; }
-    .tl-chip {
-      font-family: var(--font-typewriter);
-      font-size: 0.58rem;
+      font-size: 0.62rem;
       letter-spacing: 0.08em;
-      padding: 0.15rem 0.5rem;
-      border: 1px solid rgba(184,146,42,0.22);
-      background: rgba(184,146,42,0.06);
-      color: rgba(200,175,125,0.65);
-      white-space: nowrap;
+      color: rgba(26,20,9,0.45);
     }
-
-    .tl-empty { min-height: 5rem; }
-
+    /* Cuerpo */
+    .tl-card-body {
+      padding: 0.8rem 1.4rem 1.1rem;
+    }
+    .tl-card-titulo {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: var(--ink);
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+    }
+    .tl-card-texto {
+      font-family: var(--font-body);
+      font-size: 0.84rem;
+      color: rgba(26,20,9,0.72);
+      line-height: 1.62;
+    }
+    /* Pie con dato destacado */
+    .tl-card-pie {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      padding: 0.6rem 1.4rem 0.9rem;
+      border-top: 1px solid rgba(26,20,9,0.07);
+    }
+    .tl-card-stat-n {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .tl-card-stat-l {
+      font-family: var(--font-typewriter);
+      font-size: 0.60rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(26,20,9,0.50);
+      line-height: 1.4;
+    }
     /* Mobile */
     @media (max-width: 768px) {
       .timeline::after { display: none; }
@@ -620,7 +465,7 @@
     .foto-testimonio-text .article-body p { margin-bottom: 0.8rem; }
     .foto-testimonio-text .article-body p:first-child::first-letter { color: var(--gold-bright); }
 
-    /* — MAPA SECCIÓN — */
+    /* — MAPA SECCIÓN — IMAGEN LIMPIA SIN OVERLAYS — */
     .mapa-section {
       background: var(--press-dark);
       padding: 3rem 0;
@@ -723,7 +568,7 @@
     .cta-section::before {
       content: '';
       position: absolute; inset: 0;
-      background-image: url('../img/westfront.jpg');
+      background-image: url('../img/westfront.png');
       background-size: cover;
       background-position: center;
       filter: grayscale(1) brightness(0.12) sepia(0.3);
@@ -868,6 +713,110 @@
 
     /* Press columns */
     .press-col-border .article-body p { font-size: 1.02rem; }
+
+    /* ══════════════════════════════════════════════
+       NUEVOS ESTILOS PARA ANÁLISIS DE ALIANZAS MEJORADO
+    ══════════════════════════════════════════════ */
+    
+    .alianzas-flow {
+      background: var(--paper-aged);
+      border: 2px solid var(--ink);
+      padding: 2rem;
+      margin-top: 1.5rem;
+      position: relative;
+      box-shadow: 6px 6px 0 rgba(0,0,0,0.15);
+    }
+    
+    .alianzas-flow-title {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: var(--ink);
+      text-align: center;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid var(--ink);
+      padding-bottom: 0.5rem;
+    }
+    
+    .flow-diagram {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+    }
+    
+    .flow-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.8rem;
+      background: var(--paper-warm);
+      border-left: 4px solid var(--red-ink);
+      margin-bottom: 0.5rem;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    
+    .flow-item:hover {
+      transform: translateX(5px);
+      box-shadow: 3px 3px 10px rgba(0,0,0,0.1);
+    }
+    
+    .flow-date {
+      font-family: var(--font-typewriter);
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--red-ink);
+      min-width: 80px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    
+    .flow-event {
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      color: var(--ink);
+      flex: 1;
+    }
+    
+    .flow-arrow {
+      text-align: center;
+      color: var(--gold);
+      font-size: 1.2rem;
+      margin: -0.3rem 0;
+      opacity: 0.6;
+    }
+    
+    .urgency-stamp {
+      position: absolute;
+      top: -10px;
+      right: 20px;
+      background: var(--red-ink);
+      color: white;
+      font-family: var(--font-typewriter);
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      padding: 0.3rem 0.8rem;
+      text-transform: uppercase;
+      transform: rotate(3deg);
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    }
+    
+    .conclusion-box {
+      background: var(--ink);
+      color: var(--paper-warm);
+      padding: 1rem 1.5rem;
+      margin-top: 1rem;
+      border-left: 4px solid var(--gold);
+    }
+    
+    .conclusion-box strong {
+      color: var(--gold-bright);
+      text-transform: uppercase;
+      font-family: var(--font-typewriter);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+    }
   </style>
 </head>
 <body>
@@ -933,7 +882,7 @@
       <div class="hero-story">
         <div class="contenido-wrapper">
           <div>
-            <span class="article-kicker fade-in-1">⚠ Edición de Guerra — Noticias Urgentes</span>
+            <span class="article-kicker fade-in-1">Edición de Guerra — Noticias Urgentes</span>
             <h1 class="article-headline fade-in-2" style="font-size:clamp(2.5rem,6vw,5rem);line-height:1.05;margin-bottom:0.5rem;color:var(--paper-warm);text-shadow:0 2px 16px rgba(0,0,0,0.92),0 1px 4px rgba(0,0,0,1),3px 3px 0 rgba(0,0,0,0.7);">
               EUROPA EN LLAMAS:<br>LA GRAN GUERRA
             </h1>
@@ -987,7 +936,7 @@
           <!-- FOTO HISTÓRICA: Sarajevo 1914 -->
           <div class="press-photo photo-corners reveal-left" style="margin-bottom:0.5rem;">
             <img
-              src="../img/sarajevo1914.png"
+              src="../img/sarajevo1914.jpg"
               alt="Asesinato del Archiduque Francisco Fernando, Sarajevo 1914"
               loading="lazy"
               style="width:100%;object-fit:cover;min-height:160px;display:block;"
@@ -1115,7 +1064,7 @@
     </div>
   </section>
 
-  <!-- ═══ SECCIÓN III: LAS ALIANZAS ════════════════════════ -->
+  <!-- ═══ SECCIÓN III: LAS ALIANZAS MEJORADA ════════════════════════ -->
   <section class="main-newspaper">
     <div class="black-bar">
       <span class="black-bar-label">Sección III</span>
@@ -1170,7 +1119,7 @@
             </div>
           </div>
 
-          <!-- INFORME CLASIFICADO -->
+          <!-- INFORME CLASIFICADO MEJORADO -->
           <div class="military-report reveal" style="margin-top:1.5rem;">
             <div class="report-seal">
               <span class="report-seal-inner">★</span>
@@ -1188,10 +1137,57 @@
                 Destinatario: Estado Mayor
               </div>
             </div>
-            <div class="report-body" style="white-space:normal;">
-              <p style="margin-bottom:0.5rem;">La secuencia de activación del sistema de alianzas confirma el peor escenario posible para la estabilidad europea:</p>
-              <p style="margin-bottom:0.5rem;"><strong>28 Jun:</strong> Asesinato en Sarajevo → <strong>23 Jul:</strong> Ultimátum austro-húngaro a Serbia → <strong>28 Jul:</strong> Declaración de guerra AH→Serbia → <strong>1 Ago:</strong> Alemania declara guerra a Rusia → <strong>3 Ago:</strong> Alemania declara guerra a Francia → <strong>4 Ago:</strong> Gran Bretaña declara guerra a Alemania.</p>
-              <p><strong>CONCLUSIÓN:</strong> El sistema ha fallado catastrófico. Estimación: conflicto de larga duración inevitable. España debe mantener neutralidad absoluta.</p>
+            
+            <!-- NUEVO: Diagrama de flujo visual -->
+            <div class="alianzas-flow">
+              <div class="urgency-stamp">Urgente</div>
+              <div class="alianzas-flow-title">Secuencia de Activación del Conflicto</div>
+              
+              <div class="flow-diagram">
+                <div class="flow-item">
+                  <div class="flow-date">28 Jun</div>
+                  <div class="flow-event"><strong>Asesinato en Sarajevo</strong> — Gavrilo Princip asesina al Archiduque Francisco Fernando</div>
+                </div>
+                <div class="flow-arrow">▼</div>
+                
+                <div class="flow-item">
+                  <div class="flow-date">23 Jul</div>
+                  <div class="flow-event"><strong>Ultimátum Austrohúngaro</strong> — Serbia recibe ultimátum de 48 horas inaceptable</div>
+                </div>
+                <div class="flow-arrow">▼</div>
+                
+                <div class="flow-item">
+                  <div class="flow-date">28 Jul</div>
+                  <div class="flow-event"><strong>Guerra declarada</strong> — Austria-Hungría declara guerra a Serbia</div>
+                </div>
+                <div class="flow-arrow">▼</div>
+                
+                <div class="flow-item">
+                  <div class="flow-date">1 Ago</div>
+                  <div class="flow-event"><strong>Movilización General</strong> — Alemania declara guerra a Rusia; Schlieffen activado</div>
+                </div>
+                <div class="flow-arrow">▼</div>
+                
+                <div class="flow-item">
+                  <div class="flow-date">3 Ago</div>
+                  <div class="flow-event"><strong>Invasión de Francia</strong> — Alemania declara guerra y ejecuta Plan Schlieffen vía Bélgica</div>
+                </div>
+                <div class="flow-arrow">▼</div>
+                
+                <div class="flow-item" style="border-left-color: var(--gold);">
+                  <div class="flow-date">4 Ago</div>
+                  <div class="flow-event"><strong>Gran Bretaña entra</strong> — Londres declara guerra por violación de neutralidad belga</div>
+                </div>
+              </div>
+              
+              <div class="conclusion-box">
+                <strong>Conclusión:</strong> El sistema de alianzas ha fallado catastróficamente. Estimación: conflicto de larga duración inevitable. España debe mantener neutralidad absoluta y observar atentamente todos los frentes.
+              </div>
+            </div>
+            
+            <div class="report-body" style="white-space:normal; margin-top:1rem; font-size:0.85rem; color: var(--ink-faded); border-top: 1px solid rgba(0,0,0,0.1); padding-top: 1rem;">
+              <p style="margin-bottom:0.5rem;">El mecanismo de alianzas funcionó con precisión letal: en apenas 37 días, un atentado en los Balcanes escaló hasta convertirse en guerra continental. Los planes de movilización, una vez activados, resultaron irreversibles.</p>
+              <p>La invasión alemana de Bélgica neutral —calificada por Berlín como "un papel mojado"— fue el detonante que obligó a Gran Bretaña a intervenir, transformando un conflicto europeo en guerra mundial.</p>
             </div>
           </div>
         </div>
@@ -1246,129 +1242,8 @@
     </div>
   </section>
 
-  <!-- ═══ SECCIÓN IV: MAPA ══════════════════════════════════ -->
-  <section class="mapa-section">
-    <div class="mapa-wrapper">
-      <div class="mapa-section-title">Cartografía Militar · Clasificada</div>
-      <h2 class="fade-in-2" style="font-family:var(--font-display);font-size:clamp(1.5rem,3vw,2.2rem);">
-        Europa en Guerra — Teatro de Operaciones 1914–1918
-      </h2>
-
-      <div style="display:grid;grid-template-columns:1fr 300px;gap:1.5rem;align-items:start;" class="reveal">
-
-        <!-- MAPA HISTÓRICO REAL con SVG superpuesto -->
-        <div class="mapa-historico-container photo-corners">
-          <!-- Mapa real de Europa de Wikimedia -->
-          <img
-            src="../img/europa1914.png"
-            alt="Mapa de Europa en 1914 con las alianzas militares"
-            loading="lazy"
-            style="width:100%;min-height:400px;object-fit:cover;"
-            
-          >
-          <!-- SVG OVERLAY: Líneas de frente animadas -->
-          <svg class="mapa-overlay-svg" viewBox="0 0 1280 780" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
-            <!-- FRENTE OCCIDENTAL (línea animada) -->
-            <path class="frente-line"
-              d="M 395 180 L 410 220 L 395 270 L 400 330 L 390 390 L 395 440 L 385 500"
-              stroke-width="3"/>
-            <!-- Etiqueta Frente Occidental -->
-            <rect x="280" y="290" width="105" height="20" fill="rgba(192,57,43,0.85)" rx="2"/>
-            <text x="335" y="304" class="frente-label" text-anchor="middle" fill="white">FRENTE OCCIDENTAL</text>
-
-            <!-- FRENTE ORIENTAL -->
-            <path class="frente-line"
-              d="M 820 130 L 800 200 L 790 280 L 800 360 L 780 440 L 800 520 L 790 600"
-              stroke-width="2.5" stroke="#c0891a" stroke-dasharray="6,4"
-              style="animation-duration:1.5s;"/>
-            <!-- Etiqueta Frente Oriental -->
-            <rect x="820" y="360" width="100" height="20" fill="rgba(139,90,20,0.85)" rx="2"/>
-            <text x="870" y="374" class="frente-label" text-anchor="middle" fill="white" style="fill:#f5e8c4;">FRENTE ORIENTAL</text>
-
-            <!-- CIUDADES CLAVE -->
-            <circle cx="450" cy="320" r="5" class="ciudad-dot"/>
-            <text x="460" y="315" class="ciudad-label">PARIS</text>
-
-            <circle cx="500" cy="178" r="5" class="ciudad-dot"/>
-            <text x="510" y="173" class="ciudad-label">BRUSELAS</text>
-
-            <circle cx="620" cy="200" r="6" class="ciudad-dot" stroke="var(--red-stamp)" fill="rgba(192,57,43,0.2)"/>
-            <text x="630" y="195" class="ciudad-label" style="fill:var(--red-stamp);font-weight:bold;">BERLIN</text>
-
-            <circle cx="440" cy="185" r="4" class="ciudad-dot"/>
-            <text x="450" y="180" class="ciudad-label">LONDON</text>
-
-            <circle cx="750" cy="220" r="5" class="ciudad-dot"/>
-            <text x="760" y="215" class="ciudad-label">VIENNA</text>
-
-            <circle cx="960" cy="200" r="5" class="ciudad-dot"/>
-            <text x="970" y="195" class="ciudad-label">MOSCÚ</text>
-
-            <!-- PIN ESPAÑA (observadores) -->
-            <circle cx="310" cy="500" r="7" fill="rgba(184,146,42,0.3)" stroke="var(--gold)" stroke-width="2"/>
-            <circle cx="310" cy="500" r="12" fill="none" stroke="var(--gold)" stroke-width="1" opacity="0.5">
-              <animate attributeName="r" values="7;18" dur="2s" repeatCount="indefinite"/>
-              <animate attributeName="opacity" values="0.5;0" dur="2s" repeatCount="indefinite"/>
-            </circle>
-            <text x="325" y="494" class="ciudad-label" style="fill:var(--gold);font-weight:bold;">★ MADRID</text>
-            <text x="325" y="506" style="font-size:7px;fill:var(--gold);font-family:var(--font-typewriter);letter-spacing:0.06em;">OBSERVADORES</text>
-
-            <!-- LEYENDA -->
-            <rect x="20" y="700" width="220" height="72" fill="rgba(8,6,4,0.82)" rx="3"/>
-            <line x1="30" y1="715" x2="70" y2="715" stroke="var(--red-stamp)" stroke-width="3" stroke-dasharray="6,3"/>
-            <text x="78" y="719" style="font-size:8px;fill:var(--paper-warm);font-family:var(--font-typewriter);">Frente Occidental</text>
-            <line x1="30" y1="732" x2="70" y2="732" stroke="#c0891a" stroke-width="2" stroke-dasharray="5,4"/>
-            <text x="78" y="736" style="font-size:8px;fill:var(--paper-warm);font-family:var(--font-typewriter);">Frente Oriental</text>
-            <circle cx="40" cy="750" r="5" fill="none" stroke="var(--gold)" stroke-width="2"/>
-            <text x="78" y="754" style="font-size:8px;fill:var(--gold);font-family:var(--font-typewriter);">España — Neutral (Obs.)</text>
-          </svg>
-          <div class="mapa-caption">
-            EUROPA · 1914 — Mapa cartográfico con posición de los frentes de guerra y alianzas militares · Clasificado · Uso Exclusivo del Estado Mayor
-          </div>
-        </div>
-
-        <!-- LEYENDA MAPA -->
-        <div>
-          <div class="sidebar-facts" style="background:rgba(13,10,6,0.8);border:1px solid rgba(184,146,42,0.2);border-left:3px solid var(--gold);">
-            <div class="sidebar-facts-title">⬥ Lectura del Mapa</div>
-            <div class="fact-item">
-              <div class="fact-label" style="color:var(--red-stamp);">── Frente Occidental</div>
-              <div class="fact-value" style="font-size:0.78rem;">750 km desde el Canal de la Mancha hasta Suiza. El frente más sangriento de la historia.</div>
-            </div>
-            <div class="fact-item">
-              <div class="fact-label" style="color:#c0891a;">-- Frente Oriental</div>
-              <div class="fact-value" style="font-size:0.78rem;">Frente dinámico, más de 1,600 km. Colapso del Imperio Ruso en 1917.</div>
-            </div>
-            <div class="fact-item">
-              <div class="fact-label" style="color:var(--khaki-faded);">◼ Entente Aliada</div>
-              <div class="fact-value" style="font-size:0.78rem;">Francia, Gran Bretaña, Rusia, Italia (1915), EEUU (1917).</div>
-            </div>
-            <div class="fact-item">
-              <div class="fact-label" style="color:var(--red-ink);">◼ Potencias Centrales</div>
-              <div class="fact-value" style="font-size:0.78rem;">Alemania, Austria-Hungría, Imp. Otomano, Bulgaria.</div>
-            </div>
-            <div class="fact-item">
-              <div class="fact-label" style="color:var(--gold);">★ España</div>
-              <div class="fact-value" style="font-size:0.78rem;">Neutral. Sus observadores militares operan en todos los frentes con credenciales diplomáticas.</div>
-            </div>
-          </div>
-
-          <!-- NOTA SOBRE GALERÍA -->
-          <div style="margin-top:1rem;padding:1rem;background:rgba(8,6,4,0.6);border:1px solid rgba(184,146,42,0.15);">
-            <div style="font-family:var(--font-typewriter);font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem;">
-              Nota del Cartógrafo
-            </div>
-            <p style="font-family:var(--font-body);font-size:0.78rem;color:var(--paper-dark);line-height:1.6;">
-              Este mapa fue elaborado por el Departamento de Cartografía Militar del Estado Mayor usando fuentes de inteligencia de agosto de 1914. Las posiciones de los frentes son aproximadas y sujetas a cambios continuos.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══ SECCIÓN V: CRONOLOGÍA ════════════════════════════ -->
-  <section class="main-newspaper">
+  <!-- ═══ SECCIÓN IV: CRONOLOGÍA CON FONDO OSCURO ════════════════════════════ -->
+  <section class="main-newspaper timeline-section">
     <div class="black-bar">
       <span class="black-bar-label">Sección IV</span>
       <div class="black-bar-line"></div>
@@ -1377,303 +1252,221 @@
       <span class="black-bar-label">Cronología del Conflicto · 1914–1918</span>
     </div>
 
-    <div class="contenido-wrapper" style="padding-top:2rem;padding-bottom:2.5rem;">
-<div class="timeline-wrapper">
-      <div class="timeline">
+    <div class="contenido-wrapper" style="padding-top:2rem;padding-bottom:2.5rem; position: relative; z-index: 2;">
+<div class="tl-wrap">
 
-        <!-- ① SARAJEVO -->
-        <div class="tl-item reveal">
-          <div class="tl-content-left">
-            <div class="tl-card">
-              <div class="tl-card-accent" style="background:var(--red-ink);"></div>
-              <div class="tl-card-header">
-                <span>Despacho nº 001 · 28 Jun 1914</span>
-                <span class="tl-card-clasif" style="color:var(--red-ink);border-color:var(--red-ink);">Máximo Secreto</span>
-              </div>
-              <div class="tl-card-inner">
-                <div class="tl-cat" style="color:var(--red-ink);">⚡ El Detonante</div>
-                <div class="tl-headline">Asesinato en Sarajevo</div>
-                <div class="tl-fecha-sec" style="text-align:right;">28 de junio de 1914 · Bosnia-Herzegovina</div>
-                <div class="tl-text">El archiduque Francisco Fernando, heredero al trono austrohúngaro, y su esposa Sofía son asesinados por Gavrilo Princip, vinculado a la sociedad secreta "la Mano Negra". El atentado activa la maquinaria de ultimátums y alianzas que había tardado décadas en armarse.</div>
-                <div class="tl-quote" style="text-align:right;">"Hermano mío, me han dado un balazo." — últimas palabras del archiduque</div>
-                <div class="tl-stat">
-                  <span class="tl-stat-num" style="color:var(--red-ink);">37</span>
-                  <span class="tl-stat-lbl">días para que<br>Europa ardiera</span>
-                </div>
-                <div class="tl-chips">
-                  <span class="tl-chip">Austria-Hungría</span>
-                  <span class="tl-chip">Serbia</span>
-                  <span class="tl-chip">Bosnia</span>
+        <div class="tl-row">
+
+          <div class="tl-lado-izq">
+            <div class="tl-card" style="border-left-color:#c0392b;animation-delay:0.1s">
+              <div class="tl-card-banda" style="background:linear-gradient(90deg,#c0392b,#8b1a1a);"></div>
+              <div class="tl-card-head">
+                <div class="tl-card-año-big">1914</div>
+                <div class="tl-card-meta">
+                  <div class="tl-card-categoria" style="color:#c0392b;">El Detonante</div>
+                  <div class="tl-card-fecha-txt">28 junio 1914 · Bosnia</div>
                 </div>
               </div>
-              <div class="tl-sello" style="color:var(--red-ink);border-color:var(--red-ink);">
-                Estado<br>Mayor<br>·1914·
+              <div class="tl-card-body">
+                <div class="tl-card-titulo">Asesinato en Sarajevo</div>
+                <div class="tl-card-texto">El archiduque Francisco Fernando es asesinado por Gavrilo Princip, vinculado a la «Mano Negra». El atentado activa la maquinaria de alianzas y ultimátums que llevará a Europa a la guerra en menos de seis semanas.</div>
+              </div>
+              <div class="tl-card-pie">
+                <div class="tl-card-stat-n" style="color:#c0392b;">37</div>
+                <div class="tl-card-stat-l">días hasta que Europa ardió</div>
               </div>
             </div>
           </div>
-          <div class="tl-center">
-            <div class="tl-node" style="border-color:var(--red-ink);box-shadow:0 0 0 4px var(--press-dark),0 0 0 7px rgba(139,26,26,0.35),0 0 0 9px var(--press-dark),0 0 0 10px rgba(139,26,26,0.12),0 4px 20px rgba(0,0,0,0.6);">💥</div>
-            <span class="tl-node-year" style="border-color:rgba(139,26,26,0.5);color:var(--red-ink);">28 Jun<br>1914</span>
+
+          <div class="tl-nodo">
+            <div class="tl-nodo-anillo" style="border-color:#c0392b;color:#c0392b;animation-delay:0.05s;">I</div>
+            <div class="tl-nodo-año" style="color:#c0392b;">28 Jun
+1914</div>
           </div>
-          <div class="tl-empty" style="position:relative;">
-            <div class="tl-connector tl-connector-right" style="top:calc(50% + 36px);left:0;right:auto;width:calc(100% + 0px);"></div>
-          </div>
+          <div class="tl-vacio"></div>
         </div>
 
-        <!-- ② EUROPA EN LLAMAS -->
-        <div class="tl-item reveal">
-          <div class="tl-empty" style="position:relative;"></div>
-          <div class="tl-center">
-            <div class="tl-node" style="border-color:rgba(180,155,80,0.6);">⚔️</div>
-            <span class="tl-node-year">Ago<br>1914</span>
+        <div class="tl-row">
+          <div class="tl-vacio"></div>
+
+          <div class="tl-nodo">
+            <div class="tl-nodo-anillo" style="border-color:#2c3e50;color:#2c3e50;animation-delay:0.15s;">II</div>
+            <div class="tl-nodo-año" style="color:#2c3e50;">Ago
+1914</div>
           </div>
-          <div class="tl-content-right">
-            <div class="tl-card">
-              <div class="tl-card-accent" style="background:rgba(160,130,60,0.8);"></div>
-              <div class="tl-card-header" style="flex-direction:row-reverse;">
-                <span>Despacho nº 002 · Ago 1914</span>
-                <span class="tl-card-clasif" style="color:rgba(184,146,42,0.8);border-color:rgba(184,146,42,0.4);">Reservado</span>
-              </div>
-              <div class="tl-card-inner">
-                <div class="tl-cat" style="color:rgba(200,165,58,0.75);">📜 La Cadena de Alianzas</div>
-                <div class="tl-headline">Europa en Llamas</div>
-                <div class="tl-fecha-sec">1–4 de agosto de 1914</div>
-                <div class="tl-text">En 72 horas, las principales potencias se declaran la guerra sucesivamente. El Plan Schlieffen alemán exigía cruzar Bélgica neutral para atacar Francia. Berlín llamó "papel mojado" al tratado que garantizaba su neutralidad. Gran Bretaña declaró la guerra al día siguiente.</div>
-                <div class="tl-quote">"Un papel mojado." — Canciller Bethmann-Hollweg sobre el tratado belga</div>
-                <div class="tl-stat">
-                  <span class="tl-stat-num">6</span>
-                  <span class="tl-stat-lbl">potencias en guerra<br>en menos de una semana</span>
+
+          <div class="tl-lado-der">
+            <div class="tl-card" style="border-right-color:#2c3e50;animation-delay:0.2s">
+              <div class="tl-card-banda" style="background:linear-gradient(90deg,#2c3e50,#1a252f);"></div>
+              <div class="tl-card-head">
+                <div class="tl-card-meta">
+                  <div class="tl-card-categoria" style="color:#2c3e50;">La Cadena de Alianzas</div>
+                  <div class="tl-card-fecha-txt">1–4 agosto 1914</div>
                 </div>
-                <div class="tl-chips">
-                  <span class="tl-chip">🇩🇪 Alemania, 1 ago</span>
-                  <span class="tl-chip">🇫🇷 Francia, 3 ago</span>
-                  <span class="tl-chip">🇬🇧 Gran Bretaña, 4 ago</span>
-                </div>
+                <div class="tl-card-año-big">1914</div>
               </div>
-              <div class="tl-sello" style="color:rgba(184,146,42,0.5);border-color:rgba(184,146,42,0.3);">
-                G.H.Q.<br>Berlín<br>·1914·
+              <div class="tl-card-body">
+                <div class="tl-card-titulo">Europa en Guerra</div>
+                <div class="tl-card-texto">Alemania, Francia y Gran Bretaña se declaran la guerra en 72 horas. El Plan Schlieffen exige invadir Bélgica neutral. Berlín llama «papel mojado» al tratado que garantizaba su neutralidad.</div>
+              </div>
+              <div class="tl-card-pie">
+                <div class="tl-card-stat-n" style="color:#2c3e50;">6</div>
+                <div class="tl-card-stat-l">potencias declaradas en una semana</div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- ③ MARNE -->
-        <div class="tl-item reveal">
-          <div class="tl-content-left">
-            <div class="tl-card">
-              <div class="tl-card-accent" style="background:var(--khaki-mid);"></div>
-              <div class="tl-card-header">
-                <span>Despacho nº 003 · Sep 1914</span>
-                <span class="tl-card-clasif" style="color:var(--khaki-light);border-color:var(--khaki-mid);">Urgente</span>
-              </div>
-              <div class="tl-card-inner">
-                <div class="tl-cat" style="color:var(--khaki-light);">🚕 El Milagro de París</div>
-                <div class="tl-headline">Primera Batalla del Marne</div>
-                <div class="tl-fecha-sec" style="text-align:right;">5–12 septiembre 1914</div>
-                <div class="tl-text">El avance alemán se detiene a 40 km de París. Los célebres "taxis de la Marne" —600 taxis parisinos requisados— transportan 6.000 soldados franceses al frente. El fracaso del Plan Schlieffen obliga a Alemania a combatir en dos frentes. Nace la guerra de trincheras.</div>
-                <div class="tl-stat">
-                  <span class="tl-stat-num" style="color:var(--khaki-faded);">600</span>
-                  <span class="tl-stat-lbl">taxis de París<br>que salvaron la capital</span>
-                </div>
-                <div class="tl-chips">
-                  <span class="tl-chip">Frente Occidental</span>
-                  <span class="tl-chip">Plan Schlieffen fracasa</span>
-                  <span class="tl-chip">Guerra de posiciones</span>
+        <div class="tl-row">
+
+          <div class="tl-lado-izq">
+            <div class="tl-card" style="border-left-color:#5a6e42;animation-delay:0.3s">
+              <div class="tl-card-banda" style="background:linear-gradient(90deg,#5a6e42,#3d4f2e);"></div>
+              <div class="tl-card-head">
+                <div class="tl-card-año-big">1914</div>
+                <div class="tl-card-meta">
+                  <div class="tl-card-categoria" style="color:#5a6e42;">Frente Occidental</div>
+                  <div class="tl-card-fecha-txt">5–12 septiembre 1914</div>
                 </div>
               </div>
-              <div class="tl-sello" style="color:var(--khaki-mid);border-color:var(--khaki-mid);">
-                Grand<br>Quartier<br>·1914·
+              <div class="tl-card-body">
+                <div class="tl-card-titulo">Primera Batalla del Marne</div>
+                <div class="tl-card-texto">El avance alemán se detiene a 40 km de París. 600 taxis parisinos requisados transportan refuerzos al frente. Fracasa el Plan Schlieffen. Nace la guerra de trincheras que durará cuatro años.</div>
+              </div>
+              <div class="tl-card-pie">
+                <div class="tl-card-stat-n" style="color:#5a6e42;">600</div>
+                <div class="tl-card-stat-l">taxis que salvaron París</div>
               </div>
             </div>
           </div>
-          <div class="tl-center">
-            <div class="tl-node" style="border-color:var(--khaki-light);box-shadow:0 0 0 4px var(--press-dark),0 0 0 7px rgba(61,79,46,0.35),0 0 0 9px var(--press-dark),0 0 0 10px rgba(61,79,46,0.12),0 4px 20px rgba(0,0,0,0.6);">🚕</div>
-            <span class="tl-node-year" style="border-color:rgba(61,79,46,0.5);color:var(--khaki-faded);">Sep<br>1914</span>
+
+          <div class="tl-nodo">
+            <div class="tl-nodo-anillo" style="border-color:#5a6e42;color:#5a6e42;animation-delay:0.25s;">III</div>
+            <div class="tl-nodo-año" style="color:#5a6e42;">Sep
+1914</div>
           </div>
-          <div class="tl-empty"></div>
+          <div class="tl-vacio"></div>
         </div>
 
-        <!-- ④ GALLIPOLI -->
-        <div class="tl-item reveal">
-          <div class="tl-empty"></div>
-          <div class="tl-center">
-            <div class="tl-node" style="border-color:#4a7a9a;box-shadow:0 0 0 4px var(--press-dark),0 0 0 7px rgba(74,122,154,0.35),0 0 0 9px var(--press-dark),0 0 0 10px rgba(74,122,154,0.12),0 4px 20px rgba(0,0,0,0.6);">⚓</div>
-            <span class="tl-node-year" style="border-color:rgba(74,122,154,0.5);color:#5a8aaa;">1915</span>
+        <div class="tl-row">
+          <div class="tl-vacio"></div>
+
+          <div class="tl-nodo">
+            <div class="tl-nodo-anillo" style="border-color:#7f1d1d;color:#7f1d1d;animation-delay:0.35s;">IV</div>
+            <div class="tl-nodo-año" style="color:#7f1d1d;">1916</div>
           </div>
-          <div class="tl-content-right">
-            <div class="tl-card">
-              <div class="tl-card-accent" style="background:#4a7a9a;"></div>
-              <div class="tl-card-header" style="flex-direction:row-reverse;">
-                <span>Despacho nº 004 · Feb 1915</span>
-                <span class="tl-card-clasif" style="color:#5a8aaa;border-color:#4a7a9a;">Clasificado</span>
-              </div>
-              <div class="tl-card-inner">
-                <div class="tl-cat" style="color:#5a8aaa;">⚓ La Campaña del Bósforo</div>
-                <div class="tl-headline">Gallipoli — El Desastre Aliado</div>
-                <div class="tl-fecha-sec">Febrero 1915 – enero 1916</div>
-                <div class="tl-text">Churchill diseña la operación para abrir el Bósforo y abastecer a Rusia. El desembarco en Galípoli resulta en un fracaso catastrófico: terreno imposible, defensa turca formidable bajo Mustafá Kemal. Los ANZAC sufren un baño de sangre que define la identidad nacional de Australia y Nueva Zelanda.</div>
-                <div class="tl-stat">
-                  <span class="tl-stat-num" style="color:#5a8aaa;">250K</span>
-                  <span class="tl-stat-lbl">bajas aliadas<br>en la campaña</span>
+
+          <div class="tl-lado-der">
+            <div class="tl-card" style="border-right-color:#7f1d1d;animation-delay:0.4s">
+              <div class="tl-card-banda" style="background:linear-gradient(90deg,#991b1b,#7f1d1d);"></div>
+              <div class="tl-card-head">
+                <div class="tl-card-meta">
+                  <div class="tl-card-categoria" style="color:#7f1d1d;">Las Batallas del Horror</div>
+                  <div class="tl-card-fecha-txt">Feb–Dic 1916</div>
                 </div>
-                <div class="tl-chips">
-                  <span class="tl-chip">Churchill dimite</span>
-                  <span class="tl-chip">ANZAC</span>
-                  <span class="tl-chip">Mustafá Kemal</span>
-                </div>
+                <div class="tl-card-año-big">1916</div>
               </div>
-              <div class="tl-sello" style="color:#4a7a9a;border-color:#4a7a9a;">
-                R.N.<br>Almir.<br>·1915·
+              <div class="tl-card-body">
+                <div class="tl-card-titulo">Verdún y el Somme</div>
+                <div class="tl-card-texto">Las batallas más sangrientas de la historia. El 1 de julio de 1916 es el día más mortífero del ejército británico. Los tanques aparecen en combate por primera vez. Cero avances territoriales tras meses de masacre.</div>
+              </div>
+              <div class="tl-card-pie">
+                <div class="tl-card-stat-n" style="color:#7f1d1d;">57.470</div>
+                <div class="tl-card-stat-l">bajas británicas en un solo día</div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- ⑤ VERDÚN / SOMME -->
-        <div class="tl-item reveal">
-          <div class="tl-content-left">
-            <div class="tl-card">
-              <div class="tl-card-accent" style="background:var(--red-stamp);"></div>
-              <div class="tl-card-header">
-                <span>Despacho nº 005 · 1916</span>
-                <span class="tl-card-clasif" style="color:var(--red-stamp);border-color:var(--red-stamp);">Alto Secreto</span>
-              </div>
-              <div class="tl-card-inner">
-                <div class="tl-cat" style="color:var(--red-stamp);">☠ Las Batallas del Horror</div>
-                <div class="tl-headline" style="color:rgba(220,100,80,0.9);">Verdún y el Somme</div>
-                <div class="tl-fecha-sec" style="text-align:right;">Febrero – diciembre 1916</div>
-                <div class="tl-text">Verdún: Falkenhayn pretende "sangrar a blanco" al ejército francés. Diez meses, más de 300.000 muertos, cero avances. El Somme: el 1 de julio de 1916 es el día más sangriento de la historia militar británica. Los tanques aparecen en combate por primera vez en la historia.</div>
-                <div class="tl-quote" style="text-align:right;">"En Verdún, los hombres se olvidan de que son hombres." — soldado anónimo</div>
-                <div class="tl-stat">
-                  <span class="tl-stat-num" style="color:var(--red-stamp);">57.470</span>
-                  <span class="tl-stat-lbl">bajas británicas<br>en un solo día</span>
-                </div>
-                <div class="tl-chips">
-                  <span class="tl-chip">Primera vez: tanques</span>
-                  <span class="tl-chip">Gas mostaza</span>
-                  <span class="tl-chip">700 km de trincheras</span>
+        <div class="tl-row">
+
+          <div class="tl-lado-izq">
+            <div class="tl-card" style="border-left-color:#6b3a1f;animation-delay:0.5s">
+              <div class="tl-card-banda" style="background:linear-gradient(90deg,#854d27,#6b3a1f);"></div>
+              <div class="tl-card-head">
+                <div class="tl-card-año-big">1917</div>
+                <div class="tl-card-meta">
+                  <div class="tl-card-categoria" style="color:#6b3a1f;">El Año que lo Cambió Todo</div>
+                  <div class="tl-card-fecha-txt">1917</div>
                 </div>
               </div>
-              <div class="tl-sello" style="color:var(--red-stamp);border-color:var(--red-stamp);">
-                GHQ<br>Verdún<br>·1916·
+              <div class="tl-card-body">
+                <div class="tl-card-titulo">Revolución Rusa · EE.UU. Entra</div>
+                <div class="tl-card-texto">El Zar Nicolás II abdica. Los bolcheviques toman el poder y firman la paz con Alemania. El Telegrama Zimmermann y la guerra submarina irrestricta llevan a Washington a declarar la guerra el 6 de abril.</div>
+              </div>
+              <div class="tl-card-pie">
+                <div class="tl-card-stat-n" style="color:#6b3a1f;">2 M</div>
+                <div class="tl-card-stat-l">soldados americanos llegan a Europa</div>
               </div>
             </div>
           </div>
-          <div class="tl-center">
-            <div class="tl-node" style="border-color:var(--red-stamp);box-shadow:0 0 0 4px var(--press-dark),0 0 0 7px rgba(192,57,43,0.35),0 0 0 9px var(--press-dark),0 0 0 10px rgba(192,57,43,0.12),0 4px 20px rgba(0,0,0,0.6);">💀</div>
-            <span class="tl-node-year" style="border-color:rgba(192,57,43,0.5);background:rgba(139,20,20,0.4);color:rgba(220,100,80,0.9);">1916</span>
+
+          <div class="tl-nodo">
+            <div class="tl-nodo-anillo" style="border-color:#6b3a1f;color:#6b3a1f;animation-delay:0.45s;">V</div>
+            <div class="tl-nodo-año" style="color:#6b3a1f;">1917</div>
           </div>
-          <div class="tl-empty"></div>
+          <div class="tl-vacio"></div>
         </div>
 
-        <!-- ⑥ REVOLUCIÓN RUSA + EE.UU. -->
-        <div class="tl-item reveal">
-          <div class="tl-empty"></div>
-          <div class="tl-center">
-            <div class="tl-node" style="border-color:#7a1a1a;box-shadow:0 0 0 4px var(--press-dark),0 0 0 7px rgba(122,26,26,0.35),0 0 0 9px var(--press-dark),0 0 0 10px rgba(122,26,26,0.12),0 4px 20px rgba(0,0,0,0.6);">🚩</div>
-            <span class="tl-node-year" style="border-color:rgba(122,26,26,0.5);color:#b05050;">1917</span>
+        <div class="tl-row">
+          <div class="tl-vacio"></div>
+
+          <div class="tl-nodo">
+            <div class="tl-nodo-anillo" style="border-color:#3d4f2e;color:#3d4f2e;animation-delay:0.55s;">VI</div>
+            <div class="tl-nodo-año" style="color:#3d4f2e;">1918</div>
           </div>
-          <div class="tl-content-right">
-            <div class="tl-card">
-              <div class="tl-card-accent" style="background:#7a1a1a;"></div>
-              <div class="tl-card-header" style="flex-direction:row-reverse;">
-                <span>Despacho nº 006 · 1917</span>
-                <span class="tl-card-clasif" style="color:#b05050;border-color:#7a1a1a;">Cifrado</span>
-              </div>
-              <div class="tl-card-inner">
-                <div class="tl-cat" style="color:#b05050;">🚩 El Año que lo Cambió Todo</div>
-                <div class="tl-headline">Revolución Rusa · EE.UU. Entra</div>
-                <div class="tl-fecha-sec">Febrero – noviembre 1917</div>
-                <div class="tl-text">Rusia se derrumba: el Zar Nicolás II abdica, los bolcheviques toman el poder y firman la paz con Alemania. En el otro extremo, la guerra submarina irrestricta y el Telegrama Zimmermann —Alemania propone a México atacar EE.UU.— llevan a Washington a la guerra el 6 de abril.</div>
-                <div class="tl-quote">"Los que nos ganan la guerra son los estadounidenses." — Von Hindenburg, 1918</div>
-                <div class="tl-stat">
-                  <span class="tl-stat-num" style="color:#b05050;">2M</span>
-                  <span class="tl-stat-lbl">soldados americanos<br>a Europa en 1918</span>
+
+          <div class="tl-lado-der">
+            <div class="tl-card" style="border-right-color:#3d4f2e;animation-delay:0.6s">
+              <div class="tl-card-banda" style="background:linear-gradient(90deg,#4a5e38,#3d4f2e);"></div>
+              <div class="tl-card-head">
+                <div class="tl-card-meta">
+                  <div class="tl-card-categoria" style="color:#3d4f2e;">El Último Esfuerzo</div>
+                  <div class="tl-card-fecha-txt">Mar–Nov 1918</div>
                 </div>
-                <div class="tl-chips">
-                  <span class="tl-chip">Zar abdica — 2 mar</span>
-                  <span class="tl-chip">EE.UU. entra — 6 abr</span>
-                  <span class="tl-chip">Revolución — 7 nov</span>
-                </div>
+                <div class="tl-card-año-big">1918</div>
               </div>
-              <div class="tl-sello" style="color:#7a1a1a;border-color:#7a1a1a;">
-                Petro<br>grad<br>·1917·
+              <div class="tl-card-body">
+                <div class="tl-card-titulo">La Kaiserschlacht y el Colapso</div>
+                <div class="tl-card-texto">Alemania lanza su última ofensiva masiva en el oeste antes de la llegada americana. La Ofensiva de los Cien Días aliada derrumba el frente alemán. El Káiser abdica el 9 de noviembre. La guerra agoniza.</div>
+              </div>
+              <div class="tl-card-pie">
+                <div class="tl-card-stat-n" style="color:#3d4f2e;">100</div>
+                <div class="tl-card-stat-l">días de ofensiva para ganar la guerra</div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- ⑦ OFENSIVA DE PRIMAVERA + COLAPSO -->
-        <div class="tl-item reveal">
-          <div class="tl-content-left">
-            <div class="tl-card">
-              <div class="tl-card-accent" style="background:var(--khaki-dark);"></div>
-              <div class="tl-card-header">
-                <span>Despacho nº 007 · 1918</span>
-                <span class="tl-card-clasif" style="color:var(--khaki-faded);border-color:var(--khaki-mid);">Urgente</span>
-              </div>
-              <div class="tl-card-inner">
-                <div class="tl-cat" style="color:var(--khaki-faded);">⚔ El Último Esfuerzo</div>
-                <div class="tl-headline">Ofensiva de Primavera — El Colapso</div>
-                <div class="tl-fecha-sec" style="text-align:right;">Marzo – noviembre 1918</div>
-                <div class="tl-text">Alemania lanza la Kaiserschlacht: las tropas del frente ruso se concentran en el oeste en un último intento antes de que los americanos lleguen en masa. Los ataques logran avances históricos… pero no bastan. En agosto la Ofensiva de los Cien Días derrumba el frente alemán. El Káiser abdica el 9 de noviembre.</div>
-                <div class="tl-stat">
-                  <span class="tl-stat-num" style="color:var(--khaki-faded);">100</span>
-                  <span class="tl-stat-lbl">días de ofensiva aliada<br>para ganar la guerra</span>
-                </div>
-                <div class="tl-chips">
-                  <span class="tl-chip">Kaiserschlacht</span>
-                  <span class="tl-chip">Káiser abdica — 9 nov</span>
-                  <span class="tl-chip">Revolución en Berlín</span>
-                </div>
-              </div>
-              <div class="tl-sello" style="color:var(--khaki-mid);border-color:var(--khaki-mid);">
-                O.H.L.<br>Berlin<br>·1918·
-              </div>
-            </div>
-          </div>
-          <div class="tl-center">
-            <div class="tl-node" style="border-color:var(--khaki-light);box-shadow:0 0 0 4px var(--press-dark),0 0 0 7px rgba(61,79,46,0.35),0 0 0 9px var(--press-dark),0 0 0 10px rgba(61,79,46,0.12),0 4px 20px rgba(0,0,0,0.6);">🏳️</div>
-            <span class="tl-node-year" style="border-color:rgba(61,79,46,0.5);color:var(--khaki-faded);">Nov<br>1918</span>
-          </div>
-          <div class="tl-empty"></div>
-        </div>
+        <div class="tl-row">
 
-        <!-- ⑧ ARMISTICIO -->
-        <div class="tl-item reveal">
-          <div class="tl-empty"></div>
-          <div class="tl-center">
-            <div class="tl-node" style="border-color:var(--gold);background:rgba(184,146,42,0.12);box-shadow:0 0 0 4px var(--press-dark),0 0 0 7px rgba(184,146,42,0.45),0 0 0 9px var(--press-dark),0 0 0 10px rgba(184,146,42,0.20),0 4px 30px rgba(184,146,42,0.25);">✦</div>
-            <span class="tl-node-year" style="border-color:rgba(184,146,42,0.6);background:rgba(184,146,42,0.18);color:var(--gold-bright);">11 Nov<br>1918</span>
-          </div>
-          <div class="tl-content-right">
-            <div class="tl-card" style="border-color:rgba(184,146,42,0.35);">
-              <div class="tl-card-accent" style="background:var(--gold);"></div>
-              <div class="tl-card-header" style="flex-direction:row-reverse;background:rgba(184,146,42,0.08);border-color:rgba(184,146,42,0.25);">
-                <span style="color:rgba(184,146,42,0.6);">Despacho nº 008 · 11 Nov 1918</span>
-                <span class="tl-card-clasif" style="color:var(--gold);border-color:rgba(184,146,42,0.5);">Histórico</span>
-              </div>
-              <div class="tl-card-inner">
-                <div class="tl-cat" style="color:var(--gold-bright);">🕊 El Silencio Final</div>
-                <div class="tl-headline" style="color:var(--gold-bright);">El Armisticio — 11:11:11</div>
-                <div class="tl-fecha-sec" style="color:rgba(184,146,42,0.55);">11 de noviembre de 1918, 11:00 horas</div>
-                <div class="tl-text">A las 11:00 del undécimo día del undécimo mes, los cañones callan en el frente occidental. Cuatro años, tres meses y catorce días. El Tratado de Versalles remodela el mapa de Europa pero siembra las semillas de un nuevo conflicto que estallará veinte años después.</div>
-                <div class="tl-quote">"La guerra para acabar con todas las guerras." — H.G. Wells, 1914</div>
-                <div class="tl-stat">
-                  <span class="tl-stat-num" style="color:var(--gold);">17M</span>
-                  <span class="tl-stat-lbl">vidas perdidas —<br>combatientes y civiles</span>
-                </div>
-                <div class="tl-chips">
-                  <span class="tl-chip" style="border-color:rgba(184,146,42,0.35);color:var(--gold);">Versalles — Jun 1919</span>
-                  <span class="tl-chip" style="border-color:rgba(184,146,42,0.35);color:var(--gold);">4 imperios desaparecen</span>
-                  <span class="tl-chip" style="border-color:rgba(184,146,42,0.35);color:var(--gold);">Mapa de Europa rehecho</span>
+          <div class="tl-lado-izq">
+            <div class="tl-card" style="border-left-color:#b8860b;animation-delay:0.7s">
+              <div class="tl-card-banda" style="background:linear-gradient(90deg,#d4a83a,#b8860b);"></div>
+              <div class="tl-card-head">
+                <div class="tl-card-año-big">1918</div>
+                <div class="tl-card-meta">
+                  <div class="tl-card-categoria" style="color:#b8860b;">El Silencio Final</div>
+                  <div class="tl-card-fecha-txt">11 noviembre 1918 · 11:00 h</div>
                 </div>
               </div>
-              <div class="tl-sello" style="color:var(--gold);border-color:rgba(184,146,42,0.5);">
-                Armis<br>ticio<br>·1918·
+              <div class="tl-card-body">
+                <div class="tl-card-titulo">El Armisticio</div>
+                <div class="tl-card-texto">Los cañones callan en el frente occidental. Cuatro años, tres meses y catorce días de conflicto. El Tratado de Versalles rehace el mapa de Europa en 1919, sembrando las semillas del siguiente conflicto mundial.</div>
+              </div>
+              <div class="tl-card-pie">
+                <div class="tl-card-stat-n" style="color:#b8860b;">17 M</div>
+                <div class="tl-card-stat-l">vidas perdidas en el conflicto</div>
               </div>
             </div>
           </div>
+
+          <div class="tl-nodo">
+            <div class="tl-nodo-anillo" style="border-color:#b8860b;color:#b8860b;animation-delay:0.65s;">VII</div>
+            <div class="tl-nodo-año" style="color:#b8860b;">11 Nov
+1918</div>
+          </div>
+          <div class="tl-vacio"></div>
         </div>
 
       </div>
@@ -1694,14 +1487,18 @@
     <div style="max-width:1200px;margin:0 auto;">
       <div class="oriental-grid reveal">
         <div class="oriental-foto">
+          <!-- IMAGEN CORREGIDA: tropasRusasAtaque.jpg -->
           <img
-            src="../img/infanteria.png"
-            alt="Tropas en el frente oriental"
+            src="../img/tropasRusasAtaque.jpg"
+            alt="Tropas rusas en el frente oriental durante la Ofensiva Brusilov, 1916"
             loading="lazy"
             style="min-height:320px;object-fit:cover;"
-            
           >
           <div class="press-photo-overlay"></div>
+          <!-- Caption opcional para la imagen -->
+          <div style="position:absolute;bottom:0;left:0;right:0;padding:1.5rem 1rem 0.6rem;background:linear-gradient(transparent,rgba(0,0,0,0.9));font-family:var(--font-typewriter);font-size:0.62rem;letter-spacing:0.08em;color:var(--paper-dark);line-height:1.4;text-align:left;">
+            FRENTE ORIENTAL, 1916 — Infantería rusa durante la Ofensiva Brusilov, la operación más exitosa del Ejército Imperial Ruso en toda la guerra.
+          </div>
         </div>
         <div class="oriental-texto">
           <span class="article-kicker" style="color:var(--gold);border-color:var(--gold);">Teatro Oriental</span>
@@ -1736,7 +1533,7 @@
       <p>La misión de observación requiere un oficial de perfil específico.<br>Tres personajes están disponibles para esta misión histórica.</p>
       <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
         <a href="seleccion-personaje.html" class="btn btn-gold" style="font-size:0.9rem;padding:1rem 2.5rem;">
-          ⚔ Seleccionar Personaje →
+          Seleccionar Personaje →
         </a>
         <a href="../index.html" class="btn btn-secondary" style="font-size:0.85rem;">
           ← Volver al Menú
